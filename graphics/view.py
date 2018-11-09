@@ -31,7 +31,7 @@ class CBlueprintView(QGraphicsView):
 
     def mousePressEvent(self, event):
         super(CBlueprintView, self).mousePressEvent(event)
-        print("mousePressEvent")
+        # print("mousePressEvent")
 
     def mouseMoveEvent(self, event):
         super(CBlueprintView, self).mouseMoveEvent(event)

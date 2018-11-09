@@ -17,15 +17,17 @@ class CBlueprintItem(QGraphicsItem):
         self.m_Rect = rect
         self.m_Resizing = True
         self.m_CenterPoint = False
+        self.Init()
+
 
     def Init(self):
-        self.setRect(0, 0, 200, 100)
-        color = QColor(247, 160, 57)
-        pen = QPen(color)
-        pen.setWidth(2)  # 画笔
+        # self.setRect(0, 0, 200, 100)
+        # color = QColor(247, 160, 57)
+        # pen = QPen(color)
+        # pen.setWidth(20)  # 画笔
 
-        self.setPen(pen)
-        self.setBrush(QColor(247, 160, 57))
+        # self.setPen(pen)
+        # self.setBrush(QColor(12, 56, 123))
         self.setFlags(QGraphicsItem.ItemIsSelectable | QGraphicsItem.ItemIsMovable)
 
     def boundingRect(self):
@@ -35,8 +37,7 @@ class CBlueprintItem(QGraphicsItem):
         super(CBlueprintItem, self).paint(painter, option, widget)
         bgRect = self.boundingRect()
         painter.drawRects(bgRect)
-        painter.fillRect(bgRect, QColor('blue'))
-        pass
+        painter.fillRect(bgRect, QColor(247, 160, 57))
 
     def mousePressEvent(self, event):
         print("item.mousePressEvent")

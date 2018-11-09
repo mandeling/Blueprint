@@ -19,7 +19,7 @@ class CBlueprintScene(QGraphicsScene):
         self.Init()
 
     def Init(self):
-        self.setSceneRect(0, 0, 400, 300)
+        self.setSceneRect(0, 0, 40, 30) # 场景大小，传入item里面
 
     def mousePressEvent(self, event):
         super(CBlueprintScene, self).mousePressEvent(event)
