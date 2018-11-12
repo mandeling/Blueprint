@@ -19,7 +19,6 @@ class CBlueprintItem(QGraphicsItem):
         self.m_CenterPoint = False
         self.Init()
 
-
     def Init(self):
         # self.setRect(0, 0, 200, 100)
         # color = QColor(247, 160, 57)

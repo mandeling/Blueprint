@@ -4,16 +4,52 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "run",
+            "label": "run main",
             "type": "shell",
-            "command": "python",
+            "command": "${config:python.pythonPath} main.py",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "run current",
+            "type": "shell",
+            "command": "${config:python.pythonPath} ${file}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "ui2py",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
             "args": [
-                "main.py"
+                "ui/resource2py.py",
+                "ui"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
-        }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "qrc2py",
+            "type": "shell",
+            "command": "${config:python.pythonPath}",
+            "args": [
+                "ui/resource2py.py",
+                "qrc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
     ]
 }
