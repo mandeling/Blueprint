@@ -33,6 +33,7 @@ def QRC2PY():
             if sFile.endswith(".qrc"):
                 sQrcFile = os.path.join(sDir, sFile)
                 sPYFile = os.path.join(os.getcwd(), sFile)[:-4] + "_rc.py"
+                sPYFile = sQrcFile[:-4] + "_rc.py"
                 os.system("pyrcc5 -o %s %s" % (sPYFile, sQrcFile))
                 print("%s   ->    %s" % (sQrcFile, sPYFile))
 
