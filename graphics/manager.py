@@ -3,7 +3,8 @@ import misc
 
 from PyQt5.QtCore import pyqtSignal, QObject
 
-class CBlueChartMgr(misc.CSingleton, QObject):
+@misc.Singleton
+class CBlueChartMgr(QObject):
     SIG_ADD_CHART   = pyqtSignal(int)
     def __init__(self):
         QObject.__init__(self)

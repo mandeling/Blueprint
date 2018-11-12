@@ -70,3 +70,13 @@ class CSingleton:
         if not isinstance(cls.m_Instance, cls):
             cls.m_Instance = super(CSingleton, cls).__new__(cls, *args, **kwargs)
         return cls.m_Instance
+
+
+def Singleton(cls):
+    dInstance = {}
+
+    def GetInstance(*args, **kwargs):
+        if cls not in dInstance:
+            dInstance[cls] = cls(*args, **kwargs)
+        return dInstance[cls]
+    return GetInstance
