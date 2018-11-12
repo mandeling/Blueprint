@@ -5,25 +5,27 @@
 @Desc: 
 """
 
+from . import item
+from .manager import CBlueChartMgr
+
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QApplication, QMenu, QAction
 from PyQt5.QtGui import QBrush, QColor
 from PyQt5.QtCore import Qt
-
-from . import item
 
 
 class CBlueprintScene(QGraphicsScene):
     def __init__(self, parent=None):
         super(CBlueprintScene, self).__init__(parent)
         self.m_ItemList = []
+        self.m_Pos = None   # 创建图表的位置
         self.Init()
         self.InitSignal()
 
     def Init(self):
-        self.setSceneRect(0, 0, 40, 30) # 场景大小，传入item里面
+        self.setSceneRect(0, 0, 40, 30)  # 场景大小，传入item里面
 
     def InitSignal(self):
-        pass
+        CBlueChartMgr().SIG_ADD_CHART.connect(self.AddChartWidget)
 
     def mousePressEvent(self, event):
         super(CBlueprintScene, self).mousePressEvent(event)
@@ -37,3 +39,10 @@ class CBlueprintScene(QGraphicsScene):
             oItem.setPos(point.x(), point.y())
             self.addItem(oItem)
             self.m_ItemList.append(oItem)
+
+    def SetPos(self, pos):
+        self.m_Pos = pos
+
+    def AddChartWidget(self, iID):
+        print("=" * 30)
+        print(iID)

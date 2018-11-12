@@ -60,3 +60,13 @@ class Functor(object):
         if not obj:
             raise Warning("实例对象已经被释放,引用:%s,绑定方法:%s" % (self._objdesc, self._func))
         return self._func(obj, *(self._args + args))
+
+
+class CSingleton:
+    """单例模式基类"""
+    m_Instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not isinstance(cls.m_Instance, cls):
+            cls.m_Instance = super(CSingleton, cls).__new__(cls, *args, **kwargs)
+        return cls.m_Instance

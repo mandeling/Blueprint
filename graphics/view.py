@@ -8,6 +8,8 @@ import sys
 import misc
 
 from . import scene, config
+from .manager import CBlueChartMgr
+
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QApplication, QMenu, QAction
 from PyQt5.QtGui import QBrush, QColor
 from PyQt5.QtCore import Qt
@@ -41,21 +43,20 @@ class CBlueprintView(QGraphicsView):
         """右键上下文事件"""
         super(CBlueprintView, self).contextMenuEvent(event)
         print("contextMenuEvent")
-        gPos1 = event.pos()
-        gPos2 = self.mapToGlobal(gPos1)
-        pos1 = self.mapFromGlobal(gPos2)
-        pos = pos1.x(), pos1.y()
+        lPos = event.pos()
+        gPos = self.mapToGlobal(lPos)
+        tPos = lPos.x(), lPos.y()
+        print(lPos, gPos, tPos)
+        self.m_Scene.SetPos(tPos)
         menu = QMenu(self)
-        print(gPos1, gPos2, pos1, pos)
         for sName in config.CHART_DATA:
-            func = misc.Functor(self.OnCreateAction, pos, sName)
+            func = misc.Functor(self.OnCreateAction, sName, tPos)
             action = QAction(sName, self)
             action.triggered.connect(func)
             menu.addAction(action)
-        menu.exec_(gPos2)
+        menu.exec_(gPos)
 
-    def OnCreateAction(self, *args):
-        print("OnCreateAction:", args)
-
-
-
+    def OnCreateAction(self, sName, tPos, bClicked):
+        iID = CBlueChartMgr().NewChart(sName, tPos)
+        print("OnCreateAction:", sName, tPos, bClicked, iID)
+        CBlueChartMgr().SIG_ADD_CHART.emit(iID)
