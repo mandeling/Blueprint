@@ -7,7 +7,7 @@
 import sys
 import misc
 
-from . import scene
+from . import scene, config
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QApplication, QMenu, QAction
 from PyQt5.QtGui import QBrush, QColor
 from PyQt5.QtCore import Qt
@@ -47,9 +47,8 @@ class CBlueprintView(QGraphicsView):
         pos = pos1.x(), pos1.y()
         menu = QMenu(self)
         print(gPos1, gPos2, pos1, pos)
-        lstMenu = ["添加", "删除", "移动"]
-        for iIndex, sName in enumerate(lstMenu):
-            func = misc.Functor(self.OnCreateAction, iIndex, pos, sName)
+        for sName in config.CHART_DATA:
+            func = misc.Functor(self.OnCreateAction, pos, sName)
             action = QAction(sName, self)
             action.triggered.connect(func)
             menu.addAction(action)
