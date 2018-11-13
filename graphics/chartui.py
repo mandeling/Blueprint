@@ -12,6 +12,9 @@ class CBlueChartUI(QGraphicsProxyWidget):
         super(CBlueChartUI, self).__init__(parent)
         self.m_BlueChart = weakref.ref(oBlueChart)
         self.m_Scene = weakref.ref(oScene)
+        self.m_StartPos = None
+        self.m_ChartIsMoving = False
+
         sName = oBlueChart.GetName()
         self.m_BlueChartWidget = Ui_BlueChartWidget()
         self.m_BlueChartWidgetParent = slotui.CWidget()
@@ -33,7 +36,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.setWidget(self.m_BlueChartWidgetParent)
         self.setZValue(4)
 
-
     def SetUnselectedWidget(self):
         self.m_BlueChartWidgetParent.SetStyle("Widget")
         self.setZValue(self.zValue()-10)
@@ -41,6 +43,23 @@ class CBlueChartUI(QGraphicsProxyWidget):
         name = self.m_ChangeCharName.toPlainText()
         # TODO
         self.setSelected(False)
+
+    def mousePressEvent(self, event):
+        super(CBlueChartUI, self).mousePressEvent(event)
+        event.accept()
+        if event.button() == Qt.LeftButton:
+            self.m_StartPos = event.pos()
+            self.m_ChartIsMoving = False
+
+    def mouseMoveEvent(self, event):
+        super(CBlueChartUI, self).mouseMoveEvent(event)
+        self.SetMouseMovePos(self.m_StartPos, event.pos())
+
+    def SetMouseMovePos(self, sPos, ePos):
+        pos = self.pos()
+        x = pos.x() + ePos.x() - sPos.x()
+        y = pos.y() + ePos.y() - sPos.y()
+        self.setPos(x, y)
 
 
 class CBlueChartWidget(Ui_BlueChartWidget, slotui.CWidget):

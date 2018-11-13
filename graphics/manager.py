@@ -20,7 +20,6 @@ class CBlueChartMgr(QObject):
         super(CBlueChartMgr, self).__init__()
         self.m_ActionItem = {}
         self.m_Index = 0
-        print("----")
 
     def NewChart(self, sName, tPos):
         self.m_Index += 1
@@ -38,7 +37,7 @@ class CBlueChart:
     def __init__(self, id, sName, tPos):
         self.m_ID = id
         self.m_Name = sName
-        self.m_Pos = tPos
+        self.m_Pos = tPos   # 相对于场景的位置
 
     def GetName(self):
         return self.m_Name

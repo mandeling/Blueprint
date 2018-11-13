@@ -24,13 +24,6 @@ class CWidget(QWidget):
             iEnd = tmpStyle.find("}") + 1
             sWidgetPressStyle = tmpStyle[:iEnd]
             style = style.replace(sWidgetPressStyle, "")
-
-            # iBegin = tmpStyle.find("{") + 1
-            # iEnd = tmpStyle.find("}")
-            # sWidgetPressStyle = tmpStyle[iBegin:iEnd]
-            # sWidgetPressStyle = sWidgetPressStr + sWidgetPressStyle + "}\n"
-            # style = style.replace()
-            # style = style.remove(style.indexOf(sWidgetPressStr), len(sWidgetPressStyle))
         self.m_Stype["Widget"] = style + sWidgetStyle
         self.m_Stype["Press"] = style + sWidgetPressStyle
 

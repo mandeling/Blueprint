@@ -42,11 +42,11 @@ class CBlueprintView(QGraphicsView):
     def contextMenuEvent(self, event):
         """右键上下文事件"""
         super(CBlueprintView, self).contextMenuEvent(event)
-        print("contextMenuEvent")
         lPos = event.pos()
         gPos = self.mapToGlobal(lPos)
-        tPos = lPos.x(), lPos.y()
-        self.m_Scene.SetPos(tPos)
+        sPos = self.mapToScene(lPos)
+        tPos = sPos.x(), sPos.y()
+        self.m_Scene.SetPos(sPos)
         menu = QMenu(self)
         for sName in config.CHART_DATA:
             func = misc.Functor(self.OnCreateAction, sName, tPos)
