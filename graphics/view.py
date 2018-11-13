@@ -46,7 +46,6 @@ class CBlueprintView(QGraphicsView):
         lPos = event.pos()
         gPos = self.mapToGlobal(lPos)
         tPos = lPos.x(), lPos.y()
-        print(lPos, gPos, tPos)
         self.m_Scene.SetPos(tPos)
         menu = QMenu(self)
         for sName in config.CHART_DATA:

@@ -18,11 +18,11 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).__init__(parent)
         self.m_ChartInfo = {}
         self.m_Pos = None   # 创建图表的位置
-        self.Init()
+        # self.Init()
         self.InitSignal()
 
     def Init(self):
-        self.setSceneRect(0, 0, 40, 30)  # 场景大小，传入item里面
+        self.setSceneRect(-1000, -1000, 1000, 1000)  # 场景大小，传入item里面
 
     def InitSignal(self):
         GetBlueChartMgr().SIG_ADD_CHART.connect(self.AddChartWidget)
@@ -44,11 +44,12 @@ class CBlueprintScene(QGraphicsScene):
         self.m_Pos = pos
 
     def AddChartWidget(self, iID):
-        print("=" * 30)
-        print(iID)
         oBlueChart = GetBlueChartMgr().GetChart(iID)
         oWidget = chartui.CBlueChartUI(oBlueChart, self)
         self.m_ChartInfo[iID] = oWidget
         self.addItem(oWidget)
         x, y = oBlueChart.GetPos()
-        oWidget.setPos(x, y)
+        oWidget.setPos(0, 0)
+        
+        print(x, y, iID, self.m_Pos)
+        print(self.sceneRect(), self.itemsBoundingRect())

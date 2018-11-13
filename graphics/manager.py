@@ -23,7 +23,6 @@ class CBlueChartMgr(QObject):
         print("----")
 
     def NewChart(self, sName, tPos):
-        print(self, self.m_Index)
         self.m_Index += 1
         oAction = CBlueChart(self.m_Index, sName, tPos)
         self.m_ActionItem[self.m_Index] = oAction
