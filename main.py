@@ -5,9 +5,10 @@
 @Desc: 
 """
 
+import init
 import sys
-import misc
 import graphics
+import misc
 
 def Start():
     sys.excepthook = misc.HandleException
