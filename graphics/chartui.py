@@ -3,7 +3,7 @@ import weakref
 from . import slotui
 from ui.BlueChartWidget import Ui_BlueChartWidget
 from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QWidget
-from PyQt5.QtCore import Qt, QPointF, QRectF
+from PyQt5.QtCore import Qt, QPointF, QRectF, pyqtSignal
 from PyQt5.QtGui import QFont
 
 
@@ -25,17 +25,11 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_BlueChartWidgetParent.GetStyle()
         sName = self.m_BlueChart().GetName()
         self.m_BlueChartWidget.lb_Title.setText(sName)
-        self.m_ChangeCharName = QGraphicsTextItem(self.GetTitle(), self)
-        self.m_ChangeCharName.setTextInteractionFlags(Qt.TextEditorInteraction)
-        self.m_ChangeCharName.setCursor(Qt.IBeamCursor)
-        font = QFont()
-        font.setPixelSize(18)
-        self.m_ChangeCharName.setFont(font)
-        self.m_ChangeCharName.setZValue(8)
+
+        self.m_ChangeCharName = CGraphicsTextItem(self.GetTitle(), self)
         self.m_ChangeCharName.setParentItem(self)
-        tt = self.m_BlueChartWidget.lb_Title.pos() + QPointF(10, 10)
-        self.m_ChangeCharName.setPos(tt)
         self.m_ChangeCharName.setTextWidth(self.m_BlueChartWidget.top.width())
+
         self.SetUnselectedWidget()
         self.m_BlueChartWidget.btn_ShowProperty.setCursor(Qt.PointingHandCursor)
         self.m_BlueChartWidget.btn_Source.hide()
@@ -50,7 +44,8 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.setZValue(4)
 
     def InitSingle(self):
-        self.m_BlueChartWidget.btn_ShowProperty.clicked.connect(self.ShowProperty)
+        self.m_BlueChartWidget.btn_ShowProperty.clicked.connect(self.S_ShowProperty)
+        self.m_ChangeCharName.SING_CHANGE_TITLE.connect(self.S_ChangeName)
 
     def SetUnselectedWidget(self):
         self.m_BlueChartWidgetParent.SetStyle("Widget")
@@ -76,22 +71,12 @@ class CBlueChartUI(QGraphicsProxyWidget):
         if self.isSelected() and event.button() == Qt.LeftButton:
             pos = event.pos()
             rect = QRectF(self.m_BlueChartWidget.top.rect())
-            print(rect)
             rect.setWidth(rect.width() / 2)
             if rect.contains(pos):
-                print("1111111")
                 self.m_ChangeCharName.show()
                 self.m_ChangeCharName.setPlainText(self.GetTitle())
-                self.m_BlueChartWidget.lb_Title.setText("")
-            else:
-                print("2222222")
-                self.m_ChangeCharName.hide()
-                sName = self.m_ChangeCharName.toPlainText()
-                if sName != "":
-                    self.m_BlueChart().SetName(sName)
-                    self.m_ChangeCharName.setPlainText("")
+                self.m_BlueChartWidget.lb_Title.hide()
         self.setSelected(True)
-
 
     def GetTitle(self):
         return self.m_BlueChartWidget.lb_Title.text()
@@ -104,5 +89,39 @@ class CBlueChartUI(QGraphicsProxyWidget):
         y = pos.y() + ePos.y() - sPos.y()
         self.setPos(x, y)
 
-    def ShowProperty(self):
+    def S_ShowProperty(self):
         pass
+
+    def S_ChangeName(self, sTitle):
+        sOldTitle = self.GetTitle()
+        if sOldTitle != sTitle:
+            self.m_BlueChartWidget.lb_Title.setText(sTitle)
+            self.m_BlueChart().SetName(sTitle)
+        self.m_BlueChartWidget.lb_Title.show()
+
+
+class CGraphicsTextItem(QGraphicsTextItem):
+
+    SING_CHANGE_TITLE = pyqtSignal(str)
+
+    def __init__(self, sName, parent=None):
+        super(CGraphicsTextItem, self).__init__(sName, parent)
+        self.Init()
+
+    def Init(self):
+        self.setTextInteractionFlags(Qt.TextEditorInteraction)
+        self.setCursor(Qt.IBeamCursor)
+
+        font = QFont()
+        font.setPixelSize(18)
+        self.setFont(font)
+        self.setZValue(8)
+        self.setPos(10, 10)
+
+    def focusOutEvent(self, event):
+        super(CGraphicsTextItem, self).focusOutEvent(event)
+        sTitle = self.toPlainText()
+        if sTitle:
+            self.SING_CHANGE_TITLE.emit(sTitle)
+        self.setPlainText("")
+        self.hide()

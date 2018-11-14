@@ -25,7 +25,7 @@ class CBlueprintScene(QGraphicsScene):
         self.setSceneRect(-10000, -10000, 20000, 20000)  # 场景大小，传入item里面
 
     def InitSignal(self):
-        GetBlueChartMgr().SIG_ADD_CHART.connect(self.AddChartWidget)
+        GetBlueChartMgr().SIG_ADD_CHART.connect(self.S_AddChartWidget)
 
     def wheelEvent(self, event):
         super(CBlueprintScene, self).wheelEvent(event)
@@ -48,7 +48,7 @@ class CBlueprintScene(QGraphicsScene):
     def SetPos(self, pos):
         self.m_Pos = pos
 
-    def AddChartWidget(self, iID):
+    def S_AddChartWidget(self, iID):
         oBlueChart = GetBlueChartMgr().GetChart(iID)
         oWidget = chartui.CBlueChartUI(oBlueChart, self)
         self.m_ChartInfo[iID] = oWidget

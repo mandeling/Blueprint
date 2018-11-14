@@ -93,13 +93,13 @@ class CBlueprintView(QGraphicsView):
         self.m_Scene.SetPos(sPos)
         menu = QMenu(self)
         for sName in config.CHART_DATA:
-            func = misc.Functor(self.OnCreateAction, sName, tPos)
+            func = misc.Functor(self.S_OnCreateAction, sName, tPos)
             action = QAction(sName, self)
             action.triggered.connect(func)
             menu.addAction(action)
         menu.exec_(gPos)
 
-    def OnCreateAction(self, sName, tPos, bClicked):
+    def S_OnCreateAction(self, sName, tPos, bClicked):
         iID = GetBlueChartMgr().NewChart(sName, tPos)
-        print("OnCreateAction:", sName, tPos, bClicked, iID)
+        print("S_OnCreateAction:", sName, tPos, bClicked, iID)
         GetBlueChartMgr().SIG_ADD_CHART.emit(iID)
