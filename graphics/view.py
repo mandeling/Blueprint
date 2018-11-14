@@ -30,6 +30,9 @@ class CBlueprintView(QGraphicsView):
         self.setDragMode(QGraphicsView.RubberBandDrag)
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
         self.setResizeAnchor(QGraphicsView.NoAnchor)
+        # 隐藏滚动条
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def mousePressEvent(self, event):
         super(CBlueprintView, self).mousePressEvent(event)

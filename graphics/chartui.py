@@ -56,6 +56,8 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.SetMouseMovePos(self.m_StartPos, event.pos())
 
     def SetMouseMovePos(self, sPos, ePos):
+        if not (sPos and ePos):
+            return
         pos = self.pos()
         x = pos.x() + ePos.x() - sPos.x()
         y = pos.y() + ePos.y() - sPos.y()

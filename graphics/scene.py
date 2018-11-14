@@ -22,10 +22,15 @@ class CBlueprintScene(QGraphicsScene):
         self.InitSignal()
 
     def Init(self):
-        self.setSceneRect(-10000, -10000, 10000, 10000)  # 场景大小，传入item里面
+        self.setSceneRect(-10000, -10000, 20000, 20000)  # 场景大小，传入item里面
 
     def InitSignal(self):
         GetBlueChartMgr().SIG_ADD_CHART.connect(self.AddChartWidget)
+
+    def wheelEvent(self, event):
+        super(CBlueprintScene, self).wheelEvent(event)
+        # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
+        event.accept()
 
     # def mousePressEvent(self, event):
     #     super(CBlueprintScene, self).mousePressEvent(event)
