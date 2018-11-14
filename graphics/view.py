@@ -33,11 +33,32 @@ class CBlueprintView(QGraphicsView):
 
     def mousePressEvent(self, event):
         super(CBlueprintView, self).mousePressEvent(event)
-        # print("mousePressEvent")
+        if event.button() == Qt.LeftButton:
+            self.setDragMode(QGraphicsView.RubberBandDrag)
+        else:
+            self.setDragMode(QGraphicsView.NoDrag)
+
+        if event.button() == Qt.MidButton:
+            self.setTransformationAnchor(QGraphicsView.NoAnchor)
+            self.setDragMode(QGraphicsView.ScrollHandDrag)
+            self.m_StartPos = event.pos()
 
     def mouseMoveEvent(self, event):
         super(CBlueprintView, self).mouseMoveEvent(event)
-        # print("mouseMoveEvent")
+        if not self.m_StartPos:
+            return
+        pos = event.pos()
+        offsetX, offsetY = pos.x() - self.m_StartPos.x(), pos.y()-self.m_StartPos.y()
+        offsetX /= self.m_Scale
+        offsetY /= self.m_Scale
+        self.translate(offsetX, offsetY)
+        self.m_StartPos = pos
+
+    def mouseReleaseEvent(self, event):
+        super(CBlueprintView, self).mouseReleaseEvent(event)
+        if event.button() == Qt.MidButton:
+            self.m_StartPos = None
+        self.setDragMode(QGraphicsView.RubberBandDrag)
 
     def wheelEvent(self, event):
         """ctrl+滑轮滚动缩放"""
