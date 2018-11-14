@@ -3,7 +3,7 @@ import weakref
 from . import slotui
 from ui.BlueChartWidget import Ui_BlueChartWidget
 from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QWidget
-from PyQt5.QtCore import Qt, QPointF
+from PyQt5.QtCore import Qt, QPointF, QRectF
 from PyQt5.QtGui import QFont
 
 
@@ -25,7 +25,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_BlueChartWidgetParent.GetStyle()
         sName = self.m_BlueChart().GetName()
         self.m_BlueChartWidget.lb_Title.setText(sName)
-        self.m_ChangeCharName = QGraphicsTextItem(self.m_BlueChartWidget.lb_Title.text(), self)
+        self.m_ChangeCharName = QGraphicsTextItem(self.GetTitle(), self)
         self.m_ChangeCharName.setTextInteractionFlags(Qt.TextEditorInteraction)
         self.m_ChangeCharName.setCursor(Qt.IBeamCursor)
         font = QFont()
@@ -33,7 +33,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_ChangeCharName.setFont(font)
         self.m_ChangeCharName.setZValue(8)
         self.m_ChangeCharName.setParentItem(self)
-        tt = self.m_BlueChartWidget.lb_Title.pos() + QPointF(10,10)
+        tt = self.m_BlueChartWidget.lb_Title.pos() + QPointF(10, 10)
         self.m_ChangeCharName.setPos(tt)
         self.m_ChangeCharName.setTextWidth(self.m_BlueChartWidget.top.width())
         self.SetUnselectedWidget()
@@ -70,6 +70,31 @@ class CBlueChartUI(QGraphicsProxyWidget):
     def mouseMoveEvent(self, event):
         super(CBlueChartUI, self).mouseMoveEvent(event)
         self.SetMouseMovePos(self.m_StartPos, event.pos())
+
+    def mouseReleaseEvent(self, event):
+        super(CBlueChartUI, self).mouseReleaseEvent(event)
+        if self.isSelected() and event.button() == Qt.LeftButton:
+            pos = event.pos()
+            rect = QRectF(self.m_BlueChartWidget.top.rect())
+            print(rect)
+            rect.setWidth(rect.width() / 2)
+            if rect.contains(pos):
+                print("1111111")
+                self.m_ChangeCharName.show()
+                self.m_ChangeCharName.setPlainText(self.GetTitle())
+                self.m_BlueChartWidget.lb_Title.setText("")
+            else:
+                print("2222222")
+                self.m_ChangeCharName.hide()
+                sName = self.m_ChangeCharName.toPlainText()
+                if sName != "":
+                    self.m_BlueChart().SetName(sName)
+                    self.m_ChangeCharName.setPlainText("")
+        self.setSelected(True)
+
+
+    def GetTitle(self):
+        return self.m_BlueChartWidget.lb_Title.text()
 
     def SetMouseMovePos(self, sPos, ePos):
         if not (sPos and ePos):

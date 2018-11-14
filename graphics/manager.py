@@ -42,6 +42,9 @@ class CBlueChart:
     def GetName(self):
         return self.m_Name
 
+    def SetName(self, sName):
+        self.m_Name = sName
+
     def GetID(self):
         return self.m_ID
 
