@@ -16,7 +16,7 @@ def HandleException(execType, execValue, tb):
         return
     msg = "".join(traceback.format_tb(tb))
     msg = msg + str(execValue) + "\n"
-    while hasattr(tb, "tb_next"):
+    while tb.tb_next:
         tb = tb.tb_next
     msg += "%s\n" % tb.tb_frame.f_locals
     print(msg)
