@@ -5,12 +5,10 @@
 @Desc: 
 """
 
-from . import item, chartui
+from . import chartui
 from .manager import GetBlueChartMgr
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QApplication, QMenu, QAction
-from PyQt5.QtGui import QBrush, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QGraphicsScene
 
 
 class CBlueprintScene(QGraphicsScene):
@@ -31,19 +29,6 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).wheelEvent(event)
         # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
         event.accept()
-
-    # def mousePressEvent(self, event):
-    #     super(CBlueprintScene, self).mousePressEvent(event)
-    #     print("scene.mousePressEvent")
-    #     if event.isAccepted():
-    #         return
-    #     if event.button() == Qt.LeftButton:
-    #         point = event.scenePos()
-    #         sceneRect = self.sceneRect()
-    #         oItem = item.CBlueprintItem(sceneRect)
-    #         oItem.setPos(point.x(), point.y())
-    #         self.addItem(oItem)
-    #         self.m_ItemList.append(oItem)
 
     def SetPos(self, pos):
         self.m_Pos = pos

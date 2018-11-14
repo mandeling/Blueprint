@@ -1,5 +1,4 @@
 
-import misc
 
 from PyQt5.QtCore import pyqtSignal, QObject
 

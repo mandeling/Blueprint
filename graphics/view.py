@@ -4,7 +4,6 @@
 @Date: 2018-11-08 16:44:23
 @Desc: 蓝图
 """
-import sys
 import misc
 
 from . import scene, config
@@ -101,5 +100,4 @@ class CBlueprintView(QGraphicsView):
 
     def S_OnCreateAction(self, sName, tPos, bClicked):
         iID = GetBlueChartMgr().NewChart(sName, tPos)
-        print("S_OnCreateAction:", sName, tPos, bClicked, iID)
         GetBlueChartMgr().SIG_ADD_CHART.emit(iID)

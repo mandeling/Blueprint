@@ -1,10 +1,12 @@
 
 import weakref
-from . import slotui
-from ui.BlueChartWidget import Ui_BlueChartWidget
-from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QWidget
-from PyQt5.QtCore import Qt, QPointF, QRectF, pyqtSignal
+
+from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem
+from PyQt5.QtCore import Qt, QRectF, pyqtSignal
 from PyQt5.QtGui import QFont
+
+from ui.BlueChartWidget import Ui_BlueChartWidget
+from . import slotui
 
 
 class CBlueChartUI(QGraphicsProxyWidget):
