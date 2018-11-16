@@ -5,10 +5,10 @@
 @Desc: 
 """
 
-from . import chartui
-from .manager import GetBlueChartMgr
-
 from PyQt5.QtWidgets import QGraphicsScene
+
+from . import chartui
+from .bluechartmgr import GetBlueChartMgr
 
 
 class CBlueprintScene(QGraphicsScene):
@@ -33,10 +33,10 @@ class CBlueprintScene(QGraphicsScene):
     def SetPos(self, pos):
         self.m_Pos = pos
 
-    def S_AddChartWidget(self, iID):
-        oBlueChart = GetBlueChartMgr().GetChart(iID)
+    def S_AddChartWidget(self, idChart):
+        oBlueChart = GetBlueChartMgr().GetChart(idChart)
         oWidget = chartui.CBlueChartUI(oBlueChart, self)
-        self.m_ChartInfo[iID] = oWidget
+        self.m_ChartInfo[idChart] = oWidget
         self.addItem(oWidget)
         x, y = oBlueChart.GetPos()
         oWidget.setPos(x, y)

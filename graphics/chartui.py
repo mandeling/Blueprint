@@ -1,12 +1,14 @@
 
 import weakref
+import miscqt
 
 from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem
-from PyQt5.QtCore import Qt, QRectF, pyqtSignal
+from PyQt5.QtCore import Qt, QRectF, pyqtSignal, QPoint
 from PyQt5.QtGui import QFont
 
 from ui.BlueChartWidget import Ui_BlueChartWidget
 from . import slotui
+from .slotmgr import GetSlotMgr
 
 
 class CBlueChartUI(QGraphicsProxyWidget):
@@ -20,6 +22,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_BlueChartWidgetParent = slotui.CWidget()
         self.m_ChangeCharName = None
         self.InitUI()
+        self.InitSlot()
         self.InitSingle()
 
     def InitUI(self):
@@ -34,7 +37,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
 
         self.SetUnselectedWidget()
         self.m_BlueChartWidget.btn_ShowProperty.setCursor(Qt.PointingHandCursor)
-        self.m_BlueChartWidget.btn_Source.hide()
+        # self.m_BlueChartWidget.btn_Source.hide()
         self.setWidget(self.m_BlueChartWidgetParent)
         self.setAcceptHoverEvents(True)
         self.setAcceptedMouseButtons(Qt.LeftButton)
@@ -44,6 +47,21 @@ class CBlueChartUI(QGraphicsProxyWidget):
             QGraphicsItem.ItemSendsGeometryChanges
         )
         self.setZValue(4)
+
+    def InitSlot(self):
+        """四个槽的初始化,先手动设置"""
+        for oParent in (
+            self.m_BlueChartWidget.btn_Input,
+            self.m_BlueChartWidget.btn_Start,
+            self.m_BlueChartWidget.btn_Source,
+            self.m_BlueChartWidget.btn_End,
+        ):
+            pos = oParent.mapToParent(QPoint(0, 0))
+            size = (oParent.width(), oParent.height())
+            idSlot = miscqt.NewUuid()
+            oSlot = GetSlotMgr().NewItem(idSlot, 1, self.m_BlueChart().GetID(), pos, size)
+            oSlotUI = slotui.CSlotUI(idSlot, oSlot)
+            GetSlotMgr().AddView(idSlot, oSlotUI)
 
     def InitSingle(self):
         self.m_BlueChartWidget.btn_ShowProperty.clicked.connect(self.S_ShowProperty)
@@ -92,6 +110,8 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.setPos(x, y)
 
     def S_ShowProperty(self):
+        import miscqt
+        miscqt.NewUuid()
         pass
 
     def S_ChangeName(self, sTitle):

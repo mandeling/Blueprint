@@ -1,5 +1,5 @@
 
-
+import miscqt
 from PyQt5.QtCore import pyqtSignal, QObject
 
 g_BlueChartMgr = None
@@ -13,18 +13,17 @@ def GetBlueChartMgr():
 
 
 class CBlueChartMgr(QObject):
-    SIG_ADD_CHART = pyqtSignal(int)
+    SIG_ADD_CHART = pyqtSignal(str)
 
     def __init__(self):
         super(CBlueChartMgr, self).__init__()
         self.m_ActionItem = {}
-        self.m_Index = 0
 
     def NewChart(self, sName, tPos):
-        self.m_Index += 1
-        oAction = CBlueChart(self.m_Index, sName, tPos)
-        self.m_ActionItem[self.m_Index] = oAction
-        return self.m_Index
+        idChart = miscqt.NewUuid()
+        oAction = CBlueChart(idChart, sName, tPos)
+        self.m_ActionItem[idChart] = oAction
+        return idChart
 
     def GetChart(self, iID):
         if iID in self.m_ActionItem:

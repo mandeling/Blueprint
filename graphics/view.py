@@ -7,7 +7,7 @@
 import misc
 
 from . import scene, config
-from .manager import GetBlueChartMgr
+from .bluechartmgr import GetBlueChartMgr
 
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QApplication, QMenu, QAction
 from PyQt5.QtGui import QBrush, QColor
@@ -99,5 +99,5 @@ class CBlueprintView(QGraphicsView):
         menu.exec_(gPos)
 
     def S_OnCreateAction(self, sName, tPos, bClicked):
-        iID = GetBlueChartMgr().NewChart(sName, tPos)
-        GetBlueChartMgr().SIG_ADD_CHART.emit(iID)
+        idChart = GetBlueChartMgr().NewChart(sName, tPos)
+        GetBlueChartMgr().SIG_ADD_CHART.emit(idChart)
