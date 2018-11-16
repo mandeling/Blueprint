@@ -2,7 +2,7 @@
 import weakref
 import miscqt
 
-from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem
+from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QPushButton
 from PyQt5.QtCore import Qt, QRectF, pyqtSignal, QPoint
 from PyQt5.QtGui import QFont
 
@@ -56,11 +56,20 @@ class CBlueChartUI(QGraphicsProxyWidget):
             self.m_BlueChartWidget.btn_Source,
             self.m_BlueChartWidget.btn_End,
         ):
-            pos = oParent.mapToParent(QPoint(0, 0))
+            qpos = oParent.mapToParent(QPoint(0, 0))
+            pos = (qpos.x(), qpos.y())
             size = (oParent.width(), oParent.height())
             idSlot = miscqt.NewUuid()
             oSlot = GetSlotMgr().NewItem(idSlot, 1, self.m_BlueChart().GetID(), pos, size)
             oSlotUI = slotui.CSlotUI(idSlot, oSlot)
+            oSlotUI.setParentItem(self)
+            x, y = self.pos().x(), self.pos().y()
+            x += oParent.x()
+            y += oParent.y()
+            mfsPos = oSlotUI.mapFromScene(x, y)
+            mtpPos = oSlotUI.mapToParent(mfsPos)
+            oSlotUI.setPos(mtpPos.x(), mtpPos.y())
+
             GetSlotMgr().AddView(idSlot, oSlotUI)
 
     def InitSingle(self):
@@ -147,3 +156,49 @@ class CGraphicsTextItem(QGraphicsTextItem):
             self.SING_CHANGE_TITLE.emit(sTitle)
         self.setPlainText("")
         self.hide()
+
+
+QSS_STYLE = """
+QWidget#BlueChartWidget{
+    background:transparent;
+}
+QWidget#BCWidget{
+    background:rgba(0, 0, 0, 200);
+    border-style:solid;
+    border-width:0px;
+    border-radius:10px;
+}
+QWidget#top{
+    border-style:solid;
+    border-width:0px;
+    background:qlineargradient(spread:pad, x1:0.00564972, y1:0.358, x2:1, y2:0.637, stop:0 rgba(0, 104, 183, 200), stop:1 rgba(0, 160, 233, 50));
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+}
+QLabel{
+    color:white;
+}
+QPushButton{
+    background-color:transparent;
+    color:white;
+    border:none;
+}
+QPushButton:hover{
+    background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
+    border-image:transparent;
+    color:white;
+}
+QWidget#outline{
+    background:transparent;
+    border:4px solid rgb(244, 100, 0);
+    border-radius:14px;
+}
+"""
+
+
+class CChartButtonUI(QPushButton):
+    def __init__(self, parent=None):
+        super(CChartButtonUI, self).__init__(parent)
+        self.m_UID = miscqt.NewUuid()

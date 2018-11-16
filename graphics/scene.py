@@ -6,7 +6,8 @@
 """
 
 from PyQt5.QtWidgets import QGraphicsScene
-
+from PyQt5.QtGui import QTransform
+from PyQt5.QtCore import Qt
 from . import chartui
 from .bluechartmgr import GetBlueChartMgr
 
@@ -15,7 +16,9 @@ class CBlueprintScene(QGraphicsScene):
     def __init__(self, parent=None):
         super(CBlueprintScene, self).__init__(parent)
         self.m_ChartInfo = {}
+        self.m_SlotInfo = {}
         self.m_Pos = None   # 创建图表的位置,已换算成对于场景的位置
+        self.m_LeftBtnStartPos = None
         self.Init()
         self.InitSignal()
 
@@ -24,6 +27,26 @@ class CBlueprintScene(QGraphicsScene):
 
     def InitSignal(self):
         GetBlueChartMgr().SIG_ADD_CHART.connect(self.S_AddChartWidget)
+
+    def mousePressEvent(self, event):
+        super(CBlueprintScene, self).mousePressEvent(event)
+        if event.isAccepted():
+            return
+        sPos = event.scenePos()
+        if self.itemAt(sPos, QTransform()):
+            return
+        if event.button() == Qt.LeftButton or event.button() == Qt.RightButton:
+            GetBlueChartMgr().ClearSelect()
+        if event.button() == Qt.LeftButton:
+            self.m_LeftBtnStartPos = sPos
+
+    def mouseMoveEvent(self, event):
+        super(CBlueprintScene, self).mouseMoveEvent(event)
+        if not self.m_LeftBtnStartPos:
+            return
+
+    def mouseReleaseEvent(self, event):
+        super(CBlueprintScene, self).mouseReleaseEvent(event)
 
     def wheelEvent(self, event):
         super(CBlueprintScene, self).wheelEvent(event)

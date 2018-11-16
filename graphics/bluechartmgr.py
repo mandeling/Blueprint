@@ -18,6 +18,7 @@ class CBlueChartMgr(QObject):
     def __init__(self):
         super(CBlueChartMgr, self).__init__()
         self.m_ActionItem = {}
+        self.m_SelectItem = []
 
     def NewChart(self, sName, tPos):
         idChart = miscqt.NewUuid()
@@ -29,6 +30,16 @@ class CBlueChartMgr(QObject):
         if iID in self.m_ActionItem:
             return self.m_ActionItem[iID]
         return None
+
+    def AddSelect(self, uid):
+        if uid not in self.m_ActionItem:
+            print("bm error", uid)
+            return
+        if uid not in self.m_SelectItem:
+            self.m_SelectItem.append(uid)
+
+    def ClearSelect(self):
+        self.m_SelectItem = []
 
 
 class CBlueChart:

@@ -50,3 +50,6 @@ class CSlot:
 
     def GetPos(self):
         return self.m_Pos
+
+    def GetSize(self):
+        return self.m_Size
