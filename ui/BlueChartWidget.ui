@@ -111,7 +111,7 @@ border-radius:14px;
             <string/>
            </property>
            <property name="icon">
-            <iconset resource="res.qrc">
+            <iconset>
              <normaloff>:/icon/icon_more.png</normaloff>:/icon/icon_more.png</iconset>
            </property>
            <property name="iconSize">
@@ -134,7 +134,7 @@ border-radius:14px;
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/icon/icon_lineof.png</normaloff>:/icon/icon_lineof.png</iconset>
+            <normaloff>:/icon/btn_1.png</normaloff>:/icon/btn_1.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -167,7 +167,7 @@ border-radius:14px;
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/icon/icon_lineof.png</normaloff>:/icon/icon_lineof.png</iconset>
+            <normaloff>:/icon/btn_2.png</normaloff>:/icon/btn_2.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -188,7 +188,7 @@ border-radius:14px;
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/icon/icon_res.png</normaloff>:/icon/icon_res.png</iconset>
+            <normaloff>:/icon/btn_3.png</normaloff>:/icon/btn_3.png</iconset>
           </property>
           <property name="iconSize">
            <size>
@@ -221,7 +221,7 @@ border-radius:14px;
           </property>
           <property name="icon">
            <iconset resource="res.qrc">
-            <normaloff>:/icon/icon_lineof.png</normaloff>:/icon/icon_lineof.png</iconset>
+            <normaloff>:/icon/btn_4.png</normaloff>:/icon/btn_4.png</iconset>
           </property>
           <property name="iconSize">
            <size>

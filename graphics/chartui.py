@@ -201,6 +201,7 @@ class CBlueChartWidget(QWidget):
     def InitUI(self):
         self.setObjectName("CBlueChartWidget")
         self.setStyleSheet(QSS_STYLE)
+        self.setCursor(Qt.SizeAllCursor)
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
@@ -255,11 +256,11 @@ class CChartButtonUI(QPushButton):
         self.InitUI()
 
     def InitUI(self):
+        self.setCursor(Qt.PointingHandCursor)
         if self.m_Type == OUTPUT_BTN_TYPE:
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
         icon = QtGui.QIcon()
         pix = ":/icon/btn_%s.png" % self.m_Info["type"]
-        print(pix)
         icon.addPixmap(QtGui.QPixmap(pix), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setIcon(icon)
         self.setIconSize(QtCore.QSize(20, 20))
@@ -267,3 +268,14 @@ class CChartButtonUI(QPushButton):
 
     def GetUid(self):
         return self.m_UID
+
+    def mousePressEvent(self, event):
+        super(CChartButtonUI, self).mousePressEvent(event)
+        event.accept()
+        print("click mousePressEvent", self.m_UID)
+
+    def mouseMoveEvent(self, event):
+        super(CChartButtonUI, self).mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        super(CChartButtonUI, self).mouseReleaseEvent(event)
