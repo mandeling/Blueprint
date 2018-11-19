@@ -31,6 +31,7 @@ CHART_DATA = {
             {"type": 3, "name": "Output1"},
             {"type": 1, "name": "Output2"},
             {},
+            {"type": 4, "name": "Output3"},
         ],
     },
 }

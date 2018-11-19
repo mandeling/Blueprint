@@ -21,15 +21,12 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_StartPos = None
         self.m_ChartIsMoving = False
         self.m_BlueChartWidget = CBlueChartWidget(sName, config.CHART_DATA[sName])
-        # self.m_BlueChartWidgetParent = slotui.CWidget()
         self.m_ChangeCharName = None
         self.InitUI()
         # self.InitSlot()
         self.InitSingle()
 
     def InitUI(self):
-        # self.m_BlueChartWidget.setupUi(self.m_BlueChartWidgetParent)
-        # self.m_BlueChartWidgetParent.GetStyle()
         sName = self.m_BlueChart().GetName()
         self.m_BlueChartWidget.lb_Title.setText(sName)
 
@@ -38,9 +35,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_ChangeCharName.setTextWidth(self.m_BlueChartWidget.top.width())
         self.m_ChangeCharName.hide()
 
-        # self.SetUnselectedWidget()
-        # self.m_BlueChartWidget.btn_ShowProperty.setCursor(Qt.PointingHandCursor)
-        # self.m_BlueChartWidget.btn_Source.hide()
         self.setWidget(self.m_BlueChartWidget)
         self.setAcceptHoverEvents(True)
         self.setAcceptedMouseButtons(Qt.LeftButton)
@@ -76,16 +70,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
             GetSlotMgr().AddView(idSlot, oSlotUI)
 
     def InitSingle(self):
-        # self.m_BlueChartWidget.btn_ShowProperty.clicked.connect(self.S_ShowProperty)
         self.m_ChangeCharName.SING_CHANGE_TITLE.connect(self.S_ChangeName)
-
-    def SetUnselectedWidget(self):
-        self.m_BlueChartWidgetParent.SetStyle("Widget")
-        self.setZValue(self.zValue()-10)
-        self.m_ChangeCharName.hide()
-        name = self.m_ChangeCharName.toPlainText()
-        # TODO
-        self.setSelected(False)
 
     def mousePressEvent(self, event):
         super(CBlueChartUI, self).mousePressEvent(event)
@@ -120,11 +105,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
         x = pos.x() + ePos.x() - sPos.x()
         y = pos.y() + ePos.y() - sPos.y()
         self.setPos(x, y)
-
-    def S_ShowProperty(self):
-        import miscqt
-        miscqt.NewUuid()
-        pass
 
     def S_ChangeName(self, sTitle):
         sOldTitle = self.GetTitle()
@@ -162,7 +142,7 @@ class CGraphicsTextItem(QGraphicsTextItem):
 
 
 QSS_STYLE = """
-QWidget#self{
+QWidget#CBlueChartWidget{
     background:transparent;
 }
 QWidget#BCWidget{
@@ -219,6 +199,7 @@ class CBlueChartWidget(QWidget):
             self.m_LstButton.append(oBtn.GetUid())
 
     def InitUI(self):
+        self.setObjectName("CBlueChartWidget")
         self.setStyleSheet(QSS_STYLE)
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -248,7 +229,7 @@ class CBlueChartWidget(QWidget):
         for i in range(maxLen):
             qHL = QtWidgets.QHBoxLayout()
             oInBtn = oOutBtn = None
-            if i < len(self.m_InputInfo) and self.m_InputInfo[i] :
+            if i < len(self.m_InputInfo) and self.m_InputInfo[i]:
                 oInBtn = CChartButtonUI(INPUT_BTN_TYPE, self.m_InputInfo[i], self.BCWidget)
             if i < len(self.m_OutputInfo) and self.m_OutputInfo[i]:
                 oOutBtn = CChartButtonUI(OUTPUT_BTN_TYPE, self.m_OutputInfo[i], self.BCWidget)
@@ -262,22 +243,8 @@ class CBlueChartWidget(QWidget):
                 self.AddButton(oOutBtn)
             self.verticalLayout_BCWidget.addLayout(qHL)
 
-        # spacerItem3 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-        # self.verticalLayout_BCWidget.addItem(spacerItem3)
         self.verticalLayout.addWidget(self.BCWidget)
 
-QSS_BUTTON = """
-QPushButton{
-    background-color:transparent;
-    color:white;
-    border:none;
-}
-QPushButton:hover{
-    background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
-    border-image:transparent;
-    color:white;
-}
-"""
 
 class CChartButtonUI(QPushButton):
     def __init__(self, iType, dInfo, parent=None):
@@ -288,7 +255,6 @@ class CChartButtonUI(QPushButton):
         self.InitUI()
 
     def InitUI(self):
-        # self.setStyleSheet(QSS_BUTTON)
         if self.m_Type == OUTPUT_BTN_TYPE:
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
         icon = QtGui.QIcon()
