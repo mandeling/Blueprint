@@ -1,6 +1,5 @@
 
 import miscqt
-from PyQt5.QtCore import pyqtSignal, QObject
 
 g_BlueChartMgr = None
 
@@ -12,8 +11,7 @@ def GetBlueChartMgr():
     return g_BlueChartMgr
 
 
-class CBlueChartMgr(QObject):
-    SIG_ADD_CHART = pyqtSignal(str)
+class CBlueChartMgr:
 
     def __init__(self):
         super(CBlueChartMgr, self).__init__()

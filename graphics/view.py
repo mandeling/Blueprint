@@ -100,4 +100,4 @@ class CBlueprintView(QGraphicsView):
 
     def S_OnCreateAction(self, sName, tPos, bClicked):
         idChart = GetBlueChartMgr().NewChart(sName, tPos)
-        GetBlueChartMgr().SIG_ADD_CHART.emit(idChart)
+        self.m_Scene.AddChartWidget(idChart, sName)

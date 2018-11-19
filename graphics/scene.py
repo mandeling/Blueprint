@@ -5,6 +5,8 @@
 @Desc: 
 """
 
+import weakref
+
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform
 from PyQt5.QtCore import Qt
@@ -19,6 +21,7 @@ class CBlueprintScene(QGraphicsScene):
         self.m_SlotInfo = {}
         self.m_Pos = None   # 创建图表的位置,已换算成对于场景的位置
         self.m_LeftBtnStartPos = None
+        self.m_View = weakref.ref(parent)
         self.Init()
         self.InitSignal()
 
@@ -26,7 +29,7 @@ class CBlueprintScene(QGraphicsScene):
         self.setSceneRect(-10000, -10000, 20000, 20000)  # 场景大小，传入item里面
 
     def InitSignal(self):
-        GetBlueChartMgr().SIG_ADD_CHART.connect(self.S_AddChartWidget)
+        pass
 
     def mousePressEvent(self, event):
         super(CBlueprintScene, self).mousePressEvent(event)
@@ -56,9 +59,9 @@ class CBlueprintScene(QGraphicsScene):
     def SetPos(self, pos):
         self.m_Pos = pos
 
-    def S_AddChartWidget(self, idChart):
+    def AddChartWidget(self, idChart, sName):
         oBlueChart = GetBlueChartMgr().GetChart(idChart)
-        oWidget = chartui.CBlueChartUI(oBlueChart, self)
+        oWidget = chartui.CBlueChartUI(oBlueChart, sName, self)
         self.m_ChartInfo[idChart] = oWidget
         self.addItem(oWidget)
         x, y = oBlueChart.GetPos()

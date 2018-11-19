@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="icon">
-        <file>icon_lineof.png</file>
-        <file>icon_more.png</file>
-        <file>icon_res.png</file>
+        <file>btn_1.png</file>
+        <file>btn_2.png</file>
+        <file>btn_3.png</file>
+        <file>btn_4.png</file>
     </qresource>
 </RCC>
