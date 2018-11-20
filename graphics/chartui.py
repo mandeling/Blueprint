@@ -70,7 +70,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
 
     def mousePressEvent(self, event):
         super(CBlueChartUI, self).mousePressEvent(event)
-        print("CBlueChartUI mousePressEvent")
         event.accept()
         if self.IsDrawLine():
             return
@@ -98,7 +97,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
-            print("CBlueChartUI.itemChange", change, value)
             for _, oSlotUI in GetSlotMgr().GetAllSlotUI().items():
                 line = oSlotUI.GetPinLine()
                 if line:

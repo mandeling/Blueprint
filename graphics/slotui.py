@@ -1,8 +1,8 @@
+import weakref
+
 from PyQt5.QtWidgets import QWidget, QGraphicsPolygonItem, QGraphicsPathItem, QGraphicsItem
 from PyQt5.QtCore import Qt, QPointF, QRectF
 from PyQt5.QtGui import QColor, QBrush, QPen, QPainterPath, QPainter, QPolygonF
-
-import weakref
 
 from .slotmgr import GetSlotMgr
 from . import define
@@ -88,7 +88,6 @@ class CSlotUI(QGraphicsPolygonItem):
                 GetSlotMgr().SetLastSelect(self.m_Uid)
 
     def mouseReleaseEvent(self, event):
-        print("slotui-mouseReleaseEvent")
         event.accept()
         super(CSlotUI, self).mouseReleaseEvent(event)
         if event.button() == Qt.LeftButton:
@@ -99,6 +98,8 @@ class CSlotUI(QGraphicsPolygonItem):
 
     def CanConnect(self, oSlotUI):
         """判断self是否可以和oSlotUI连接"""
+        if self.m_Uid == oSlotUI.m_Uid:
+            return False
         return True
 
     def SetPinLine(self, oPinLine):
@@ -147,8 +148,6 @@ class CPinLine(QGraphicsItem):
 
     def SetStartReceiver(self, oSlotUI):
         self.m_StartSlotUI = weakref.ref(oSlotUI)
-        # self.m_StartPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
-        print("StartPoint", self.m_StartPoint)
         self.UpdatePosition()
 
     def GetStartSlotUI(self):
@@ -158,8 +157,6 @@ class CPinLine(QGraphicsItem):
 
     def SetEndReceiver(self, oSlotUI):
         self.m_EndSlotUI = weakref.ref(oSlotUI)
-        # self.m_EndPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
-        print("EndPoint", self.m_EndPoint)
         self.UpdatePosition()
 
     def GetEndSlotUI(self):
