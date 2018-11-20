@@ -8,7 +8,7 @@ CHART_DATA = {
         "output": [
             {},
             {"type": 3, "name": "Output1"},
-            {"type": 4, "name": "Output2"},
+            {"type": 4, "name": "O2"},
         ],
     },
     "测试2": {

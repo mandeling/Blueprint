@@ -21,6 +21,7 @@ class CBlueprintScene(QGraphicsScene):
         self.m_SlotInfo = {}
         self.m_Pos = None   # 创建图表的位置,已换算成对于场景的位置
         self.m_LeftBtnStartPos = None
+        self.m_IsDrawLine = False
         self.m_View = weakref.ref(parent)
         self.Init()
         self.InitSignal()
@@ -67,3 +68,9 @@ class CBlueprintScene(QGraphicsScene):
         x, y = oBlueChart.GetPos()
         oWidget.setPos(x, y)
         # oWidget.setPos(self.m_Pos.x(), self.m_Pos.y())
+
+    def BeginConnect(self, oSlotui):
+        self.m_IsDrawLine = True
+
+    def EndConnect(self, oSlotui):
+        self.m_IsDrawLine = False

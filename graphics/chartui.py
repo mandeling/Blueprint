@@ -3,17 +3,17 @@ import weakref
 import miscqt
 
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QPushButton, QWidget
+from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QPushButton, QWidget, QGraphicsRectItem
 from PyQt5.QtCore import Qt, QRectF, pyqtSignal, QPoint
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QColor, QBrush
 
 from ui.BlueChartWidget import Ui_BlueChartWidget
-from . import slotui, config
+from . import slotui, config, define
 from .slotmgr import GetSlotMgr
 
 
 class CBlueChartUI(QGraphicsProxyWidget):
-    def __init__(self, oBlueChart, sName,  oScene, parent=None):
+    def __init__(self, oBlueChart, sName, oScene, parent=None):
         super(CBlueChartUI, self).__init__(parent)
         self.m_BlueChart = weakref.ref(oBlueChart)
         self.m_Name = sName
@@ -23,7 +23,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_BlueChartWidget = CBlueChartWidget(sName, config.CHART_DATA[sName])
         self.m_ChangeCharName = None
         self.InitUI()
-        # self.InitSlot()
+        self.InitSlot()
         self.InitSingle()
 
     def InitUI(self):
@@ -47,40 +47,41 @@ class CBlueChartUI(QGraphicsProxyWidget):
 
     def InitSlot(self):
         """四个槽的初始化,先手动设置"""
-        for oParent in (
-            self.m_BlueChartWidget.btn_Input,
-            self.m_BlueChartWidget.btn_Start,
-            self.m_BlueChartWidget.btn_Source,
-            self.m_BlueChartWidget.btn_End,
-        ):
-            qpos = oParent.mapToParent(QPoint(0, 0))
+        for uid, oBtn in self.m_BlueChartWidget.m_ButtonInfo.items():
+            qpos = oBtn.mapToParent(QPoint(0, 0))
             pos = (qpos.x(), qpos.y())
-            size = (oParent.width(), oParent.height())
-            idSlot = miscqt.NewUuid()
-            oSlot = GetSlotMgr().NewItem(idSlot, 1, self.m_BlueChart().GetID(), pos, size)
-            oSlotUI = slotui.CSlotUI(idSlot, oSlot)
+            size = (oBtn.width(), oBtn.height())
+            oSlot = GetSlotMgr().NewItem(uid, oBtn.GetType(), self.m_BlueChart().GetID(), pos, size)
+            oSlotUI = slotui.CSlotUI(uid, oSlot)
             oSlotUI.setParentItem(self)
             x, y = self.pos().x(), self.pos().y()
-            x += oParent.x()
-            y += oParent.y()
+            x += oBtn.x()
+            y += oBtn.y()
             mfsPos = oSlotUI.mapFromScene(x, y)
             mtpPos = oSlotUI.mapToParent(mfsPos)
             oSlotUI.setPos(mtpPos.x(), mtpPos.y())
-
-            GetSlotMgr().AddView(idSlot, oSlotUI)
+            GetSlotMgr().AddView(uid, oSlotUI)
 
     def InitSingle(self):
         self.m_ChangeCharName.SING_CHANGE_TITLE.connect(self.S_ChangeName)
 
+    def IsDrawLine(self):
+        return self.m_Scene().m_IsDrawLine
+
     def mousePressEvent(self, event):
         super(CBlueChartUI, self).mousePressEvent(event)
+        print("CBlueChartUI mousePressEvent")
         event.accept()
+        if self.IsDrawLine():
+            return
         if event.button() == Qt.LeftButton:
             self.m_StartPos = event.pos()
             self.m_ChartIsMoving = False
 
     def mouseMoveEvent(self, event):
         super(CBlueChartUI, self).mouseMoveEvent(event)
+        if self.IsDrawLine():
+            return
         self.SetMouseMovePos(self.m_StartPos, event.pos())
 
     def mouseReleaseEvent(self, event):
@@ -180,8 +181,6 @@ QWidget#outline{
 }
 """
 
-INPUT_BTN_TYPE = 0
-OUTPUT_BTN_TYPE = 1
 
 
 class CBlueChartWidget(QWidget):
@@ -190,13 +189,13 @@ class CBlueChartWidget(QWidget):
         self.m_Name = sName
         self.m_InputInfo = dInfo.get("input", [])
         self.m_OutputInfo = dInfo.get("output", [])
-        self.m_LstDefault = []
-        self.m_LstButton = []
+        self.m_ButtonInfo = {}
         self.InitUI()
 
     def AddButton(self, oBtn):
-        if oBtn:
-            self.m_LstButton.append(oBtn.GetUid())
+        if not oBtn:
+            return
+        self.m_ButtonInfo[oBtn.GetUid()] = oBtn
 
     def InitUI(self):
         self.setObjectName("CBlueChartWidget")
@@ -231,9 +230,9 @@ class CBlueChartWidget(QWidget):
             qHL = QtWidgets.QHBoxLayout()
             oInBtn = oOutBtn = None
             if i < len(self.m_InputInfo) and self.m_InputInfo[i]:
-                oInBtn = CChartButtonUI(INPUT_BTN_TYPE, self.m_InputInfo[i], self.BCWidget)
+                oInBtn = CChartButtonUI(define.INPUT_BTN_TYPE, self.m_InputInfo[i], self.BCWidget)
             if i < len(self.m_OutputInfo) and self.m_OutputInfo[i]:
-                oOutBtn = CChartButtonUI(OUTPUT_BTN_TYPE, self.m_OutputInfo[i], self.BCWidget)
+                oOutBtn = CChartButtonUI(define.OUTPUT_BTN_TYPE, self.m_OutputInfo[i], self.BCWidget)
             spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
             if oInBtn:
                 qHL.addWidget(oInBtn)
@@ -257,7 +256,7 @@ class CChartButtonUI(QPushButton):
 
     def InitUI(self):
         self.setCursor(Qt.PointingHandCursor)
-        if self.m_Type == OUTPUT_BTN_TYPE:
+        if self.m_Type == define.OUTPUT_BTN_TYPE:
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
         icon = QtGui.QIcon()
         pix = ":/icon/btn_%s.png" % self.m_Info["type"]
@@ -269,13 +268,18 @@ class CChartButtonUI(QPushButton):
     def GetUid(self):
         return self.m_UID
 
+    def GetType(self):
+        return self.m_Type
+
     def mousePressEvent(self, event):
         super(CChartButtonUI, self).mousePressEvent(event)
         event.accept()
-        print("click mousePressEvent", self.m_UID)
+        print("CChartButtonUI mousePressEvent", self.m_UID)
 
     def mouseMoveEvent(self, event):
         super(CChartButtonUI, self).mouseMoveEvent(event)
+        event.accept()
 
     def mouseReleaseEvent(self, event):
         super(CChartButtonUI, self).mouseReleaseEvent(event)
+        event.accept()

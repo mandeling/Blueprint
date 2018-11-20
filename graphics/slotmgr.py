@@ -1,6 +1,6 @@
 
 import miscqt
-
+from . import define
 g_SlotMgr = None
 
 
@@ -38,12 +38,15 @@ class CSlot:
         self.m_Type = iType     # 类型
         self.m_CharID = charID  # 父类的uuid
         self.m_Pos = pos        # 相对于父类的pos坐标
-        self.m_Size = size
+        self.m_Size = size      # (x, y)自身size
         self.m_Center = None
         self.SetCenter()
 
     def SetCenter(self):
-        self.m_Center = (self.m_Size[0], self.m_Size[1])
+        if self.m_Type == define.INPUT_BTN_TYPE:
+            self.m_Center = (0, self.m_Size[1]/2)
+        else:
+            self.m_Center = (self.m_Size[0], self.m_Size[1]/2)
 
     def GetCenter(self):
         return self.m_Center

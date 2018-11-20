@@ -59,14 +59,17 @@ class CSlotUI(QGraphicsPolygonItem):
         self.setCursor(Qt.CrossCursor)
 
     def mousePressEvent(self, event):
-        print("slotui-mousePressEvent")
+        print("slotui-mousePressEvent", self.scene())
         super(CSlotUI, self).mousePressEvent(event)
+        event.accept()
         if event.button() == Qt.LeftButton:
-            self.m_DownPosition = event.buttonDownScenePos(Qt.LeftButton)
+            self.scene().BeginConnect(self)
+            # self.m_DownPosition = event.buttonDownScenePos(Qt.LeftButton)
 
     def mouseMoveEvent(self, event):
         print("slotui-mouseMoveEvent")
         super(CSlotUI, self).mouseMoveEvent(event)
+        event.accept()
         if event.button() == Qt.LeftButton and self.m_DownPosition:
             self.m_IsLineMoving = True
             self.m_CurPos = event.scenePos()
@@ -78,32 +81,34 @@ class CSlotUI(QGraphicsPolygonItem):
 
     def mouseReleaseEvent(self, event):
         print("slotui-mouseReleaseEvent")
+        event.accept()
         super(CSlotUI, self).mouseReleaseEvent(event)
         if event.button() == Qt.LeftButton:
+            self.scene().EndConnect(self)
             self.m_IsLineMoving = False
             self.m_DownPosition = None
             self.m_CurPos = None
 
     def paint(self, painter, qStyleOptionGraphicsItem, widget):
-        # color = QColor(Qt.yellow)
+        color = QColor(Qt.yellow)
         brush = QBrush(color)
         pen = QPen(color)
         pen.setWidth(2)
         painter.setBrush(brush)
         painter.setPen(pen)
         painter.drawRect(self.m_PF)
-        if not self.m_LintItem:
-            self.m_LintItem = QGraphicsPathItem(self)
-        path = QPainterPath()
-        if self.m_IsLineMoving:
-            self.prepareGeometryChange()
-            painter.setRenderHint(QPainter.Antialiasing, True)
-            path.moveTo(*self.m_Slot().GetCenter())
-            point = self.m_CurPos - QPointF(*self.m_Slot().GetPos()) + QPointF(*self.m_Slot().GetCenter())
-            print("---", self.m_Slot().GetCenter(), point)
-            path.lineTo(point)
-        self.m_LintItem.setPath(path)
-        painter.drawPath(path)
+        # if not self.m_LintItem:
+        #     self.m_LintItem = QGraphicsPathItem(self)
+        # path = QPainterPath()
+        # if self.m_IsLineMoving:
+        #     self.prepareGeometryChange()
+        #     painter.setRenderHint(QPainter.Antialiasing, True)
+        #     path.moveTo(*self.m_Slot().GetCenter())
+        #     point = self.m_CurPos - QPointF(*self.m_Slot().GetPos()) + QPointF(*self.m_Slot().GetCenter())
+        #     print("---", self.m_Slot().GetCenter(), point)
+        #     path.lineTo(point)
+        # self.m_LintItem.setPath(path)
+        # painter.drawPath(path)
 
     def hoverEnterEvent(self, event):
         # print("slotui-hoverEnterEvent")
