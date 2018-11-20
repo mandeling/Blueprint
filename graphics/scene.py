@@ -2,15 +2,15 @@
 """
 @Author: lamborghini
 @Date: 2018-11-09 09:55:45
-@Desc: 
+@Desc:
 """
 
 import weakref
 
 from PyQt5.QtWidgets import QGraphicsScene
-from PyQt5.QtGui import QTransform
+from PyQt5.QtGui import QTransform, QCursor
 from PyQt5.QtCore import Qt
-from . import chartui
+from . import chartui, slotui
 from .bluechartmgr import GetBlueChartMgr
 
 
@@ -22,6 +22,7 @@ class CBlueprintScene(QGraphicsScene):
         self.m_Pos = None   # 创建图表的位置,已换算成对于场景的位置
         self.m_LeftBtnStartPos = None
         self.m_IsDrawLine = False
+        self.m_TempPinLine = None  # 临时引脚线
         self.m_View = weakref.ref(parent)
         self.Init()
         self.InitSignal()
@@ -46,6 +47,8 @@ class CBlueprintScene(QGraphicsScene):
 
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
+        if self.m_TempPinLine:
+            self.m_TempPinLine.UpdatePosition()
         if not self.m_LeftBtnStartPos:
             return
 
@@ -69,8 +72,18 @@ class CBlueprintScene(QGraphicsScene):
         oWidget.setPos(x, y)
         # oWidget.setPos(self.m_Pos.x(), self.m_Pos.y())
 
-    def BeginConnect(self, oSlotui):
+    def BeginConnect(self, oSlotUI):
         self.m_IsDrawLine = True
+        self.m_TempPinLine = slotui.CPinLine()
+        self.addItem(self.m_TempPinLine)
+        self.m_TempPinLine.SetStartReceiver(oSlotUI)
 
-    def EndConnect(self, oSlotui):
+    def EndConnect(self, oSlotUI):
         self.m_IsDrawLine = False
+        self.m_TempPinLine = None
+
+    def GetMouseScenePos(self):
+        view = self.views()[0]
+        viewPos = view.mapFromGlobal(QCursor.pos())
+        scenePos = view.mapToScene(viewPos)
+        return scenePos

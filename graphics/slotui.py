@@ -58,6 +58,9 @@ class CSlotUI(QGraphicsPolygonItem):
         self.setPolygon(QPolygonF(self.m_PF))
         self.setCursor(Qt.CrossCursor)
 
+    def GetConnectPoint(self):
+        return self.m_Slot().m_Center
+
     def mousePressEvent(self, event):
         print("slotui-mousePressEvent", self.scene())
         super(CSlotUI, self).mousePressEvent(event)
@@ -67,7 +70,6 @@ class CSlotUI(QGraphicsPolygonItem):
             # self.m_DownPosition = event.buttonDownScenePos(Qt.LeftButton)
 
     def mouseMoveEvent(self, event):
-        print("slotui-mouseMoveEvent")
         super(CSlotUI, self).mouseMoveEvent(event)
         event.accept()
         if event.button() == Qt.LeftButton and self.m_DownPosition:
@@ -89,14 +91,14 @@ class CSlotUI(QGraphicsPolygonItem):
             self.m_DownPosition = None
             self.m_CurPos = None
 
-    def paint(self, painter, qStyleOptionGraphicsItem, widget):
-        color = QColor(Qt.yellow)
-        brush = QBrush(color)
-        pen = QPen(color)
-        pen.setWidth(2)
-        painter.setBrush(brush)
-        painter.setPen(pen)
-        painter.drawRect(self.m_PF)
+    # def paint(self, painter, qStyleOptionGraphicsItem, widget):
+    #     color = QColor(Qt.yellow)
+    #     brush = QBrush(color)
+    #     pen = QPen(color)
+    #     pen.setWidth(2)
+    #     painter.setBrush(brush)
+    #     painter.setPen(pen)
+    #     painter.drawRect(self.m_PF)
         # if not self.m_LintItem:
         #     self.m_LintItem = QGraphicsPathItem(self)
         # path = QPainterPath()
@@ -121,3 +123,62 @@ class CSlotUI(QGraphicsPolygonItem):
     def hoverLeaveEvent(self, event):
         # print("slotui-hoverLeaveEvent")
         super(CSlotUI, self).hoverLeaveEvent(event)
+
+
+class CPinLine(QGraphicsItem):
+    """引脚连线"""
+
+    def __init__(self, parent=None):
+        super(CPinLine, self).__init__(parent)
+        self.m_StartSlotUI = None
+        self.m_EndSlotUI = None
+        self.setZValue(-1000)
+        self.m_StartPoint = None
+        self.m_EndPoint = None
+        self.m_Path = None
+        self.m_Rect = None
+        self.RecalculateShapeAndBount()
+
+    def RecalculateShapeAndBount(self):
+        if self.m_StartPoint is None or self.m_EndPoint is None:
+            self.m_Path = QPainterPath()
+            self.m_Path.addRect(0, 0, 0, 0)
+            self.m_Rect = self.m_Path.boundingRect()
+            return
+        if self.m_StartPoint.x() < self.m_EndPoint.x():
+            centerY = (self.m_StartPoint.y() + self.m_EndPoint.y()) // 2
+            c1 = QPointF(self.m_StartPoint.x(), centerY)
+            c2 = QPointF(self.m_EndPoint.x(), centerY)
+        else:
+            centerX = (self.m_StartPoint.x() + self.m_EndPoint.x()) // 2
+            c1 = QPointF(centerX, self.m_StartPoint.y())
+            c2 = QPointF(centerX, self.m_EndPoint.y())
+        self.m_Path = QPainterPath()
+        self.m_Path.moveTo(self.m_StartPoint)
+        self.m_Path.cubicTo(c1, c2, self.m_EndPoint)
+        self.m_Path.addEllipse(self.m_StartPoint, 4, 4)
+        self.m_Path.addEllipse(self.m_EndPoint, 4, 4)
+        self.m_Rect = self.m_Path.boundingRect()
+
+    def SetStartReceiver(self, oSlotUI):
+        self.m_StartSlotUI = weakref.ref(oSlotUI)
+        self.m_StartPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
+        print("StartPoint", self.m_StartPoint)
+        self.UpdatePosition()
+
+    def SetEndReceiver(self, oSlotUI):
+        self.m_EndSlotUI = weakref.ref(oSlotUI)
+        self.m_EndPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
+        print("EndPoint", self.m_EndPoint)
+        self.UpdatePosition()
+
+    def UpdatePosition(self):
+        if not self.m_EndSlotUI:
+            self.m_EndPoint = self.mapFromScene(self.scene().GetMouseScenePos())
+        self.prepareGeometryChange()
+        self.RecalculateShapeAndBount()
+
+    def paint(self, painter, _, __):
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        painter.setPen(Qt.white)
+        painter.drawPath(self.m_Path)
