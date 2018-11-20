@@ -33,17 +33,24 @@ class CBlueprintScene(QGraphicsScene):
     def InitSignal(self):
         pass
 
-    def mousePressEvent(self, event):
-        super(CBlueprintScene, self).mousePressEvent(event)
-        if event.isAccepted():
-            return
-        sPos = event.scenePos()
-        if self.itemAt(sPos, QTransform()):
-            return
-        if event.button() == Qt.LeftButton or event.button() == Qt.RightButton:
-            GetBlueChartMgr().ClearSelect()
-        if event.button() == Qt.LeftButton:
-            self.m_LeftBtnStartPos = sPos
+    # def mousePressEvent(self, event):
+    #     # super(CBlueprintScene, self).mousePressEvent(event)
+    #     # if event.isAccepted():
+    #     #     return
+    #     sPos = event.scenePos()
+    #     item = self.itemAt(sPos, QTransform())
+    #     if isinstance(item, slotui.CPinLine):
+    #         item = None
+    #     print("item:", item)
+    #     # if event.button() == Qt.LeftButton or event.button() == Qt.RightButton:
+    #     #     GetBlueChartMgr().ClearSelect()
+    #     if event.button() == Qt.LeftButton:
+    #         self.m_LeftBtnStartPos = sPos
+    #         if self.m_TempPinLine:
+    #             self.MyEndConnect(item)
+
+    #     if not self.m_IsDrawLine:
+    #         super(CBlueprintScene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
@@ -78,9 +85,39 @@ class CBlueprintScene(QGraphicsScene):
         self.addItem(self.m_TempPinLine)
         self.m_TempPinLine.SetStartReceiver(oSlotUI)
 
-    def EndConnect(self, oSlotUI):
-        self.m_IsDrawLine = False
+
+    def EndConnect(self, event):
+        sPos = event.scenePos()
+        endSlotUI = self.itemAt(sPos, QTransform())
+        if isinstance(endSlotUI, slotui.CSlotUI):    # 如果不是slotui
+            startSlotUI = self.m_TempPinLine.GetStartSlotUI()
+            if startSlotUI.CanConnect(endSlotUI) and endSlotUI.CanConnect(startSlotUI):
+                # 断开原有连线
+                if startSlotUI.GetPinLine():
+                    self.BreakConnect(startSlotUI)
+                if endSlotUI.GetPinLine():
+                    self.BreakConnect(endSlotUI)
+                if startSlotUI.IsInputSlotUI():
+                    inputSlotUI, outputSlotUI = startSlotUI, endSlotUI
+                else:
+                    inputSlotUI, outputSlotUI = endSlotUI, startSlotUI
+                self.AddConnect(inputSlotUI, outputSlotUI)
+
+        self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
+        self.m_IsDrawLine = False
+
+    def BreakConnect(self, oSlotUI):
+        pass
+
+    def AddConnect(self, inputSlotUI, outputSlotUI):
+        """真正执行添加连接线"""
+        line = slotui.CPinLine()
+        self.addItem(line)  # 这个顺序不能变
+        line.SetStartReceiver(inputSlotUI)
+        line.SetEndReceiver(outputSlotUI)
+        inputSlotUI.SetPinLine(line)
+        outputSlotUI.SetPinLine(line)
 
     def GetMouseScenePos(self):
         view = self.views()[0]

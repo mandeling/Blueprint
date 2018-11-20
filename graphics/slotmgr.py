@@ -56,3 +56,6 @@ class CSlot:
 
     def GetSize(self):
         return self.m_Size
+
+    def GetType(self):
+        return self.m_Type

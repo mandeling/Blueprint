@@ -5,6 +5,7 @@ from PyQt5.QtGui import QColor, QBrush, QPen, QPainterPath, QPainter, QPolygonF
 import weakref
 
 from .slotmgr import GetSlotMgr
+from . import define
 
 
 class CWidget(QWidget):
@@ -45,6 +46,7 @@ class CSlotUI(QGraphicsPolygonItem):
         self.m_IsLineMoving = False  # 是否在划线
         self.m_DownPosition = None   # 划线的起始坐标（相对于场景）
         self.m_CurPos = None         # 划线当前的坐标（相对于场景）
+        self.m_PinLine = None
         self.InitUI()
 
     def InitUI(self):
@@ -57,6 +59,10 @@ class CSlotUI(QGraphicsPolygonItem):
         self.m_PF = QRectF(0, 0, size[0], size[1])
         self.setPolygon(QPolygonF(self.m_PF))
         self.setCursor(Qt.CrossCursor)
+
+    def IsInputSlotUI(self):
+        iType = self.m_Slot().GetType()
+        return iType == define.INPUT_BTN_TYPE
 
     def GetConnectPoint(self):
         return self.m_Slot().m_Center
@@ -86,43 +92,22 @@ class CSlotUI(QGraphicsPolygonItem):
         event.accept()
         super(CSlotUI, self).mouseReleaseEvent(event)
         if event.button() == Qt.LeftButton:
-            self.scene().EndConnect(self)
+            self.scene().EndConnect(event)
             self.m_IsLineMoving = False
             self.m_DownPosition = None
             self.m_CurPos = None
 
-    # def paint(self, painter, qStyleOptionGraphicsItem, widget):
-    #     color = QColor(Qt.yellow)
-    #     brush = QBrush(color)
-    #     pen = QPen(color)
-    #     pen.setWidth(2)
-    #     painter.setBrush(brush)
-    #     painter.setPen(pen)
-    #     painter.drawRect(self.m_PF)
-        # if not self.m_LintItem:
-        #     self.m_LintItem = QGraphicsPathItem(self)
-        # path = QPainterPath()
-        # if self.m_IsLineMoving:
-        #     self.prepareGeometryChange()
-        #     painter.setRenderHint(QPainter.Antialiasing, True)
-        #     path.moveTo(*self.m_Slot().GetCenter())
-        #     point = self.m_CurPos - QPointF(*self.m_Slot().GetPos()) + QPointF(*self.m_Slot().GetCenter())
-        #     print("---", self.m_Slot().GetCenter(), point)
-        #     path.lineTo(point)
-        # self.m_LintItem.setPath(path)
-        # painter.drawPath(path)
+    def CanConnect(self, oSlotUI):
+        """判断self是否可以和oSlotUI连接"""
+        return True
 
-    def hoverEnterEvent(self, event):
-        # print("slotui-hoverEnterEvent")
-        super(CSlotUI, self).hoverEnterEvent(event)
+    def SetPinLine(self, oPinLine):
+        self.m_PinLine = weakref.ref(oPinLine)
 
-    def hoverMoveEvent(self, event):
-        # print("slotui-hoverMoveEvent")
-        super(CSlotUI, self).hoverMoveEvent(event)
-
-    def hoverLeaveEvent(self, event):
-        # print("slotui-hoverLeaveEvent")
-        super(CSlotUI, self).hoverLeaveEvent(event)
+    def GetPinLine(self):
+        if self.m_PinLine:
+            return self.m_PinLine()
+        return None
 
 
 class CPinLine(QGraphicsItem):
@@ -165,6 +150,11 @@ class CPinLine(QGraphicsItem):
         self.m_StartPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
         print("StartPoint", self.m_StartPoint)
         self.UpdatePosition()
+
+    def GetStartSlotUI(self):
+        if self.m_StartSlotUI:
+            return self.m_StartSlotUI()
+        return None
 
     def SetEndReceiver(self, oSlotUI):
         self.m_EndSlotUI = weakref.ref(oSlotUI)
