@@ -85,7 +85,6 @@ class CBlueprintScene(QGraphicsScene):
         self.addItem(self.m_TempPinLine)
         self.m_TempPinLine.SetStartReceiver(oSlotUI)
 
-
     def EndConnect(self, event):
         sPos = event.scenePos()
         endSlotUI = self.itemAt(sPos, QTransform())
@@ -102,13 +101,19 @@ class CBlueprintScene(QGraphicsScene):
                 else:
                     inputSlotUI, outputSlotUI = endSlotUI, startSlotUI
                 self.AddConnect(inputSlotUI, outputSlotUI)
+                # TODO
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
 
     def BreakConnect(self, oSlotUI):
-        pass
+        line = oSlotUI.GetPinLine()
+        inputSlotUI = line.GetStartSlotUI()
+        inputSlotUI.SetPinLine(None)
+        outputSlotUI = line.GetEndSlotUI()
+        outputSlotUI.SetPinLine(None)
+        self.removeItem(line)
 
     def AddConnect(self, inputSlotUI, outputSlotUI):
         """真正执行添加连接线"""

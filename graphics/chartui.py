@@ -51,7 +51,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
             qpos = oBtn.mapToParent(QPoint(0, 0))
             pos = (qpos.x(), qpos.y())
             size = (oBtn.width(), oBtn.height())
-            oSlot = GetSlotMgr().NewItem(uid, oBtn.GetType(), self.m_BlueChart().GetID(), pos, size)
+            oSlot = GetSlotMgr().NewSlot(uid, oBtn.GetType(), self.m_BlueChart().GetID(), pos, size)
             oSlotUI = slotui.CSlotUI(uid, oSlot)
             oSlotUI.setParentItem(self)
             x, y = self.pos().x(), self.pos().y()
@@ -60,7 +60,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
             mfsPos = oSlotUI.mapFromScene(x, y)
             mtpPos = oSlotUI.mapToParent(mfsPos)
             oSlotUI.setPos(mtpPos.x(), mtpPos.y())
-            GetSlotMgr().AddView(uid, oSlotUI)
+            GetSlotMgr().AddSlotUI(uid, oSlotUI)
 
     def InitSingle(self):
         self.m_ChangeCharName.SING_CHANGE_TITLE.connect(self.S_ChangeName)
@@ -95,6 +95,17 @@ class CBlueChartUI(QGraphicsProxyWidget):
                 self.m_ChangeCharName.setPlainText(self.GetTitle())
                 self.m_BlueChartWidget.lb_Title.hide()
         self.setSelected(True)
+
+    def itemChange(self, change, value):
+        if change == QGraphicsItem.ItemPositionHasChanged:
+            print("CBlueChartUI.itemChange", change, value)
+            for _, oSlotUI in GetSlotMgr().GetAllSlotUI().items():
+                line = oSlotUI.GetPinLine()
+                if line:
+                    line.UpdatePosition()
+        # if change == QGraphicsItem.ItemSelectedChange:
+        #     self.scene().ItemSelectChange(self, value)
+        return super(CBlueChartUI, self).itemChange(change, value)
 
     def GetTitle(self):
         return self.m_BlueChartWidget.lb_Title.text()
@@ -180,7 +191,6 @@ QWidget#outline{
     border-radius:14px;
 }
 """
-
 
 
 class CBlueChartWidget(QWidget):

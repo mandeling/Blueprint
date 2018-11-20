@@ -14,16 +14,19 @@ def GetSlotMgr():
 class CSlotMgr:
     def __init__(self):
         self.m_Items = {}
-        self.m_Views = {}
+        self.m_SlotUIs = {}
         self.m_LastSelect = None  # 保存上一次选中的slotid
 
-    def NewItem(self, idSlot, iType, charID, pos, size):
+    def NewSlot(self, idSlot, iType, charID, pos, size):
         oSlot = CSlot(idSlot, iType, charID, pos, size)
         self.m_Items[idSlot] = oSlot
         return oSlot
 
-    def AddView(self, idSlot, oSlotUI):
-        self.m_Views[idSlot] = oSlotUI
+    def AddSlotUI(self, idSlot, oSlotUI):
+        self.m_SlotUIs[idSlot] = oSlotUI
+
+    def GetAllSlotUI(self):
+        return self.m_SlotUIs
 
     def GetLastSelect(self):
         return self.m_LastSelect
@@ -43,10 +46,11 @@ class CSlot:
         self.SetCenter()
 
     def SetCenter(self):
+        iOffset = 10    # 边距偏移
         if self.m_Type == define.INPUT_BTN_TYPE:
-            self.m_Center = (0, self.m_Size[1]/2)
+            self.m_Center = (0 - iOffset, self.m_Size[1]/2)
         else:
-            self.m_Center = (self.m_Size[0], self.m_Size[1]/2)
+            self.m_Center = (self.m_Size[0] + iOffset, self.m_Size[1]/2)
 
     def GetCenter(self):
         return self.m_Center

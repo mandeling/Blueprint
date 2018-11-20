@@ -147,7 +147,7 @@ class CPinLine(QGraphicsItem):
 
     def SetStartReceiver(self, oSlotUI):
         self.m_StartSlotUI = weakref.ref(oSlotUI)
-        self.m_StartPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
+        # self.m_StartPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
         print("StartPoint", self.m_StartPoint)
         self.UpdatePosition()
 
@@ -158,12 +158,23 @@ class CPinLine(QGraphicsItem):
 
     def SetEndReceiver(self, oSlotUI):
         self.m_EndSlotUI = weakref.ref(oSlotUI)
-        self.m_EndPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
+        # self.m_EndPoint = self.mapFromItem(oSlotUI, *oSlotUI.GetConnectPoint())
         print("EndPoint", self.m_EndPoint)
         self.UpdatePosition()
 
+    def GetEndSlotUI(self):
+        if self.m_EndSlotUI:
+            return self.m_EndSlotUI()
+        return None
+
     def UpdatePosition(self):
-        if not self.m_EndSlotUI:
+        startSlotUI = self.GetStartSlotUI()
+        if startSlotUI:
+            self.m_StartPoint = self.mapFromItem(startSlotUI, *startSlotUI.GetConnectPoint())
+        endSlotUI = self.GetEndSlotUI()
+        if endSlotUI:
+            self.m_EndPoint = self.mapFromItem(endSlotUI, *endSlotUI.GetConnectPoint())
+        else:
             self.m_EndPoint = self.mapFromScene(self.scene().GetMouseScenePos())
         self.prepareGeometryChange()
         self.RecalculateShapeAndBount()
