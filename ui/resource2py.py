@@ -37,7 +37,8 @@ def GenerateQrcFile(sQrcFile):
         sPrefix = os.path.split(sDir)[1]
         if IsIgnore(sPrefix):
             continue
-        sQrc += '    <qresource prefix="%s">\n' % sPrefix
+        # sQrc += '    <qresource prefix="%s">\n' % sPrefix
+        sQrc += '    <qresource>\n'
         for sFile in lstFile:
             if not IsPic(sFile):
                 continue
@@ -78,7 +79,7 @@ def Other2PY(sType):
 
 
 if __name__ == "__main__":
-    if(len(sys.argv) < 2):
+    if len(sys.argv) < 2:
         Other2PY("all")
     else:
         Other2PY(sys.argv[1])

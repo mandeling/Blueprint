@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="icon">
+    <qresource>
         <file>.\icon\btn_1.png</file>
         <file>.\icon\btn_2.png</file>
         <file>.\icon\btn_3.png</file>
