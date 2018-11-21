@@ -116,7 +116,10 @@ class CSlotUI(QGraphicsPolygonItem):
         return True
 
     def SetPinLine(self, oPinLine):
-        self.m_PinLine = weakref.ref(oPinLine)
+        if oPinLine:
+            self.m_PinLine = weakref.ref(oPinLine)
+        else:
+            self.m_PinLine = None
 
     def GetPinLine(self):
         if self.m_PinLine:
