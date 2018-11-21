@@ -9,8 +9,8 @@ import misc
 from . import scene, config
 from .bluechartmgr import GetBlueChartMgr
 
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene, QApplication, QMenu, QAction
-from PyQt5.QtGui import QBrush, QColor
+from PyQt5.QtWidgets import QGraphicsView, QMenu, QAction
+from PyQt5.QtGui import QBrush, QColor, QTransform
 from PyQt5.QtCore import Qt
 
 
@@ -85,6 +85,8 @@ class CBlueprintView(QGraphicsView):
     def contextMenuEvent(self, event):
         """右键上下文事件"""
         super(CBlueprintView, self).contextMenuEvent(event)
+        if event.isAccepted():
+            return
         lPos = event.pos()
         gPos = self.mapToGlobal(lPos)
         sPos = self.mapToScene(lPos)

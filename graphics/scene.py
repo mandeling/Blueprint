@@ -93,9 +93,9 @@ class CBlueprintScene(QGraphicsScene):
             if startSlotUI.CanConnect(endSlotUI) and endSlotUI.CanConnect(startSlotUI):
                 # 断开原有连线
                 if startSlotUI.GetPinLine():
-                    self.BreakConnect(startSlotUI)
+                    self.DelConnect(startSlotUI)
                 if endSlotUI.GetPinLine():
-                    self.BreakConnect(endSlotUI)
+                    self.DelConnect(endSlotUI)
                 if startSlotUI.IsInputSlotUI():
                     inputSlotUI, outputSlotUI = startSlotUI, endSlotUI
                 else:
@@ -107,7 +107,7 @@ class CBlueprintScene(QGraphicsScene):
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
 
-    def BreakConnect(self, oSlotUI):
+    def DelConnect(self, oSlotUI):
         line = oSlotUI.GetPinLine()
         inputSlotUI = line.GetStartSlotUI()
         inputSlotUI.SetPinLine(None)

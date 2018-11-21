@@ -1,8 +1,8 @@
 import weakref
 
-from PyQt5.QtWidgets import QWidget, QGraphicsPolygonItem, QGraphicsPathItem, QGraphicsItem
+from PyQt5.QtWidgets import QWidget, QGraphicsPolygonItem, QMenu, QGraphicsItem, QAction
 from PyQt5.QtCore import Qt, QPointF, QRectF
-from PyQt5.QtGui import QColor, QBrush, QPen, QPainterPath, QPainter, QPolygonF
+from PyQt5.QtGui import QCursor, QPainterPath, QPainter, QPolygonF
 
 from .slotmgr import GetSlotMgr
 from . import define
@@ -103,13 +103,25 @@ class CSlotUI(QGraphicsPolygonItem):
             self.m_DownPosition = None
             self.m_CurPos = None
 
+    def contextMenuEvent(self, event):
+        if not self.GetPinLine():
+            return
+        menu = QMenu()
+        action = QAction("删除连线", None)
+        action.triggered.connect(self.OnDelConnect)
+        menu.addAction(action)
+        menu.exec_(QCursor.pos())
+
+    def OnDelConnect(self):
+        self.scene().DelConnect(self)
+
     def CanConnect(self, oSlotUI):
         """判断self是否可以和oSlotUI连接"""
-        if self.m_Uid == oSlotUI.m_Uid: # 槽不能和自己连接
+        if self.m_Uid == oSlotUI.m_Uid:  # 槽不能和自己连接
             return False
         if self.GetChartID() == oSlotUI.GetChartID():   # 同一个节点不能连接
             return False
-        if self.GetSlotType() == oSlotUI.GetSlotType(): # 同输入或者同输出不能连接
+        if self.GetSlotType() == oSlotUI.GetSlotType():  # 同输入或者同输出不能连接
             return False
         if self.GetVarType() != oSlotUI.GetVarType():   # 相同的变量类型才能连接
             return False
