@@ -17,8 +17,9 @@ class CSlotMgr:
         self.m_SlotUIs = {}
         self.m_LastSelect = None  # 保存上一次选中的slotid
 
-    def NewSlot(self, idSlot, iType, charID, pos, size):
-        oSlot = CSlot(idSlot, iType, charID, pos, size)
+    def NewSlot(self, charID, pos, size, oBtn):
+        idSlot = oBtn.GetUid()
+        oSlot = CSlot(charID, pos, size, oBtn)
         self.m_Items[idSlot] = oSlot
         return oSlot
 
@@ -36,18 +37,19 @@ class CSlotMgr:
 
 
 class CSlot:
-    def __init__(self, sUID, iType, charID, pos, size):
-        self.m_UID = sUID       # uuid
-        self.m_Type = iType     # 类型
-        self.m_CharID = charID  # 父类的uuid
-        self.m_Pos = pos        # 相对于父类的pos坐标
-        self.m_Size = size      # (x, y)自身size
+    def __init__(self, charID, pos, size, oBtn):
+        self.m_UID = oBtn.GetUid()              # uuid
+        self.m_SlotType = oBtn.GetSlotType()    # 类型 0-input 1-output
+        self.m_VarType = oBtn.GetVarType()      # 变量类型
+        self.m_CharID = charID                  # 父类的uuid
+        self.m_Pos = pos                        # 相对于父类的pos坐标
+        self.m_Size = size                      # (x, y)自身size
         self.m_Center = None
         self.SetCenter()
 
     def SetCenter(self):
         iOffset = 10    # 边距偏移
-        if self.m_Type == define.INPUT_BTN_TYPE:
+        if self.m_SlotType == define.INPUT_BTN_TYPE:
             self.m_Center = (0 - iOffset, self.m_Size[1]/2)
         else:
             self.m_Center = (self.m_Size[0] + iOffset, self.m_Size[1]/2)
@@ -61,5 +63,11 @@ class CSlot:
     def GetSize(self):
         return self.m_Size
 
-    def GetType(self):
-        return self.m_Type
+    def GetSlotType(self):
+        return self.m_SlotType
+
+    def GetChartID(self):
+        return self.m_CharID
+
+    def GetVarType(self):
+        return self.m_VarType

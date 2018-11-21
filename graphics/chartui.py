@@ -15,6 +15,7 @@ from .slotmgr import GetSlotMgr
 class CBlueChartUI(QGraphicsProxyWidget):
     def __init__(self, oBlueChart, sName, oScene, parent=None):
         super(CBlueChartUI, self).__init__(parent)
+        self.m_Uid = oBlueChart.GetID()
         self.m_BlueChart = weakref.ref(oBlueChart)
         self.m_Name = sName
         self.m_Scene = weakref.ref(oScene)
@@ -51,7 +52,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
             qpos = oBtn.mapToParent(QPoint(0, 0))
             pos = (qpos.x(), qpos.y())
             size = (oBtn.width(), oBtn.height())
-            oSlot = GetSlotMgr().NewSlot(uid, oBtn.GetType(), self.m_BlueChart().GetID(), pos, size)
+            oSlot = GetSlotMgr().NewSlot(self.m_Uid, pos, size, oBtn)
             oSlotUI = slotui.CSlotUI(uid, oSlot)
             oSlotUI.setParentItem(self)
             x, y = self.pos().x(), self.pos().y()
@@ -257,27 +258,31 @@ class CBlueChartWidget(QWidget):
 class CChartButtonUI(QPushButton):
     def __init__(self, iType, dInfo, parent=None):
         super(CChartButtonUI, self).__init__(parent)
-        self.m_Type = iType
-        self.m_Info = dInfo
+        self.m_SlotType = iType
+        self.m_VarType = dInfo["type"]
+        self.m_Name = dInfo["name"]
         self.m_UID = miscqt.NewUuid()
         self.InitUI()
 
     def InitUI(self):
         self.setCursor(Qt.PointingHandCursor)
-        if self.m_Type == define.OUTPUT_BTN_TYPE:
+        if self.m_SlotType == define.OUTPUT_BTN_TYPE:
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
         icon = QtGui.QIcon()
-        pix = ":/icon/btn_%s.png" % self.m_Info["type"]
+        pix = ":/icon/btn_%s.png" % self.m_VarType
         icon.addPixmap(QtGui.QPixmap(pix), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setIcon(icon)
         self.setIconSize(QtCore.QSize(20, 20))
-        self.setText(self.m_Info["name"])
+        self.setText(self.m_Name)
 
     def GetUid(self):
         return self.m_UID
 
-    def GetType(self):
-        return self.m_Type
+    def GetSlotType(self):
+        return self.m_SlotType
+
+    def GetVarType(self):
+        return self.m_VarType
 
     def mousePressEvent(self, event):
         super(CChartButtonUI, self).mousePressEvent(event)

@@ -60,15 +60,22 @@ class CSlotUI(QGraphicsPolygonItem):
         self.setPolygon(QPolygonF(self.m_PF))
         self.setCursor(Qt.CrossCursor)
 
+    def GetSlotType(self):
+        return self.m_Slot().GetSlotType()
+
+    def GetVarType(self):
+        return self.m_Slot().GetVarType()
+
+    def GetChartID(self):
+        return self.m_Slot().GetChartID()
+
     def IsInputSlotUI(self):
-        iType = self.m_Slot().GetType()
-        return iType == define.INPUT_BTN_TYPE
+        return self.GetSlotType() == define.INPUT_BTN_TYPE
 
     def GetConnectPoint(self):
         return self.m_Slot().m_Center
 
     def mousePressEvent(self, event):
-        print("slotui-mousePressEvent", self.scene())
         super(CSlotUI, self).mousePressEvent(event)
         event.accept()
         if event.button() == Qt.LeftButton:
@@ -98,7 +105,13 @@ class CSlotUI(QGraphicsPolygonItem):
 
     def CanConnect(self, oSlotUI):
         """判断self是否可以和oSlotUI连接"""
-        if self.m_Uid == oSlotUI.m_Uid:
+        if self.m_Uid == oSlotUI.m_Uid: # 槽不能和自己连接
+            return False
+        if self.GetChartID() == oSlotUI.GetChartID():   # 同一个节点不能连接
+            return False
+        if self.GetSlotType() == oSlotUI.GetSlotType(): # 同输入或者同输出不能连接
+            return False
+        if self.GetVarType() != oSlotUI.GetVarType():   # 相同的变量类型才能连接
             return False
         return True
 
