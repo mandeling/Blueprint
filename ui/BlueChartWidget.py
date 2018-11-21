@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'E:\mygithub\Blueprint\ui\BlueChartWidget.ui'
+# Form implementation generated from reading ui file '.\BlueChartWidget.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.3
 #
@@ -131,4 +131,4 @@ class Ui_BlueChartWidget(object):
         self.btn_Source.setText(_translate("BlueChartWidget", "资源"))
         self.btn_End.setText(_translate("BlueChartWidget", "end"))
 
-import res_rc
+from . import res_rc

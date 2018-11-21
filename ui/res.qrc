@@ -1,8 +1,8 @@
 <RCC>
     <qresource prefix="icon">
-        <file>btn_1.png</file>
-        <file>btn_2.png</file>
-        <file>btn_3.png</file>
-        <file>btn_4.png</file>
+        <file>.\icon\btn_1.png</file>
+        <file>.\icon\btn_2.png</file>
+        <file>.\icon\btn_3.png</file>
+        <file>.\icon\btn_4.png</file>
     </qresource>
 </RCC>
