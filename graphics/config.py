@@ -21,12 +21,12 @@ CHART_DATA = {
     "测试2": {
         "input": [
             {},
-            {"type": 1, "name": "Input1"},
+            {"type": 4, "name": "Input1"},
             {"type": 3, "name": "Input2"},
         ],
         "output": [
             {},
-            {"type": 1, "name": "Output1"},
+            {"type": 2, "name": "Output1"},
         ],
     },
     "测试3": {
