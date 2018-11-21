@@ -1,13 +1,18 @@
+# -*- coding:utf-8 -*-
+"""
+@Author: xiaohao
+@Date: 2018-11-21 14:48:22
+@Desc: 节点ui
+"""
 
 import weakref
 import miscqt
 
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QPushButton, QWidget, QGraphicsRectItem
+from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QPushButton, QWidget
 from PyQt5.QtCore import Qt, QRectF, pyqtSignal, QPoint
-from PyQt5.QtGui import QFont, QColor, QBrush
+from PyQt5.QtGui import QFont
 
-from ui.BlueChartWidget import Ui_BlueChartWidget
 from . import slotui, config, define
 from .slotmgr import GetSlotMgr
 

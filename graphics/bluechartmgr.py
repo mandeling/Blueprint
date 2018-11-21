@@ -1,3 +1,9 @@
+# -*- coding:utf-8 -*-
+"""
+@Author: xiaohao
+@Date: 2018-11-21 14:48:12
+@Desc: 节点数据管理对象
+"""
 
 import miscqt
 

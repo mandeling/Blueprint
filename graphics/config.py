@@ -1,3 +1,10 @@
+# -*- coding:utf-8 -*-
+"""
+@Author: xiaohao
+@Date: 2018-11-21 14:49:38
+@Desc: 节点配表信息
+"""
+
 CHART_DATA = {
     "测试1": {
         "input": [

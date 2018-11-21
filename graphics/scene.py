@@ -1,15 +1,15 @@
 # -*- coding:utf-8 -*-
 """
-@Author: lamborghini
-@Date: 2018-11-09 09:55:45
-@Desc:
+@Author: xiaohao
+@Date: 2018-11-21 14:47:43
+@Desc: 蓝图场景
 """
+
 
 import weakref
 
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform, QCursor
-from PyQt5.QtCore import Qt
 from . import chartui, slotui
 from .bluechartmgr import GetBlueChartMgr
 
@@ -19,56 +19,23 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).__init__(parent)
         self.m_ChartInfo = {}
         self.m_SlotInfo = {}
-        self.m_Pos = None   # 创建图表的位置,已换算成对于场景的位置
-        self.m_LeftBtnStartPos = None
         self.m_IsDrawLine = False
         self.m_TempPinLine = None  # 临时引脚线
         self.m_View = weakref.ref(parent)
         self.Init()
-        self.InitSignal()
 
     def Init(self):
         self.setSceneRect(-10000, -10000, 20000, 20000)  # 场景大小，传入item里面
-
-    def InitSignal(self):
-        pass
-
-    # def mousePressEvent(self, event):
-    #     # super(CBlueprintScene, self).mousePressEvent(event)
-    #     # if event.isAccepted():
-    #     #     return
-    #     sPos = event.scenePos()
-    #     item = self.itemAt(sPos, QTransform())
-    #     if isinstance(item, slotui.CPinLine):
-    #         item = None
-    #     print("item:", item)
-    #     # if event.button() == Qt.LeftButton or event.button() == Qt.RightButton:
-    #     #     GetBlueChartMgr().ClearSelect()
-    #     if event.button() == Qt.LeftButton:
-    #         self.m_LeftBtnStartPos = sPos
-    #         if self.m_TempPinLine:
-    #             self.MyEndConnect(item)
-
-    #     if not self.m_IsDrawLine:
-    #         super(CBlueprintScene, self).mousePressEvent(event)
 
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
         if self.m_TempPinLine:
             self.m_TempPinLine.UpdatePosition()
-        if not self.m_LeftBtnStartPos:
-            return
-
-    def mouseReleaseEvent(self, event):
-        super(CBlueprintScene, self).mouseReleaseEvent(event)
 
     def wheelEvent(self, event):
         super(CBlueprintScene, self).wheelEvent(event)
         # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
         event.accept()
-
-    def SetPos(self, pos):
-        self.m_Pos = pos
 
     def AddChartWidget(self, idChart, sName):
         oBlueChart = GetBlueChartMgr().GetChart(idChart)
@@ -77,7 +44,6 @@ class CBlueprintScene(QGraphicsScene):
         self.addItem(oWidget)
         x, y = oBlueChart.GetPos()
         oWidget.setPos(x, y)
-        # oWidget.setPos(self.m_Pos.x(), self.m_Pos.y())
 
     def BeginConnect(self, oSlotUI):
         self.m_IsDrawLine = True

@@ -1,8 +1,8 @@
 # -*- coding:utf-8 -*-
 """
-@Author: lamborghini
+@Author: xiaohao
 @Date: 2018-11-09 09:56:09
-@Desc: 
+@Desc:
 
 QGraphicsScene QGraphicsView QGraphicsItem三者之间的关系：
 (1) QGraphicsScene是QGraphicsView中的场景：

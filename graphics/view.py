@@ -2,7 +2,7 @@
 """
 @Author: lamborghini
 @Date: 2018-11-08 16:44:23
-@Desc: 蓝图
+@Desc: 蓝图view
 """
 import misc
 
@@ -10,7 +10,7 @@ from . import scene, config
 from .bluechartmgr import GetBlueChartMgr
 
 from PyQt5.QtWidgets import QGraphicsView, QMenu, QAction
-from PyQt5.QtGui import QBrush, QColor, QTransform
+from PyQt5.QtGui import QBrush, QColor
 from PyQt5.QtCore import Qt
 
 
@@ -91,7 +91,6 @@ class CBlueprintView(QGraphicsView):
         gPos = self.mapToGlobal(lPos)
         sPos = self.mapToScene(lPos)
         tPos = sPos.x(), sPos.y()
-        self.m_Scene.SetPos(sPos)
         menu = QMenu(self)
         for sName in config.CHART_DATA:
             func = misc.Functor(self.S_OnCreateAction, sName, tPos)
@@ -100,6 +99,6 @@ class CBlueprintView(QGraphicsView):
             menu.addAction(action)
         menu.exec_(gPos)
 
-    def S_OnCreateAction(self, sName, tPos, bClicked):
+    def S_OnCreateAction(self, sName, tPos, _):
         idChart = GetBlueChartMgr().NewChart(sName, tPos)
         self.m_Scene.AddChartWidget(idChart, sName)

@@ -1,3 +1,10 @@
+# -*- coding:utf-8 -*-
+"""
+@Author: xiaohao
+@Date: 2018-11-21 14:52:42
+@Desc: 信号槽界面UI
+"""
+
 import weakref
 
 from PyQt5.QtWidgets import QWidget, QGraphicsPolygonItem, QMenu, QGraphicsItem, QAction
@@ -103,7 +110,7 @@ class CSlotUI(QGraphicsPolygonItem):
             self.m_DownPosition = None
             self.m_CurPos = None
 
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, _):
         if not self.GetPinLine():
             return
         menu = QMenu()

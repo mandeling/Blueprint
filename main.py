@@ -2,13 +2,15 @@
 """
 @Author: lamborghini
 @Date: 2018-11-08 16:43:10
-@Desc: 
+@Desc: 主函数
 """
 
-import init
 import sys
 import graphics
 import misc
+
+from ui import res_rc
+
 
 def Start():
     sys.excepthook = misc.HandleException

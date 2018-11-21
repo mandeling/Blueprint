@@ -1,6 +1,12 @@
+# -*- coding:utf-8 -*-
+"""
+@Author: xiaohao
+@Date: 2018-11-21 14:51:56
+@Desc: 信号槽全局数据管理对象
+"""
 
-import miscqt
 from . import define
+
 g_SlotMgr = None
 
 
