@@ -139,6 +139,15 @@ class CSlotUI(QGraphicsPolygonItem):
         if uid in self.m_PinLineInfo:
             del self.m_PinLineInfo[uid]
 
+    def UpdateLinePosition(self):
+        if self.IsInputSlotUI():
+            line = self.GetPinLine()
+            if line:
+                line.UpdatePosition()
+            return
+        for _, wPinLine in self.m_PinLineInfo.items():
+            wPinLine().UpdatePosition()
+
 
 class CPinLine(QGraphicsItem):
     """引脚连线"""
