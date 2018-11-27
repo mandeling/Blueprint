@@ -45,10 +45,15 @@ class CBlueChartMgr:
     def ClearSelect(self):
         self.m_SelectItem = []
 
+    def GetBlueChartName(self, cid):
+        if cid not in self.m_ActionItem:
+            return ""
+        oChart = self.m_ActionItem[cid]
+        return oChart.GetName()
 
 class CBlueChart:
-    def __init__(self, id, sName, tPos):
-        self.m_ID = id
+    def __init__(self, cid, sName, tPos):
+        self.m_ID = cid
         self.m_Name = sName
         self.m_Pos = tPos   # 相对于场景的位置
 

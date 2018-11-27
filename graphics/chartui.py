@@ -104,7 +104,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
             for _, oSlotUI in GetSlotMgr().GetAllSlotUI().items():
-                line = oSlotUI.GetPinLine()
+                line = oSlotUI.GetPinLine() #TODO
                 if line:
                     line.UpdatePosition()
         # if change == QGraphicsItem.ItemSelectedChange:

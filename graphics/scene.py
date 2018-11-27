@@ -62,15 +62,18 @@ class CBlueprintScene(QGraphicsScene):
                 else:
                     inputSlotUI, outputSlotUI = endSlotUI, startSlotUI
                 # 断开输入槽原有连线
-                self.DelConnect(inputSlotUI)
+                self.DelConnectBySlotUI(inputSlotUI)
                 self.AddConnect(inputSlotUI, outputSlotUI)
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
 
-    def DelConnect(self, oSlotUI):
+    def DelConnectBySlotUI(self, oSlotUI):
         line = oSlotUI.GetPinLine()
+        self.DelConnect(line)
+
+    def DelConnect(self, line):
         if not line:
             return
         inputSlotUI = line.GetStartSlotUI()
@@ -86,7 +89,7 @@ class CBlueprintScene(QGraphicsScene):
         line.SetStartReceiver(inputSlotUI)
         line.SetEndReceiver(outputSlotUI)
         inputSlotUI.SetPinLine(line)
-        outputSlotUI.SetPinLine(line)
+        outputSlotUI.AddPinLine(line)
 
     def GetMouseScenePos(self):
         view = self.views()[0]

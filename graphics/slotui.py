@@ -7,6 +7,7 @@
 
 import weakref
 import miscqt
+import misc
 
 from PyQt5.QtWidgets import QGraphicsPolygonItem, QMenu, QGraphicsItem, QAction
 from PyQt5.QtCore import Qt, QPointF, QRectF
@@ -21,7 +22,6 @@ class CSlotUI(QGraphicsPolygonItem):
         super(CSlotUI, self).__init__(parent)
         self.m_Uid = uid
         self.m_Slot = weakref.ref(oSlot)
-        self.m_LintItem = None
         self.m_IsLineMoving = False  # 是否在划线
         self.m_DownPosition = None   # 划线的起始坐标（相对于场景）
         self.m_PinLine = None
@@ -38,6 +38,9 @@ class CSlotUI(QGraphicsPolygonItem):
         self.m_PF = QRectF(0, 0, size[0], size[1])
         self.setPolygon(QPolygonF(self.m_PF))
         self.setCursor(Qt.CrossCursor)
+
+    def GetChartName(self):
+        return self.m_Slot().GetChartName()
 
     def GetSlotType(self):
         return self.m_Slot().GetSlotType()
@@ -81,16 +84,25 @@ class CSlotUI(QGraphicsPolygonItem):
             self.m_DownPosition = None
 
     def contextMenuEvent(self, _):
-        if not self.GetPinLine():
+        if not self.GetPinLine() and not self.m_PinLineInfo:
             return
         menu = QMenu()
-        action = QAction("删除连线", None)
-        action.triggered.connect(self.OnDelConnect)
-        menu.addAction(action)
+        if self.IsInputSlotUI():
+            action = QAction("删除连线", None)
+            func = misc.Functor(self.OnDelConnect, self.m_PinLine)
+            action.triggered.connect(func)
+            menu.addAction(action)
+        else:
+            for _, wPinLine in self.m_PinLineInfo.items():
+                sName = wPinLine().GetStartSlotChartName()
+                sMsg = "删除与%s的连线" % sName
+                func = misc.Functor(self.OnDelConnect, wPinLine)
+                menu.addAction(sMsg, func)
         menu.exec_(QCursor.pos())
 
-    def OnDelConnect(self):
-        self.scene().DelConnect(self)
+    def OnDelConnect(self, wPinLine):
+        oPinLine = wPinLine()
+        self.scene().DelConnect(oPinLine)
 
     def CanConnect(self, oSlotUI):
         """判断self是否可以和oSlotUI连接"""
@@ -145,6 +157,11 @@ class CPinLine(QGraphicsItem):
 
     def GetUid(self):
         return self.m_UID
+
+    def GetStartSlotChartName(self):
+        oSlotUI = self.GetStartSlotUI()
+        sName = oSlotUI.GetChartName()
+        return sName
 
     def RecalculateShapeAndBount(self):
         if self.m_StartPoint is None or self.m_EndPoint is None:

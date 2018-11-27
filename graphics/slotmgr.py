@@ -6,6 +6,7 @@
 """
 
 from . import define
+from .bluechartmgr import GetBlueChartMgr
 
 g_SlotMgr = None
 
@@ -56,9 +57,13 @@ class CSlot:
     def SetCenter(self):
         iOffset = 10    # 边距偏移
         if self.m_SlotType == define.INPUT_BTN_TYPE:
-            self.m_Center = (0 - iOffset, self.m_Size[1]/2)
+            self.m_Center = (0 - iOffset, self.m_Size[1] / 2)
         else:
-            self.m_Center = (self.m_Size[0] + iOffset, self.m_Size[1]/2)
+            self.m_Center = (self.m_Size[0] + iOffset, self.m_Size[1] / 2)
+
+    def GetChartName(self):
+        sName = GetBlueChartMgr().GetBlueChartName(self.m_CharID)
+        return sName
 
     def GetCenter(self):
         return self.m_Center
