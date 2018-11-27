@@ -22,8 +22,6 @@ class CSlotUI(QGraphicsPolygonItem):
         super(CSlotUI, self).__init__(parent)
         self.m_Uid = uid
         self.m_Slot = weakref.ref(oSlot)
-        self.m_IsLineMoving = False  # 是否在划线
-        self.m_DownPosition = None   # 划线的起始坐标（相对于场景）
         self.m_PinLine = None
         self.m_PinLineInfo = {}       # 槽的连线列表
         self.InitUI()
@@ -62,15 +60,12 @@ class CSlotUI(QGraphicsPolygonItem):
         event.accept()
         if event.button() == Qt.LeftButton:
             self.scene().BeginConnect(self)
-            # self.m_DownPosition = event.buttonDownScenePos(Qt.LeftButton)
 
     def mouseMoveEvent(self, event):
         super(CSlotUI, self).mouseMoveEvent(event)
         event.accept()
-        if event.button() == Qt.LeftButton and self.m_DownPosition:
-            self.m_IsLineMoving = True
+        if event.button() == Qt.LeftButton:
             self.update()
-
             lastuid = GetSlotMgr().GetLastSelect()
             if not lastuid:
                 GetSlotMgr().SetLastSelect(self.m_Uid)
@@ -80,8 +75,6 @@ class CSlotUI(QGraphicsPolygonItem):
         super(CSlotUI, self).mouseReleaseEvent(event)
         if event.button() == Qt.LeftButton:
             self.scene().EndConnect(event)
-            self.m_IsLineMoving = False
-            self.m_DownPosition = None
 
     def contextMenuEvent(self, _):
         if not self.GetPinLine() and not self.m_PinLineInfo:
