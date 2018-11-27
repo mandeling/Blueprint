@@ -81,10 +81,8 @@ class CSlotUI(QGraphicsPolygonItem):
             return
         menu = QMenu()
         if self.IsInputSlotUI():
-            action = QAction("删除连线", None)
             func = misc.Functor(self.OnDelConnect, self.m_PinLine)
-            action.triggered.connect(func)
-            menu.addAction(action)
+            menu.addAction("删除连线", func)
         else:
             for _, wPinLine in self.m_PinLineInfo.items():
                 sName = wPinLine().GetStartSlotChartName()
