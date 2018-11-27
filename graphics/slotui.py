@@ -6,8 +6,9 @@
 """
 
 import weakref
+import miscqt
 
-from PyQt5.QtWidgets import QWidget, QGraphicsPolygonItem, QMenu, QGraphicsItem, QAction
+from PyQt5.QtWidgets import QGraphicsPolygonItem, QMenu, QGraphicsItem, QAction
 from PyQt5.QtCore import Qt, QPointF, QRectF
 from PyQt5.QtGui import QCursor, QPainterPath, QPainter, QPolygonF
 
@@ -24,6 +25,7 @@ class CSlotUI(QGraphicsPolygonItem):
         self.m_IsLineMoving = False  # 是否在划线
         self.m_DownPosition = None   # 划线的起始坐标（相对于场景）
         self.m_PinLine = None
+        self.m_PinLineInfo = {}       # 槽的连线列表
         self.InitUI()
 
     def InitUI(self):
@@ -102,16 +104,28 @@ class CSlotUI(QGraphicsPolygonItem):
             return False
         return True
 
+    # input
     def SetPinLine(self, oPinLine):
-        if oPinLine:
-            self.m_PinLine = weakref.ref(oPinLine)
-        else:
+        if not oPinLine:
             self.m_PinLine = None
+        else:
+            self.m_PinLine = weakref.ref(oPinLine)
 
     def GetPinLine(self):
         if self.m_PinLine:
             return self.m_PinLine()
         return None
+
+    # output
+    def AddPinLine(self, oPinLine):
+        if not oPinLine:
+            return
+        self.m_PinLineInfo[oPinLine.GetUid()] = weakref.ref(oPinLine)
+
+    def DelPinLine(self, oPinLine):
+        uid = oPinLine.GetUid()
+        if uid in self.m_PinLineInfo:
+            del self.m_PinLineInfo[uid]
 
 
 class CPinLine(QGraphicsItem):
@@ -119,6 +133,7 @@ class CPinLine(QGraphicsItem):
 
     def __init__(self, parent=None):
         super(CPinLine, self).__init__(parent)
+        self.m_UID = miscqt.NewUuid()
         self.m_StartSlotUI = None
         self.m_EndSlotUI = None
         self.setZValue(-1000)
@@ -127,6 +142,9 @@ class CPinLine(QGraphicsItem):
         self.m_Path = None
         self.m_Rect = None
         self.RecalculateShapeAndBount()
+
+    def GetUid(self):
+        return self.m_UID
 
     def RecalculateShapeAndBount(self):
         if self.m_StartPoint is None or self.m_EndPoint is None:

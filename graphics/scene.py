@@ -57,17 +57,13 @@ class CBlueprintScene(QGraphicsScene):
         if isinstance(endSlotUI, slotui.CSlotUI):    # 如果不是slotui
             startSlotUI = self.m_TempPinLine.GetStartSlotUI()
             if startSlotUI.CanConnect(endSlotUI) and endSlotUI.CanConnect(startSlotUI):
-                # 断开原有连线
-                if startSlotUI.GetPinLine():
-                    self.DelConnect(startSlotUI)
-                if endSlotUI.GetPinLine():
-                    self.DelConnect(endSlotUI)
                 if startSlotUI.IsInputSlotUI():
                     inputSlotUI, outputSlotUI = startSlotUI, endSlotUI
                 else:
                     inputSlotUI, outputSlotUI = endSlotUI, startSlotUI
+                # 断开输入槽原有连线
+                self.DelConnect(inputSlotUI)
                 self.AddConnect(inputSlotUI, outputSlotUI)
-                # TODO
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
@@ -75,10 +71,12 @@ class CBlueprintScene(QGraphicsScene):
 
     def DelConnect(self, oSlotUI):
         line = oSlotUI.GetPinLine()
+        if not line:
+            return
         inputSlotUI = line.GetStartSlotUI()
         inputSlotUI.SetPinLine(None)
         outputSlotUI = line.GetEndSlotUI()
-        outputSlotUI.SetPinLine(None)
+        outputSlotUI.DelPinLine(line)
         self.removeItem(line)
 
     def AddConnect(self, inputSlotUI, outputSlotUI):
