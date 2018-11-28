@@ -301,7 +301,6 @@ class CChartButtonUI(QPushButton):
     def mousePressEvent(self, event):
         super(CChartButtonUI, self).mousePressEvent(event)
         event.accept()
-        print("CChartButtonUI mousePressEvent", self.m_UID)
 
     def mouseMoveEvent(self, event):
         super(CChartButtonUI, self).mouseMoveEvent(event)
