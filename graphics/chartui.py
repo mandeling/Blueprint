@@ -74,6 +74,12 @@ class CBlueChartUI(QGraphicsProxyWidget):
     def IsDrawLine(self):
         return self.m_Scene().m_IsDrawLine
 
+    def contextMenuEvent(self, event):
+        event.accept()
+        menu = QtWidgets.QMenu()
+        menu.addAction("删除节点", self.S_OnDelChartUI)
+        menu.exec_(QtGui.QCursor.pos())
+
     def mousePressEvent(self, event):
         super(CBlueChartUI, self).mousePressEvent(event)
         event.accept()
@@ -124,6 +130,13 @@ class CBlueChartUI(QGraphicsProxyWidget):
             self.m_BlueChartWidget.lb_Title.setText(sTitle)
             self.m_BlueChart().SetName(sTitle)
         self.m_BlueChartWidget.lb_Title.show()
+
+    def S_OnDelChartUI(self):
+        for slotID, _ in self.m_BlueChartWidget.m_ButtonInfo.items():
+            oSlotUI = GetSlotMgr().GetSlotUIByID(slotID)
+            oSlotUI.Relase()
+        self.m_BlueChartWidget = None
+        self.scene().DelChartWideget(self.m_Uid)
 
 
 class CGraphicsTextItem(QGraphicsTextItem):

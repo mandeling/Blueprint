@@ -9,7 +9,7 @@ import weakref
 import miscqt
 import misc
 
-from PyQt5.QtWidgets import QGraphicsPolygonItem, QMenu, QGraphicsItem, QAction
+from PyQt5.QtWidgets import QGraphicsPolygonItem, QMenu, QGraphicsItem
 from PyQt5.QtCore import Qt, QPointF, QRectF
 from PyQt5.QtGui import QCursor, QPainterPath, QPainter, QPolygonF
 
@@ -92,6 +92,8 @@ class CSlotUI(QGraphicsPolygonItem):
         menu.exec_(QCursor.pos())
 
     def OnDelConnect(self, wPinLine):
+        if not wPinLine:
+            return
         oPinLine = wPinLine()
         self.scene().DelConnect(oPinLine)
 
@@ -106,6 +108,20 @@ class CSlotUI(QGraphicsPolygonItem):
         if self.GetVarType() != oSlotUI.GetVarType():   # 相同的变量类型才能连接
             return False
         return True
+
+    def Relase(self):
+        if self.IsInputSlotUI():
+            self.OnDelConnect(self.m_PinLine)
+            return
+        lst = []
+        for _, wPinLine in self.m_PinLineInfo.items():
+            lst.append(wPinLine)
+        for wPinLine in lst:
+            self.OnDelConnect(wPinLine)
+        GetSlotMgr().Relase(self.m_Uid)
+        self.setParentItem(None)
+        self.m_PinLineInfo = {}
+        self.m_PinLine = None
 
     # input
     def SetPinLine(self, oPinLine):

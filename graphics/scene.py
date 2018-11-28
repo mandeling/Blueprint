@@ -45,6 +45,13 @@ class CBlueprintScene(QGraphicsScene):
         x, y = oBlueChart.GetPos()
         oWidget.setPos(x, y)
 
+    def DelChartWideget(self, idChart):
+        oWidget = self.m_ChartInfo.get(idChart, None)
+        if not oWidget:
+            return
+        self.removeItem(oWidget)
+        del self.m_ChartInfo[idChart]
+
     def BeginConnect(self, oSlotUI):
         self.m_IsDrawLine = True
         self.m_TempPinLine = slotui.CPinLine()

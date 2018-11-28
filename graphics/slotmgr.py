@@ -36,11 +36,22 @@ class CSlotMgr:
     def GetAllSlotUI(self):
         return self.m_SlotUIs
 
+    def GetSlotUIByID(self, idSlot):
+        if idSlot in self.m_SlotUIs:
+            return self.m_SlotUIs[idSlot]
+        return None
+
     def GetLastSelect(self):
         return self.m_LastSelect
 
     def SetLastSelect(self, uid):
         self.m_LastSelect = uid
+
+    def Relase(self, idSlot):
+        if idSlot in self.m_Items:
+            del self.m_Items[idSlot]
+        if idSlot in self.m_SlotUIs:
+            del self.m_SlotUIs[idSlot]
 
 
 class CSlot:
