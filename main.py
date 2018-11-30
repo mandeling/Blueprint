@@ -6,15 +6,23 @@
 """
 
 import sys
-import graphics
+import mainwindow
 import misc
 
 from ui import res_rc
+from PyQt5 import QtWidgets
 
 
 def Start():
     sys.excepthook = misc.HandleException
-    graphics.Show()
+    Mainwindow()
+
+
+def Mainwindow():
+    app = QtWidgets.QApplication(sys.argv)
+    obj = mainwindow.CMainWindow()
+    obj.show()
+    sys.exit(app.exec_())
 
 
 if __name__ == "__main__":
