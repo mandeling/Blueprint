@@ -12,6 +12,7 @@ from menu import menumgr, menudefine
 class CMainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
+        self.m_BlutprintView = CBluePrintView(self)
         self.InitUI()
         self.InitView()
 
@@ -47,21 +48,22 @@ class CMainWindow(QtWidgets.QMainWindow):
         leftDock.setObjectName("m_LeftDockt")
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
-        # rightDock = QtWidgets.QDockWidget("右侧面板", self)
-        # rightDock.setSizePolicy(sizePolicy)
-        # rightDock.setObjectName("m_RightDockt")
-        # self.addDockWidget(QtCore.Qt.RightDockWidgetArea, rightDock)
-
-        blueprintDock = QtWidgets.QDockWidget("蓝图", self)
-        blueprintDock.setSizePolicy(sizePolicy)
-        blueprintDock.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        blueprintDock.setObjectName("m_BlueprintDockt")
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, blueprintDock)
+        rightDock = QtWidgets.QDockWidget("右侧面板", self)
+        rightDock.setSizePolicy(sizePolicy)
+        rightDock.setObjectName("m_RightDockt")
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, rightDock)
 
         downDock = QtWidgets.QDockWidget("底部面板", self)
         downDock.setSizePolicy(sizePolicy)
         downDock.setObjectName("m_DownDockt")
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, downDock)
+
+        blueprintDock = QtWidgets.QDockWidget("蓝图", self)
+        blueprintDock.setSizePolicy(sizePolicy)
+        blueprintDock.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        blueprintDock.setObjectName("m_BlueprintDockt")
+        blueprintDock.setWidget(self.m_BlutprintView)
+        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, blueprintDock)
 
     def InitCenter(self):
         pass
@@ -81,7 +83,29 @@ class CMainWindow(QtWidgets.QMainWindow):
         ]
 
     def NewBlueprint(self):
-        pass
+        self.m_BlutprintView.NewBlueprint()
 
     def SaveBlueprint(self):
         pass
+
+
+class CBluePrintView(QtWidgets.QTabWidget):
+    def __init__(self, parent=None):
+        super(CBluePrintView, self).__init__(parent)
+        self.setMovable(True)
+        self.NewBlueprint()
+
+    def NewBlueprint(self):
+        from graphics import view
+        bpView = view.CBlueprintView(self)
+        tabIndex = self.addTab(bpView, "蓝图%s" % self.count())
+
+        def CloseTab():
+            self.removeTab(tabIndex)
+            self.setCurrentIndex(tabIndex - 1)
+
+        btn = QtWidgets.QPushButton("x")
+        btn.setFlat(True)
+        btn.setMaximumSize(16, 16)
+        btn.clicked.connect(CloseTab)
+        self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
