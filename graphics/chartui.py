@@ -25,22 +25,11 @@ class CBlueChartUI(QGraphicsProxyWidget):
         self.m_Name = sName
         self.m_Scene = weakref.ref(oScene)
         self.m_StartPos = None
-        self.m_ChartIsMoving = False
         self.m_BlueChartWidget = CBlueChartWidget(sName, config.CHART_DATA[sName])
-        self.m_ChangeCharName = None
         self.InitUI()
         self.InitSlot()
-        self.InitSingle()
 
     def InitUI(self):
-        sName = self.m_BlueChart().GetName()
-        self.m_BlueChartWidget.lb_Title.setText(sName)
-
-        self.m_ChangeCharName = CGraphicsTextItem(self.GetTitle(), self)
-        self.m_ChangeCharName.setParentItem(self)
-        self.m_ChangeCharName.setTextWidth(self.m_BlueChartWidget.top.width())
-        self.m_ChangeCharName.hide()
-
         self.setWidget(self.m_BlueChartWidget)
         self.setAcceptHoverEvents(True)
         self.setAcceptedMouseButtons(Qt.LeftButton)
@@ -68,9 +57,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
             oSlotUI.setPos(mtpPos.x(), mtpPos.y())
             GetSlotMgr().AddSlotUI(uid, oSlotUI)
 
-    def InitSingle(self):
-        self.m_ChangeCharName.SING_CHANGE_TITLE.connect(self.S_ChangeName)
-
     def IsDrawLine(self):
         return self.m_Scene().m_IsDrawLine
 
@@ -87,7 +73,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
             return
         if event.button() == Qt.LeftButton:
             self.m_StartPos = event.pos()
-            self.m_ChartIsMoving = False
 
     def mouseMoveEvent(self, event):
         super(CBlueChartUI, self).mouseMoveEvent(event)
@@ -97,14 +82,7 @@ class CBlueChartUI(QGraphicsProxyWidget):
 
     def mouseReleaseEvent(self, event):
         super(CBlueChartUI, self).mouseReleaseEvent(event)
-        if self.isSelected() and event.button() == Qt.LeftButton:
-            pos = event.pos()
-            rect = QRectF(self.m_BlueChartWidget.top.rect())
-            rect.setWidth(rect.width() / 2)
-            if rect.contains(pos):
-                self.m_ChangeCharName.show()
-                self.m_ChangeCharName.setPlainText(self.GetTitle())
-                self.m_BlueChartWidget.lb_Title.hide()
+        self.m_StartPos = None
         self.setSelected(True)
 
     def itemChange(self, change, value):
@@ -112,9 +90,6 @@ class CBlueChartUI(QGraphicsProxyWidget):
             for _, oSlotUI in GetSlotMgr().GetAllSlotUI().items():
                 oSlotUI.UpdateLinePosition()
         return super(CBlueChartUI, self).itemChange(change, value)
-
-    def GetTitle(self):
-        return self.m_BlueChartWidget.lb_Title.text()
 
     def SetMouseMovePos(self, sPos, ePos):
         if not (sPos and ePos):
@@ -124,46 +99,12 @@ class CBlueChartUI(QGraphicsProxyWidget):
         y = pos.y() + ePos.y() - sPos.y()
         self.setPos(x, y)
 
-    def S_ChangeName(self, sTitle):
-        sOldTitle = self.GetTitle()
-        if sOldTitle != sTitle:
-            self.m_BlueChartWidget.lb_Title.setText(sTitle)
-            self.m_BlueChart().SetName(sTitle)
-        self.m_BlueChartWidget.lb_Title.show()
-
     def S_OnDelChartUI(self):
         for slotID, _ in self.m_BlueChartWidget.m_ButtonInfo.items():
             oSlotUI = GetSlotMgr().GetSlotUIByID(slotID)
             oSlotUI.Relase()
         self.m_BlueChartWidget = None
         self.scene().DelChartWideget(self.m_Uid)
-
-
-class CGraphicsTextItem(QGraphicsTextItem):
-
-    SING_CHANGE_TITLE = pyqtSignal(str)
-
-    def __init__(self, sName, parent=None):
-        super(CGraphicsTextItem, self).__init__(sName, parent)
-        self.Init()
-
-    def Init(self):
-        self.setTextInteractionFlags(Qt.TextEditorInteraction)
-        self.setCursor(Qt.IBeamCursor)
-
-        font = QFont()
-        font.setPixelSize(18)
-        self.setFont(font)
-        self.setZValue(8)
-        self.setPos(10, 10)
-
-    def focusOutEvent(self, event):
-        super(CGraphicsTextItem, self).focusOutEvent(event)
-        sTitle = self.toPlainText()
-        if sTitle:
-            self.SING_CHANGE_TITLE.emit(sTitle)
-        self.setPlainText("")
-        self.hide()
 
 
 QSS_STYLE = """
