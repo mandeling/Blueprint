@@ -28,9 +28,12 @@
             "type": "shell",
             "command": "${config:python.pythonPath}",
             "args": [
-                "ui/resource2py.py",
+                "resource2py.py",
                 "ui"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}/ui/"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -42,9 +45,12 @@
             "type": "shell",
             "command": "${config:python.pythonPath}",
             "args": [
-                "ui/resource2py.py",
+                "resource2py.py",
                 "qrc"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}/ui/"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
