@@ -1,8 +1,18 @@
 <RCC>
     <qresource>
+        <file>.\icon\btn_-1.png</file>
+        <file>.\icon\btn_0.png</file>
         <file>.\icon\btn_1.png</file>
+        <file>.\icon\btn_10.png</file>
+        <file>.\icon\btn_11.png</file>
+        <file>.\icon\btn_12.png</file>
         <file>.\icon\btn_2.png</file>
         <file>.\icon\btn_3.png</file>
         <file>.\icon\btn_4.png</file>
+        <file>.\icon\btn_5.png</file>
+        <file>.\icon\btn_6.png</file>
+        <file>.\icon\btn_7.png</file>
+        <file>.\icon\btn_8.png</file>
+        <file>.\icon\btn_9.png</file>
     </qresource>
 </RCC>
