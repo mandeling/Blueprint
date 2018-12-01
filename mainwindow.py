@@ -48,22 +48,22 @@ class CMainWindow(QtWidgets.QMainWindow):
         leftDock.setObjectName("m_LeftDockt")
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
-        rightDock = QtWidgets.QDockWidget("右侧面板", self)
-        rightDock.setSizePolicy(sizePolicy)
-        rightDock.setObjectName("m_RightDockt")
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, rightDock)
+        # rightDock = QtWidgets.QDockWidget("右侧面板", self)
+        # rightDock.setSizePolicy(sizePolicy)
+        # rightDock.setObjectName("m_RightDockt")
+        # self.addDockWidget(QtCore.Qt.RightDockWidgetArea, rightDock)
 
-        downDock = QtWidgets.QDockWidget("底部面板", self)
-        downDock.setSizePolicy(sizePolicy)
-        downDock.setObjectName("m_DownDockt")
-        self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, downDock)
+        # downDock = QtWidgets.QDockWidget("底部面板", self)
+        # downDock.setSizePolicy(sizePolicy)
+        # downDock.setObjectName("m_DownDockt")
+        # self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, downDock)
 
         blueprintDock = QtWidgets.QDockWidget("蓝图", self)
         blueprintDock.setSizePolicy(sizePolicy)
         blueprintDock.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         blueprintDock.setObjectName("m_BlueprintDockt")
         blueprintDock.setWidget(self.m_BlutprintView)
-        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, blueprintDock)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, blueprintDock)
 
     def InitCenter(self):
         pass

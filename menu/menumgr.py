@@ -36,14 +36,26 @@ class CMenuMgr(QtCore.QObject):
             return
         menuPath = dInfo[menudefine.MENU_NAME]
         iIndex = dInfo.get("Index", None)
-        self.AddNode(iIndex, menuPath)
+        lInfo = menuPath.split("/")
+        nIndex = 0
+        curNode = self.m_RootNode
+        while nIndex < len(lInfo):
+            curName = lInfo[nIndex]
+            childNode = curNode.Find(curName)
+            if not childNode:
+                if nIndex == len(lInfo) - 1:
+                    childNode = curNode.AddChild(curName, iIndex)
+                    childNode.m_Data = dInfo
+                    childNode.SetData(menudefine.MENU_QTCLASS_NAME, QtWidgets.QAction)
+                else:
+                    childNode = curNode.AddChild(curName)
+                    childNode.SetData(menudefine.MENU_QTCLASS_NAME, QtWidgets.QMenu)
+            curNode = childNode
+            nIndex += 1
 
     def AddSeparator(self, dInfo):
         menuPath = dInfo[menudefine.MENU_SEPARATOR_NAME]
         iIndex = dInfo.get("Index", None)
-        self.AddNode(iIndex, menuPath)
-
-    def AddNode(self, iIndex, menuPath):
         lInfo = menuPath.split("/")
         nIndex = 0
         curNode = self.m_RootNode
@@ -88,7 +100,7 @@ class CMenuMgr(QtCore.QObject):
                 icon = QtGui.QIcon()
                 icon.addPixmap(QtGui.QPixmap(sIconPath), QtGui.QIcon.Normal, QtGui.QIcon.Off)
                 qObj.setIcon(icon)
-            sTips = qObj.GetData(menudefine.MENU_TIPS_NAME)
+            sTips = pNode.GetData(menudefine.MENU_TIPS_NAME)
             if sTips:
                 qObj.setStatusTip(sTips)
             func = pNode.GetData(menudefine.MENU_FUNCTION_NAME)
