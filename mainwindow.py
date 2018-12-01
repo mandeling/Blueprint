@@ -45,12 +45,11 @@ class CMainWindow(QtWidgets.QMainWindow):
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 
         from graphics import variableui
-        from data import variable
         leftDock = QtWidgets.QDockWidget("左侧面板", self)
         leftDock.setSizePolicy(sizePolicy)
-        self.m_VariableView = variableui.CVariableUI("全局变量", variable.GetVariable().GetAllVarInfo())
         leftDock.setObjectName("m_LeftDockt")
-        leftDock.setWidget(self.m_VariableView)
+        self.m_VariableWidget = variableui.CVariableWidget()
+        leftDock.setWidget(self.m_VariableWidget)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
         # rightDock = QtWidgets.QDockWidget("右侧面板", self)
