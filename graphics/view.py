@@ -25,7 +25,7 @@ class CBlueprintView(QGraphicsView):
     def Init(self):
         self.setWindowTitle("蓝图")
         self.setScene(self.m_Scene)
-        self.setGeometry(300, 150, 1200, 800)
+        # self.setGeometry(300, 150, 1200, 800)
         self.setBackgroundBrush(QBrush(QColor(103, 103, 103), Qt.SolidPattern))
         self.setDragMode(QGraphicsView.RubberBandDrag)
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)

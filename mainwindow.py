@@ -18,6 +18,7 @@ class CMainWindow(QtWidgets.QMainWindow):
 
     def InitUI(self):
         self.showMaximized()
+        self.setGeometry(300, 150, 1200, 800)
         self.setWindowTitle("蓝图")
 
     def InitView(self):
@@ -43,9 +44,12 @@ class CMainWindow(QtWidgets.QMainWindow):
     def InitDock(self):
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 
+        from graphics import variableui
         leftDock = QtWidgets.QDockWidget("左侧面板", self)
         leftDock.setSizePolicy(sizePolicy)
+        self.m_VariableView = variableui.CVariableUI("全局变量", variableui.TESTINGO)
         leftDock.setObjectName("m_LeftDockt")
+        leftDock.setWidget(self.m_VariableView)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
         # rightDock = QtWidgets.QDockWidget("右侧面板", self)
@@ -93,7 +97,6 @@ class CBluePrintView(QtWidgets.QTabWidget):
     def __init__(self, parent=None):
         super(CBluePrintView, self).__init__(parent)
         self.setMovable(True)
-        self.NewBlueprint()
 
     def NewBlueprint(self):
         from graphics import view
