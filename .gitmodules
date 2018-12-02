@@ -1,0 +1,3 @@
+[submodule "pubtool"]
+	path = pubtool
+	url = git@github.com:lamborghini1993/pubtool.git
