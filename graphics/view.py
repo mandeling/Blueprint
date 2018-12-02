@@ -51,7 +51,7 @@ class CBlueprintView(QGraphicsView):
         if not self.m_StartPos:
             return
         pos = event.pos()
-        offsetX, offsetY = pos.x() - self.m_StartPos.x(), pos.y()-self.m_StartPos.y()
+        offsetX, offsetY = pos.x() - self.m_StartPos.x(), pos.y() - self.m_StartPos.y()
         offsetX /= self.m_Scale
         offsetY /= self.m_Scale
         self.translate(offsetX, offsetY)
@@ -103,3 +103,18 @@ class CBlueprintView(QGraphicsView):
     def S_OnCreateAction(self, sName, tPos, _):
         idChart = GetBlueChartMgr().NewChart(sName, tPos)
         self.m_Scene.AddChartWidget(idChart, sName)
+
+    def dragEnterEvent(self, event):
+        print("dragEnterEvent")
+        event.accept()
+        event.accepProposeAction()
+
+    def dragMoveEvent(self, event):
+        event.accept()
+        event.accepProposeAction()
+
+    def dropEvent(self, event):
+        print("dropEvent")
+        event.accepProposeAction()
+        print(event)
+        print(dir(event))
