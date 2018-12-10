@@ -28,3 +28,15 @@ class NodeAttrName:
     NAME = NODE_ATTR_NAME_PREFIX + "name"
     POSITION = NODE_ATTR_NAME_PREFIX + "postion"
     PININFO = NODE_ATTR_NAME_PREFIX + "pin_info"
+
+
+# ----------------------Node-------------------------------
+LINE_ATTR_NAME_PREFIX = "line_attr_name:"
+
+
+class LineAttrName:
+    ID = LINE_ATTR_NAME_PREFIX + "id"
+    OUTPUT_NODEID = LINE_ATTR_NAME_PREFIX + "output_node_id"
+    INPUT_NODEID = LINE_ATTR_NAME_PREFIX + "input_node_id"
+    OUTPUT_PINID = LINE_ATTR_NAME_PREFIX + "output_pin_id"
+    INPUT_PINID = LINE_ATTR_NAME_PREFIX + "input_pin_id"

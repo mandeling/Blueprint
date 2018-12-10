@@ -7,8 +7,8 @@
 
 from PyQt5 import QtWidgets, QtGui
 from ui.VariableWidget import Ui_Form
-from data.variable import GetVariable
 
+from editdata import interface
 
 class CVariableWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -18,8 +18,8 @@ class CVariableWidget(QtWidgets.QWidget):
 
     def InitUI(self):
         VBox = QtWidgets.QVBoxLayout(self)
-        self.m_GloablVarUI = CGloablVariableUI("全局变量", GetVariable().GetAllVarInfo())
-        self.m_GloablVarUI2 = CGloablVariableUI("局部变量", GetVariable().GetAllVarInfo())
+        self.m_GloablVarUI = CGloablVariableUI("全局变量", interface.GetVariableData())
+        self.m_GloablVarUI2 = CGloablVariableUI("局部变量", interface.GetVariableData())
         VBox.addWidget(self.m_GloablVarUI)
         VBox.addWidget(self.m_GloablVarUI2)
         self.setLayout(VBox)

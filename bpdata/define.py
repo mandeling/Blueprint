@@ -18,3 +18,14 @@ class Type:
 
 class NodeName:
     ADD = "加法节点"
+    PRINT = "打印节点"
+
+
+PIN_ATTR_NAME_PREFIX = "pin_attr_name:"
+
+
+class PinAttrName:
+    ID = PIN_ATTR_NAME_PREFIX + "id"
+    NAME = PIN_ATTR_NAME_PREFIX + "name"
+    PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"
+    DATA_TYPE = PIN_ATTR_NAME_PREFIX + "data_type"

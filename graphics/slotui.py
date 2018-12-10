@@ -37,6 +37,9 @@ class CSlotUI(QGraphicsPolygonItem):
         self.setPolygon(QPolygonF(self.m_PF))
         self.setCursor(Qt.CrossCursor)
 
+    def GetIDInfo(self):
+        return 1, 1, 1  # TODO
+
     def GetChartName(self):
         return self.m_Slot().GetChartName()
 
@@ -159,8 +162,9 @@ class CSlotUI(QGraphicsPolygonItem):
 class CPinLine(QGraphicsItem):
     """引脚连线"""
 
-    def __init__(self, parent=None):
+    def __init__(self, lineID=0, parent=None):
         super(CPinLine, self).__init__(parent)
+        self.m_LineID = lineID
         self.m_UID = miscqt.NewUuid()
         self.m_StartSlotUI = None
         self.m_EndSlotUI = None

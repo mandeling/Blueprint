@@ -7,12 +7,14 @@
 
 from PyQt5 import QtWidgets, QtCore
 from menu import menumgr, menudefine
+from graphics import bptabwidget, variableui
 
 
 class CMainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
-        self.m_BlutprintView = CBluePrintView(self)
+        self.m_BlutprintView = bptabwidget.CBlueprintView(self)
+        self.m_VariableWidget = variableui.CVariableWidget()
         self.InitUI()
         self.InitView()
 
@@ -44,11 +46,9 @@ class CMainWindow(QtWidgets.QMainWindow):
     def InitDock(self):
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 
-        from graphics import variableui
         leftDock = QtWidgets.QDockWidget("左侧面板", self)
         leftDock.setSizePolicy(sizePolicy)
         leftDock.setObjectName("m_LeftDockt")
-        self.m_VariableWidget = variableui.CVariableWidget()
         leftDock.setWidget(self.m_VariableWidget)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
@@ -84,31 +84,18 @@ class CMainWindow(QtWidgets.QMainWindow):
                 menudefine.MENU_FUNCTION_NAME: self.SaveBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+S"
             },
+            {
+                menudefine.MENU_NAME: "文件/打开蓝图",
+                menudefine.MENU_FUNCTION_NAME: self.OpenBlueprint,
+                menudefine.MENU_SHORTCUT_NAME: "Ctrl+O"
+            },
         ]
 
     def NewBlueprint(self):
-        self.m_BlutprintView.NewBlueprint()
+        self.m_BlutprintView.AddBlueprint()
 
     def SaveBlueprint(self):
-        pass
+        self.m_BlutprintView.SaveBlueprint()
 
-
-class CBluePrintView(QtWidgets.QTabWidget):
-    def __init__(self, parent=None):
-        super(CBluePrintView, self).__init__(parent)
-        self.setMovable(True)
-
-    def NewBlueprint(self):
-        from graphics import view
-        bpView = view.CBlueprintView(self)
-        tabIndex = self.addTab(bpView, "蓝图%s" % self.count())
-
-        def CloseTab():
-            self.removeTab(tabIndex)
-            self.setCurrentIndex(tabIndex - 1)
-
-        btn = QtWidgets.QPushButton("x")
-        btn.setFlat(True)
-        btn.setMaximumSize(16, 16)
-        btn.clicked.connect(CloseTab)
-        self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
+    def OpenBlueprint(self):
+        self.m_BlutprintView.OpenBlueprint()

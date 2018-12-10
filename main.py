@@ -10,6 +10,7 @@ import mainwindow
 import misc
 
 from ui import res_rc
+from bpdata import node
 from PyQt5 import QtWidgets
 
 

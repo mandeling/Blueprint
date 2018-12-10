@@ -10,22 +10,30 @@ import weakref
 
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform, QCursor
-from . import chartui, slotui
+from . import nodeui, pinui
 from .bluechartmgr import GetBlueChartMgr
+from editdata import interface
 
 
 class CBlueprintScene(QGraphicsScene):
-    def __init__(self, parent=None):
+    def __init__(self, bpID, parent=None):
         super(CBlueprintScene, self).__init__(parent)
-        self.m_ChartInfo = {}
+        self.m_BPID = bpID
+        self.m_NodeUIInfo = {}
         self.m_SlotInfo = {}
         self.m_IsDrawLine = False
         self.m_TempPinLine = None  # 临时引脚线
-        self.m_View = weakref.ref(parent)
+        self.m_SelectPin = None
         self.Init()
 
     def Init(self):
         self.setSceneRect(-10000, -10000, 20000, 20000)  # 场景大小，传入item里面
+
+    def GetBPID(self):
+        return self.m_BPID
+
+    def SetSelectPin(self, nodeID, pinID):
+        self.m_SelectPin = (nodeID, pinID)
 
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
@@ -37,20 +45,19 @@ class CBlueprintScene(QGraphicsScene):
         # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
         event.accept()
 
-    def AddChartWidget(self, idChart, sName):
-        oBlueChart = GetBlueChartMgr().GetChart(idChart)
-        oWidget = chartui.CBlueChartUI(oBlueChart, sName, self)
-        self.m_ChartInfo[idChart] = oWidget
+    def AddNodeUI(self, nodeID, tPos):
+        oWidget = nodeui.CNodeUI(self.m_BPID, nodeID, self)
+        self.m_NodeUIInfo[nodeID] = oWidget
         self.addItem(oWidget)
-        x, y = oBlueChart.GetPos()
+        x, y = tPos
         oWidget.setPos(x, y)
 
-    def DelChartWideget(self, idChart):
-        oWidget = self.m_ChartInfo.get(idChart, None)
+    def DelNodeUI(self, nodeID):
+        oWidget = self.m_NodeUIInfo.get(nodeID, None)
         if not oWidget:
             return
         self.removeItem(oWidget)
-        del self.m_ChartInfo[idChart]
+        del self.m_NodeUIInfo[nodeID]
 
     def BeginConnect(self, oSlotUI):
         self.m_IsDrawLine = True
@@ -61,20 +68,22 @@ class CBlueprintScene(QGraphicsScene):
     def EndConnect(self, event):
         sPos = event.scenePos()
         endSlotUI = self.itemAt(sPos, QTransform())
-        if isinstance(endSlotUI, slotui.CSlotUI):    # 如果不是slotui
+        if isinstance(endSlotUI, pinui.CPinUI):    # 如果不是slotui
             startSlotUI = self.m_TempPinLine.GetStartSlotUI()
+            # TODO 判断给data判断
             if startSlotUI.CanConnect(endSlotUI) and endSlotUI.CanConnect(startSlotUI):
                 if startSlotUI.IsInputSlotUI():
                     inputSlotUI, outputSlotUI = startSlotUI, endSlotUI
                 else:
                     inputSlotUI, outputSlotUI = endSlotUI, startSlotUI
-                # 断开输入槽原有连线
+                # 断开输入槽原有连线 由数据层驱动
                 self.DelConnectBySlotUI(inputSlotUI)
-                self.AddConnect(inputSlotUI, outputSlotUI)
+                self.OnAddConnect(inputSlotUI, outputSlotUI)
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
+        self.m_SelectPin = None
 
     def DelConnectBySlotUI(self, oSlotUI):
         line = oSlotUI.GetPinLine()
@@ -89,9 +98,15 @@ class CBlueprintScene(QGraphicsScene):
         outputSlotUI.DelPinLine(line)
         self.removeItem(line)
 
-    def AddConnect(self, inputSlotUI, outputSlotUI):
+    def OnAddConnect(self, inputSlotUI, outputSlotUI):
+        bpID, iNodeID, iPinID = inputSlotUI.GetIDInfo()
+        bpID, oNodeID, oPinID = outputSlotUI.GetIDInfo()
+        lineID = interface.AddLine(bpID, oNodeID, oPinID, iNodeID, iPinID)
+        self.AddConnect(lineID, inputSlotUI, outputSlotUI)
+
+    def AddConnect(self, lineID, inputSlotUI, outputSlotUI):
         """真正执行添加连接线"""
-        line = slotui.CPinLine()
+        line = slotui.CPinLine(lineID)
         self.addItem(line)  # 这个顺序不能变
         line.SetStartReceiver(inputSlotUI)
         line.SetEndReceiver(outputSlotUI)
