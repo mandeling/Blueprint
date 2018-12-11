@@ -28,6 +28,9 @@ class CUIManager:
     def AddBPView(self, bpID, oBPView):
         self.m_BPUI[bpID] = weakref.ref(oBPView)
 
+    def GetBPView(self, bpID):
+        return self.m_BPUI[bpID]()
+
     def AddNodeUI(self, bpID, nodeID, oNodeUI):
         dInfo = self.m_NodeUI.setdefault(bpID, {})
         dInfo[nodeID] = weakref.ref(oNodeUI)
@@ -45,3 +48,6 @@ class CUIManager:
     def AddLineUI(self, bpID, lineID, oLineUI):
         dInfo = self.m_LineUI.setdefault(bpID, {})
         dInfo[lineID] = weakref.ref(oLineUI)
+
+    def GetLineUI(self, bpID, lineID):
+        return self.m_LineUI[bpID][lineID]()

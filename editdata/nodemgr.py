@@ -34,11 +34,15 @@ class CNodeMgr:
         dInfo[iInputID] = pid
 
     def GetValue(self, sNodeName, iInputID):
+        # TODO
         return 0
 
     def GetAllPin(self, sNodeName):
         dInfo = self.m_DefineInfo[sNodeName]
         return copy.deepcopy(dInfo)
+
+    def GetAllDefineNodeName(self):
+        return self.m_DefineInfo.keys()
 
     # ----------------编辑器节点信息-----------------------------
     def NewBlueprint(self, bpID):
@@ -47,6 +51,15 @@ class CNodeMgr:
     def NewNode(self, bpID, sNodeName):
         oBpNode = self.m_Info[bpID]
         return oBpNode.NewNode(sNodeName)
+
+    def DelNode(self, bpID, nodeID):
+        from . import interface
+        from graphics import graphinterface
+        lstLine = interface.GetAllLineByNode(bpID, nodeID)
+        for lineID in lstLine:
+            graphinterface.DelLine(bpID, lineID)
+        oBpNode = self.m_Info[bpID]
+        oBpNode.DelNode(nodeID)
 
     def GetNode(self, bpID, nodeID):
         oBpNode = self.m_Info[bpID]
@@ -78,6 +91,9 @@ class CBpNodeMgr:
         uid = self.NewID()
         self.m_Info[uid] = CNode(uid, sNodeName)
         return uid
+
+    def DelNode(self, uid):
+        del self.m_Info[uid]
 
 
 class CNode:

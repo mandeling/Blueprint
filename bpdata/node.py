@@ -100,11 +100,64 @@ class CAdd(CBase):
         return self.GetValue(0) + self.GetValue(1)
 
 
+@Register(define.NodeName.MIUNS)
+class CMiuns(CBase):
+    def InputData(self):
+        return [
+            (define.Type.INT, "输入1"),
+            (define.Type.INT, "输入2"),
+        ]
+
+    def OutputData(self):
+        return [
+            (define.Type.INT, "输出", self.Output1),
+        ]
+
+    def Output1(self):
+        return self.GetValue(0) - self.GetValue(1)
+
+
+@Register(define.NodeName.MULTIPLY)
+class CMultipyl(CBase):
+    def InputData(self):
+        return [
+            (define.Type.INT, "输入1"),
+            (define.Type.INT, "输入2"),
+        ]
+
+    def OutputData(self):
+        return [
+            (define.Type.INT, "输出", self.Output1),
+        ]
+
+    def Output1(self):
+        return self.GetValue(0) * self.GetValue(1)
+
+
+@Register(define.NodeName.DIVIDE)
+class CDivide(CBase):
+    def InputData(self):
+        return [
+            (define.Type.INT, "输入1"),
+            (define.Type.INT, "输入2"),
+        ]
+
+    def OutputData(self):
+        return [
+            (define.Type.INT, "输出", self.Output1),
+        ]
+
+    def Output1(self):
+        return self.GetValue(0) / self.GetValue(1)
+
+
 @Register(define.NodeName.PRINT)
 class CPrint(CBase):
 
+    def InputData(self):
+        return [
+            (define.Type.INT, "输入"),
+        ]
+
     def InputFlow(self):
         return ["输入"]
-
-    def OutputFlow(self):
-        return ["输出"]

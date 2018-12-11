@@ -7,7 +7,7 @@
 
 import os
 from PyQt5 import QtWidgets
-from . import view, uimgr
+from . import view
 from editdata import interface
 
 

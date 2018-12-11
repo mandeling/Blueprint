@@ -6,8 +6,7 @@
 """
 import misc
 
-from . import scene, config, uimgr
-from .bluechartmgr import GetBlueChartMgr
+from . import scene, uimgr
 from editdata import interface
 
 from PyQt5.QtWidgets import QGraphicsView, QMenu
@@ -99,7 +98,7 @@ class CBlueprintView(QGraphicsView):
         sPos = self.mapToScene(lPos)
         tPos = sPos.x(), sPos.y()
         menu = QMenu(self)
-        for sNodeName in config.CHART_DATA:
+        for sNodeName in interface.GetAllDefineNodeName():
             func = misc.Functor(self.S_OnCreateNodeUI, sNodeName, tPos)
             menu.addAction(sNodeName, func)
         menu.exec_(gPos)

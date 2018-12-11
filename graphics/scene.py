@@ -6,12 +6,10 @@
 """
 
 
-import weakref
-
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform, QCursor
-from . import nodeui, pinui
-from .bluechartmgr import GetBlueChartMgr
+
+from . import nodeui, pinui, lineui, uimgr
 from editdata import interface
 
 
@@ -20,7 +18,7 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).__init__(parent)
         self.m_BPID = bpID
         self.m_NodeUIInfo = {}
-        self.m_SlotInfo = {}
+        self.m_PinInfo = {}
         self.m_IsDrawLine = False
         self.m_TempPinLine = None  # 临时引脚线
         self.m_SelectPin = None
@@ -46,7 +44,7 @@ class CBlueprintScene(QGraphicsScene):
         event.accept()
 
     def AddNodeUI(self, nodeID, tPos):
-        oWidget = nodeui.CNodeUI(self.m_BPID, nodeID, self)
+        oWidget = nodeui.CNodeUI(self.m_BPID, nodeID)
         self.m_NodeUIInfo[nodeID] = oWidget
         self.addItem(oWidget)
         x, y = tPos
@@ -59,59 +57,48 @@ class CBlueprintScene(QGraphicsScene):
         self.removeItem(oWidget)
         del self.m_NodeUIInfo[nodeID]
 
-    def BeginConnect(self, oSlotUI):
+    def BeginConnect(self, startPinUI):
         self.m_IsDrawLine = True
-        self.m_TempPinLine = slotui.CPinLine()
+        self.m_TempPinLine = lineui.CLineUI(self.m_BPID)
         self.addItem(self.m_TempPinLine)
-        self.m_TempPinLine.SetStartReceiver(oSlotUI)
+        self.m_TempPinLine.SetStartReceiver(startPinUI)
 
     def EndConnect(self, event):
         sPos = event.scenePos()
-        endSlotUI = self.itemAt(sPos, QTransform())
-        if isinstance(endSlotUI, pinui.CPinUI):    # 如果不是slotui
-            startSlotUI = self.m_TempPinLine.GetStartSlotUI()
-            # TODO 判断给data判断
-            if startSlotUI.CanConnect(endSlotUI) and endSlotUI.CanConnect(startSlotUI):
-                if startSlotUI.IsInputSlotUI():
-                    inputSlotUI, outputSlotUI = startSlotUI, endSlotUI
+        endPinUI = self.itemAt(sPos, QTransform())
+        if isinstance(endPinUI, pinui.CPinUI):    # 如果是pinui
+            startPinUI = self.m_TempPinLine.GetStartPinUI()
+            bpID, sNodeID, sPinID = startPinUI.GetIDInfo()
+            bpID, eNodeID, ePinID = endPinUI.GetIDInfo()
+            if interface.PinCanConnect(bpID, sNodeID, sPinID, eNodeID, ePinID):
+                if interface.IsInputPin(bpID, sNodeID, sPinID):
+                    inputPinUI, outputPinUI = startPinUI, endPinUI
                 else:
-                    inputSlotUI, outputSlotUI = endSlotUI, startSlotUI
-                # 断开输入槽原有连线 由数据层驱动
-                self.DelConnectBySlotUI(inputSlotUI)
-                self.OnAddConnect(inputSlotUI, outputSlotUI)
+                    inputPinUI, outputPinUI = endPinUI, startPinUI
+                self.OnAddConnect(inputPinUI, outputPinUI)
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
         self.m_SelectPin = None
 
-    def DelConnectBySlotUI(self, oSlotUI):
-        line = oSlotUI.GetPinLine()
-        self.DelConnect(line)
+    def DelConnect(self, lineID):
+        oLineUI = uimgr.GetUIMgr().GetLineUI(self.m_BPID, lineID)
+        interface.DelLine(self.m_BPID, lineID)
+        self.removeItem(oLineUI)
 
-    def DelConnect(self, line):
-        if not line:
-            return
-        inputSlotUI = line.GetStartSlotUI()
-        inputSlotUI.SetPinLine(None)
-        outputSlotUI = line.GetEndSlotUI()
-        outputSlotUI.DelPinLine(line)
-        self.removeItem(line)
-
-    def OnAddConnect(self, inputSlotUI, outputSlotUI):
-        bpID, iNodeID, iPinID = inputSlotUI.GetIDInfo()
-        bpID, oNodeID, oPinID = outputSlotUI.GetIDInfo()
+    def OnAddConnect(self, inputPinUI, outputPinUI):
+        bpID, iNodeID, iPinID = inputPinUI.GetIDInfo()
+        bpID, oNodeID, oPinID = outputPinUI.GetIDInfo()
         lineID = interface.AddLine(bpID, oNodeID, oPinID, iNodeID, iPinID)
-        self.AddConnect(lineID, inputSlotUI, outputSlotUI)
+        self.AddConnect(lineID, inputPinUI, outputPinUI)
 
-    def AddConnect(self, lineID, inputSlotUI, outputSlotUI):
+    def AddConnect(self, lineID, inputPinUI, outputPinUI):
         """真正执行添加连接线"""
-        line = slotui.CPinLine(lineID)
+        line = lineui.CLineUI(self.m_BPID, lineID)
         self.addItem(line)  # 这个顺序不能变
-        line.SetStartReceiver(inputSlotUI)
-        line.SetEndReceiver(outputSlotUI)
-        inputSlotUI.SetPinLine(line)
-        outputSlotUI.AddPinLine(line)
+        line.SetStartReceiver(inputPinUI)
+        line.SetEndReceiver(outputPinUI)
 
     def GetMouseScenePos(self):
         view = self.views()[0]

@@ -5,23 +5,20 @@
 @Desc: 节点ui
 """
 
-import weakref
-import miscqt
 
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsTextItem, QGraphicsItem, QPushButton, QWidget
-from PyQt5.QtCore import Qt, QRectF, pyqtSignal, QPoint
-from PyQt5.QtGui import QFont
+from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsItem, QPushButton, QWidget
+from PyQt5.QtCore import Qt
 
-from . import slotui, config, define, uimgr, pinui
-from .slotmgr import GetSlotMgr
+from . import uimgr, pinui
 from editdata import interface
+
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
 
 class CNodeUI(QGraphicsProxyWidget):
-    def __init__(self, bpID, nodeID, oScene, parent=None):
+    def __init__(self, bpID, nodeID, parent=None):
         super(CNodeUI, self).__init__(parent)
         self.m_BPID = bpID
         self.m_NodeID = nodeID
@@ -67,7 +64,7 @@ class CNodeUI(QGraphicsProxyWidget):
     def contextMenuEvent(self, event):
         event.accept()
         menu = QtWidgets.QMenu()
-        menu.addAction("删除节点", self.S_OnDelChartUI)
+        menu.addAction("删除节点", self.S_OnDelNodeUI)
         menu.exec_(QtGui.QCursor.pos())
 
     def mousePressEvent(self, event):
@@ -91,8 +88,9 @@ class CNodeUI(QGraphicsProxyWidget):
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
-            for _, oPinUI in GetSlotMgr().GetAllSlotUI().items():
-                oPinUI.UpdateLinePosition()
+            for lineID in interface.GetAllLineByNode(self.m_BPID, self.m_NodeID):
+                oLineUI = uimgr.GetUIMgr().GetLineUI(self.m_BPID, lineID)
+                oLineUI.UpdatePosition()
         return super(CNodeUI, self).itemChange(change, value)
 
     def SetMouseMovePos(self, sPos, ePos):
@@ -103,10 +101,8 @@ class CNodeUI(QGraphicsProxyWidget):
         y = pos.y() + ePos.y() - sPos.y()
         self.setPos(x, y)
 
-    def S_OnDelChartUI(self):
-        for slotID, _ in self.m_NodeWidget.m_ButtonInfo.items():
-            oPinUI = GetSlotMgr().GetSlotUIByID(slotID)
-            oPinUI.Relase()
+    def S_OnDelNodeUI(self):
+        interface.DelNode(self.m_BPID, self.m_NodeID)
         self.m_NodeWidget = None
         self.scene().DelNodeUI(self.m_NodeID)
 
@@ -176,7 +172,6 @@ class CNodeWidget(QWidget):
                 tmp.append([self.m_BPID, self.m_NodeID, pid])
             else:
                 tmp.insert(0, [self.m_BPID, self.m_NodeID, pid])
-            print(pid, pinInfo)
 
     def AddButton(self, oBtn):
         if not oBtn:

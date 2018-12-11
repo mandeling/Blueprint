@@ -18,6 +18,9 @@ class Type:
 
 class NodeName:
     ADD = "加法节点"
+    MIUNS = "减法节点"
+    MULTIPLY = "乘法节点"
+    DIVIDE = "除法节点"
     PRINT = "打印节点"
 
 
