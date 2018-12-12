@@ -2,7 +2,7 @@
 """
 @Author: lamborghini
 @Date: 2018-12-10 10:34:20
-@Desc: 
+@Desc: ui界面管理
 """
 
 import weakref
@@ -22,11 +22,14 @@ class CUIManager:
         self.m_BPUI = {}
         self.m_NodeUI = {}
         self.m_PinBtnUI = {}
-        self.m_PinUIUI = {}
+        self.m_PinUI = {}
         self.m_LineUI = {}
 
     def AddBPView(self, bpID, oBPView):
         self.m_BPUI[bpID] = weakref.ref(oBPView)
+
+    def DelBPView(self, bpID):
+        del self.m_BPUI[bpID]
 
     def GetBPView(self, bpID):
         return self.m_BPUI[bpID]()
@@ -35,15 +38,26 @@ class CUIManager:
         dInfo = self.m_NodeUI.setdefault(bpID, {})
         dInfo[nodeID] = weakref.ref(oNodeUI)
 
+    def DelNodeUI(self, bpID, nodeID):
+        dInfo = self.m_NodeUI.setdefault(bpID, {})
+        if nodeID in dInfo:
+            del dInfo[nodeID]
+
     def AddPinUI(self, bpID, nodeID, pinID, oPinUI):
-        dBPInfo = self.m_PinUIUI.setdefault(bpID, {})
+        dBPInfo = self.m_PinUI.setdefault(bpID, {})
         dNodeInfo = dBPInfo.setdefault(nodeID, {})
         dNodeInfo[pinID] = weakref.ref(oPinUI)
+
+    def DelPinUI(self, bpID, nodeID, pinID):
+        del self.m_PinUI[bpID][nodeID][pinID]
 
     def AddPinBtnUI(self, bpID, nodeID, pinID, oPinbtnUI):
         dBPInfo = self.m_PinBtnUI.setdefault(bpID, {})
         dNodeInfo = dBPInfo.setdefault(nodeID, {})
         dNodeInfo[pinID] = weakref.ref(oPinbtnUI)
+
+    def DelPinBtnUI(self, bpID, nodeID, pinID):
+        del self.m_PinBtnUI[bpID][nodeID][pinID]
 
     def AddLineUI(self, bpID, lineID, oLineUI):
         dInfo = self.m_LineUI.setdefault(bpID, {})
@@ -51,3 +65,8 @@ class CUIManager:
 
     def GetLineUI(self, bpID, lineID):
         return self.m_LineUI[bpID][lineID]()
+
+    def DelLineUI(self, bpID, lineID):
+        dInfo = self.m_LineUI.setdefault(bpID, {})
+        if lineID in dInfo:
+            del dInfo[lineID]

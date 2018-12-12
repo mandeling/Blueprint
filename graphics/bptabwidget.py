@@ -22,7 +22,7 @@ class CBlueprintView(QtWidgets.QTabWidget):
 
     def AddBlueprint(self, sPath=None):
         if sPath:
-            bpID = interface.NewBlueprint()
+            bpID = interface.OpenBlueprint(sPath)
             bpView = view.CBlueprintView(bpID)
             sTabTitle = os.path.split(sPath)[1]
             tabIndex = self.addTab(bpView, sTabTitle)
@@ -46,7 +46,7 @@ class CBlueprintView(QtWidgets.QTabWidget):
     def OpenBlueprint(self):
         sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", filter=self.m_Filter)[0]
         if sPath:
-            self.AddBlurprint(sPath)
+            self.AddBlueprint(sPath)
 
     def SaveBlueprint(self):
         iIndex = self.currentIndex()

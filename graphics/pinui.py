@@ -10,7 +10,7 @@ import misc
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 from editdata import interface, pinmgr
-
+from . import uimgr
 import editdata.define as eddefine
 
 
@@ -26,6 +26,10 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
         self.m_IsInput = interface.IsInputPin(bpID, nodeID, pinID)
         self.InitUI()
         pinmgr.GetPinMgr().NewPin(bpID, nodeID, pinID)
+        uimgr.GetUIMgr().AddPinUI(bpID, nodeID, pinID, self)
+
+    def __del__(self):
+        uimgr.GetUIMgr().DelPinUI(self.m_BPID, self.m_NodeID, self.m_PinID)
 
     def SetCenter(self, center):
         """设置连线中心，相对于父类"""

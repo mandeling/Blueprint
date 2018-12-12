@@ -76,17 +76,17 @@ class CMainWindow(QtWidgets.QMainWindow):
         return [
             {
                 menudefine.MENU_NAME: "文件/新建蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.NewBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintView.AddBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+N"
             },
             {
                 menudefine.MENU_NAME: "文件/保存蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.SaveBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintView.SaveBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+S"
             },
             {
                 menudefine.MENU_NAME: "文件/打开蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.OpenBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintView.OpenBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+O"
             },
         ]

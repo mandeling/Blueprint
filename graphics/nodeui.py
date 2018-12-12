@@ -28,6 +28,9 @@ class CNodeUI(QGraphicsProxyWidget):
         self.InitSlot()
         uimgr.GetUIMgr().AddNodeUI(bpID, nodeID, self)
 
+    def __del__(self):
+        uimgr.GetUIMgr().DelNodeUI(self.m_BPID, self.m_NodeID)
+
     def InitUI(self):
         self.setWidget(self.m_NodeWidget)
         self.setAcceptHoverEvents(True)
@@ -240,6 +243,9 @@ class CNodeButtonUI(QPushButton):
         self.SetIcon()
         self.SetText()
         uimgr.GetUIMgr().AddPinBtnUI(bpID, nodeID, pinID, self)
+
+    def __del__(self):
+        uimgr.GetUIMgr().DelPinBtnUI(self.m_BPID, self.m_NodeID, self.m_PinID)
 
     def GetPinID(self):
         return self.m_PinID

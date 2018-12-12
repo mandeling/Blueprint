@@ -24,6 +24,9 @@ class CBlueprintView(QGraphicsView):
         self.Init()
         uimgr.GetUIMgr().AddBPView(bpID, self)
 
+    def __del__(self):
+        uimgr.GetUIMgr().DelBPView(self.m_BPID)
+
     def Init(self):
         self.setWindowTitle("蓝图")
         self.setScene(self.m_Scene)

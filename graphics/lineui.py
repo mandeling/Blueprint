@@ -30,6 +30,11 @@ class CLineUI(QtWidgets.QGraphicsItem):
         if lineID != -1:    # -1为临时连线
             uimgr.GetUIMgr().AddLineUI(bpID, lineID, self)
 
+    def __del__(self):
+        if self.m_LineID == -1:
+            return
+        uimgr.GetUIMgr().DelLineUI(self.m_BPID, self.m_LineID)
+
     def GetStartPinChartName(self):
         oPinUI = self.GetStartPinUI()
         sName = oPinUI.GetChartName()
