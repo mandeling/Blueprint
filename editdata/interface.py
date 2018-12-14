@@ -38,6 +38,19 @@ def GetVariableData():
     oVariableMgr = variablemgr.GetVariableMgr()
     return oVariableMgr.GetAllVarInfo()
 
+def NewVariable(sName, iType=bddefine.Type.INT, value=None):
+    oVariableMgr = variablemgr.GetVariableMgr()
+    oVariableMgr.NewVariable(sName, iType, value)
+
+def SetVariableAttr(sName, sAttrName, value):
+    oVariableMgr = variablemgr.GetVariableMgr()
+    oVariableMgr.SetAttr(sName, sAttrName, value)
+
+def GetVariableAttr(sName, sAttrName):
+    oVariableMgr = variablemgr.GetVariableMgr()
+    return oVariableMgr.GetAttr(sName, sAttrName)
+
+
 
 # --------------------------节点--------------------------
 def AddNode(bpID, sName):

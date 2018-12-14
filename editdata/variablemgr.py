@@ -9,6 +9,7 @@ import random
 import copy
 
 from . import define
+from bpdata import define as bddefine
 
 g_VariableMgr = None
 
@@ -26,19 +27,30 @@ class CVariableMgr:
         self.InitTestData()
 
     def NewVariable(self, sName, iType, value):
+        if value is None:
+            value = bddefine.GetDefauleValue(iType)
         self.m_Data[sName] = CVariable(sName, iType, value)
 
     def InitTestData(self):
         for i in range(10):
             sName = "Test%s" % i
-            dInfo = {
-                "type": random.randint(0, 9),
-                "value": random.randint(-999999, 999999)
-            }
-            self.m_Data[sName] = dInfo
+            iType = random.randint(1, 3)
+            value = random.randint(-999999, 999999)
+            self.NewVariable(sName, iType, value)
 
     def GetAllVarInfo(self):
         return copy.deepcopy(self.m_Data)
+
+    def SetAttr(self, sName, sAttrName, value):
+        oData = self.m_Data[sName]
+        oData.SetAttr(sAttrName, value)
+        if sAttrName == define.VariableAttrName.NAME:
+            self.m_Data[value] = oData
+            del self.m_Data[sName]
+
+    def GetAttr(self, sName, sAttrName):
+        oData = self.m_Data[sName]
+        return oData.GetAttr(sAttrName)
 
 
 class CVariable:

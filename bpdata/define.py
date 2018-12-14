@@ -16,6 +16,48 @@ class Type:
     STR = 3
 
 
+NAME_TYPE = {
+    "int": Type.INT,
+    "float": Type.FLOAT,
+    "str": Type.STR,
+}
+
+TYPE_NAME = {
+    Type.INT: "int",
+    Type.FLOAT: "float",
+    Type.STR: "str",
+}
+
+
+def GetDefauleValue(iType):
+    if iType in (Type.INT, Type.FLOAT):
+        return 0
+    if iType in (Type.STR,):
+        return ""
+
+
+def ForceTransValue(iType, sValue):
+    value, bSuc = None, False
+    if iType == Type.FLOAT:
+        try:
+            value = float(sValue)
+            bSuc = True
+        except:
+            pass
+
+    if iType == Type.INT:
+        try:
+            value = int(sValue)
+            bSuc = True
+        except:
+            pass
+
+    if iType == Type.STR:
+        value = sValue
+        bSuc = True
+    return value, bSuc
+
+
 class NodeName:
     ADD = "加法节点"
     MIUNS = "减法节点"

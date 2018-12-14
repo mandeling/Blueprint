@@ -7,14 +7,15 @@
 
 from PyQt5 import QtWidgets, QtCore
 from menu import menumgr, menudefine
-from graphics import bptabwidget, variableui
-
+from graphics import bptabwidget
+from bpwidget import detailui, variableui
 
 class CMainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
         self.m_BlutprintView = bptabwidget.CBlueprintView(self)
-        self.m_VariableWidget = variableui.CVariableWidget()
+        self.m_VariableWidget = variableui.CVariableWidget(self)
+        self.m_DeltailWidget = detailui.CDetailUI(self)
         self.InitUI()
         self.InitView()
 
@@ -44,11 +45,12 @@ class CMainWindow(QtWidgets.QMainWindow):
         self.setCorner(QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
 
     def InitDock(self):
+        # self.setDockNestingEnabled(True)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
 
         leftDock = QtWidgets.QDockWidget("左侧面板", self)
         leftDock.setSizePolicy(sizePolicy)
-        leftDock.setObjectName("m_LeftDockt")
+        leftDock.setObjectName("leftDock")
         leftDock.setWidget(self.m_VariableWidget)
         self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
@@ -62,12 +64,21 @@ class CMainWindow(QtWidgets.QMainWindow):
         # downDock.setObjectName("m_DownDockt")
         # self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, downDock)
 
+        detailDock = QtWidgets.QDockWidget("细节", self)
+        detailDock.setSizePolicy(sizePolicy)
+        detailDock.setObjectName("detailDock")
+        detailDock.setWidget(self.m_DeltailWidget)
+        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, detailDock)
+
         blueprintDock = QtWidgets.QDockWidget("蓝图", self)
         blueprintDock.setSizePolicy(sizePolicy)
         blueprintDock.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        blueprintDock.setObjectName("m_BlueprintDockt")
+        blueprintDock.setObjectName("blueprintDock")
         blueprintDock.setWidget(self.m_BlutprintView)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, blueprintDock)
+        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, blueprintDock)
+
+        self.splitDockWidget(leftDock, blueprintDock, QtCore.Qt.Horizontal)
+        self.splitDockWidget(blueprintDock, detailDock, QtCore.Qt.Horizontal)
 
     def InitCenter(self):
         pass
