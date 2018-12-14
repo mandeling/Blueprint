@@ -5,7 +5,7 @@
 @Desc: 
 """
 
-import signal
+import uisignal
 
 from PyQt5 import QtWidgets
 from ui import VariableDetail
@@ -33,13 +33,13 @@ class CDetailUI(QtWidgets.QWidget):
         self.InitSingal()
 
     def InitSingal(self):
-        signal.GetSignal().VARIABLE_OPEN.connect(self.S_OpenVariable)
+        uisignal.GetSignal().VARIABLE_OPEN.connect(self.S_OpenVariable)
         self.m_VariableDetail.lineEdit_var_name.editingFinished.connect(self.S_NameEditingFinished)
         self.m_VariableDetail.lineEdit_var_value.editingFinished.connect(self.S_ValueEditingFinished)
         self.m_VariableDetail.comboBox_var_type.currentIndexChanged.connect(self.S_TypeChanged)
 
     def InitUI(self):
-        for sName in bddefine.NAME_TYPE.keys():
+        for sName in bddefine.NAME_TYPE:
             self.m_VariableDetail.comboBox_var_type.addItem(sName)
 
     def S_OpenVariable(self, sName):
@@ -60,8 +60,8 @@ class CDetailUI(QtWidgets.QWidget):
         if sName == self.m_CurName:
             return
         print("S_NameEditingFinished", sName, self.m_CurName)
-        interface.SetVariableAttr(self.m_CurName, eddefine.VariableAttrName.NAME, sName)
         self.m_VariableDetail.lineEdit_var_name.setText(sName)
+        uisignal.GetSignal().VARIABLE_CHANGE_NAME.emit(self.m_CurName, sName)
         self.m_CurName = sName
 
     def S_ValueEditingFinished(self):
@@ -80,11 +80,11 @@ class CDetailUI(QtWidgets.QWidget):
             return
         sType = self.m_VariableDetail.comboBox_var_type.currentText()
         iType = bddefine.NAME_TYPE[sType]
-        interface.SetVariableAttr(self.m_CurName, eddefine.VariableAttrName.TYPE, iType)
         value = bddefine.GetDefauleValue(iType)
         self.m_VariableDetail.lineEdit_var_value.setText(str(value))
         print("S_TypeChanged", iType, self.m_CurType)
         self.m_CurType = iType
+        uisignal.GetSignal().VARIABLE_CHANGE_TYPE.emit(self.m_CurName, iType)
 
 
 class CVariableDetail(QtWidgets.QWidget, VariableDetail.Ui_Form):
