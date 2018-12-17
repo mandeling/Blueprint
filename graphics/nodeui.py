@@ -54,7 +54,7 @@ QPushButton:hover{
 QSS_NODE_PRESS = QSS_NODE_UNPRESS + """
 QWidget#outline{
     background:transparent;
-    border:4px solid rgb(239, 227, 8);
+    border:4px solid rgb(241, 176, 0);
     border-radius:14px;
 }
 """
@@ -132,7 +132,6 @@ class CNodeUI(QGraphicsProxyWidget):
         if self.m_NodeID not in lst:
             statusmgr.GetStatusMgr().SelectOneNode(self.m_BPID, self.m_NodeID)
         self.scene().SetNodeMove(event.pos() - self.m_StartPos)
-        print(event.pos(), self.m_StartPos)
 
     def mouseReleaseEvent(self, event):
         super(CNodeUI, self).mouseReleaseEvent(event)
