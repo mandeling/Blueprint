@@ -7,13 +7,14 @@
 
 from PyQt5 import QtWidgets, QtCore
 from menu import menumgr, menudefine
-from graphics import bptabwidget
+from graphics import bpwidget
 from bpwidget import detailui, variableui
+
 
 class CMainWindow(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
-        self.m_BlutprintView = bptabwidget.CBlueprintView(self)
+        self.m_BlutprintWidget = bpwidget.CBlueprintWidget(self)
         self.m_VariableWidget = variableui.CVariableWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
         self.InitUI()
@@ -74,7 +75,7 @@ class CMainWindow(QtWidgets.QMainWindow):
         blueprintDock.setSizePolicy(sizePolicy)
         blueprintDock.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         blueprintDock.setObjectName("blueprintDock")
-        blueprintDock.setWidget(self.m_BlutprintView)
+        blueprintDock.setWidget(self.m_BlutprintWidget)
         self.addDockWidget(QtCore.Qt.TopDockWidgetArea, blueprintDock)
 
         self.splitDockWidget(leftDock, blueprintDock, QtCore.Qt.Horizontal)
@@ -87,26 +88,17 @@ class CMainWindow(QtWidgets.QMainWindow):
         return [
             {
                 menudefine.MENU_NAME: "文件/新建蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintView.AddBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintWidget.NewBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+N"
             },
             {
                 menudefine.MENU_NAME: "文件/保存蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintView.SaveBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintWidget.SaveBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+S"
             },
             {
                 menudefine.MENU_NAME: "文件/打开蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintView.OpenBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintWidget.OpenBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+O"
             },
         ]
-
-    def NewBlueprint(self):
-        self.m_BlutprintView.AddBlueprint()
-
-    def SaveBlueprint(self):
-        self.m_BlutprintView.SaveBlueprint()
-
-    def OpenBlueprint(self):
-        self.m_BlutprintView.OpenBlueprint()

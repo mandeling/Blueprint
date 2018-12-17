@@ -43,6 +43,10 @@ class CUIManager:
         if nodeID in dInfo:
             del dInfo[nodeID]
 
+    def GetNodeUI(self, bpID, nodeID):
+        dInfo = self.m_NodeUI[bpID]
+        return dInfo[nodeID]()
+
     def AddPinUI(self, bpID, nodeID, pinID, oPinUI):
         dBPInfo = self.m_PinUI.setdefault(bpID, {})
         dNodeInfo = dBPInfo.setdefault(nodeID, {})

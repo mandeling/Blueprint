@@ -19,6 +19,7 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
 
     def __init__(self, bpID, nodeID, pinID, parent=None):
         super(CPinUI, self).__init__(parent)
+        # 位置需要优化下
         self.m_BPID = bpID
         self.m_NodeID = nodeID
         self.m_PinID = pinID

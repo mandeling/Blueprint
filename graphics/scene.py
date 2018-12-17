@@ -9,7 +9,7 @@
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform, QCursor
 
-from . import nodeui, pinui, lineui, uimgr
+from . import nodeui, pinui, lineui, uimgr, statusmgr
 from editdata import interface
 
 
@@ -20,7 +20,7 @@ class CBlueprintScene(QGraphicsScene):
         self.m_NodeUIInfo = {}
         self.m_PinInfo = {}
         self.m_IsDrawLine = False
-        self.m_TempPinLine = None  # 临时引脚线
+        self.m_TempPinLine = None   # 临时引脚线
         self.m_SelectPin = None
         self.Init()
 
@@ -42,6 +42,11 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).wheelEvent(event)
         # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
         event.accept()
+
+    def SetNodeMove(self, offpos):
+        for nodeID in statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID):
+            oNodeUI = uimgr.GetUIMgr().GetNodeUI(self.m_BPID, nodeID)
+            oNodeUI.SetMouseMovePos(offpos)
 
     def AddNodeUI(self, nodeID, tPos):
         oWidget = nodeui.CNodeUI(self.m_BPID, nodeID)

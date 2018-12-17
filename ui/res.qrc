@@ -1,5 +1,10 @@
 <RCC>
     <qresource>
+        <file>./bp/settings.png</file>
+        <file>./bp/debug.png</file>
+        <file>./bp/start.png</file>
+    </qresource>
+    <qresource>
         <file>./icon/btn_11.png</file>
         <file>./icon/btn_5.png</file>
         <file>./icon/btn_7.png</file>

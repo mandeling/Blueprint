@@ -10,11 +10,54 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsItem, QPushButton, QWidget
 from PyQt5.QtCore import Qt
 
-from . import uimgr, pinui
+from . import uimgr, pinui, statusmgr
 from editdata import interface
 
 import editdata.define as eddefine
 import bpdata.define as bddefine
+
+
+QSS_NODE_UNPRESS = """
+QWidget#CNodeWidget{
+    background:transparent;
+}
+QWidget#BCWidget{
+    background:rgba(0, 0, 0, 200);
+    border-style:solid;
+    border-width:0px;
+    border-radius:10px;
+}
+QWidget#top{
+    border-style:solid;
+    border-width:0px;
+    background:qlineargradient(spread:pad, x1:0.00564972, y1:0.358, x2:1, y2:0.637, stop:0 rgba(0, 104, 183, 200), stop:1 rgba(0, 160, 233, 50));
+    border-top-left-radius:10px;
+    border-top-right-radius:10px;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+}
+QLabel{
+    color:white;
+}
+QPushButton{
+    background-color:transparent;
+    color:white;
+    border:none;
+}
+QPushButton:hover{
+    background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
+    border-image:transparent;
+    color:white;
+}
+"""
+
+QSS_NODE_PRESS = QSS_NODE_UNPRESS + """
+QWidget#outline{
+    background:transparent;
+    border:4px solid rgb(239, 227, 8);
+    border-radius:14px;
+}
+"""
 
 
 class CNodeUI(QGraphicsProxyWidget):
@@ -23,6 +66,7 @@ class CNodeUI(QGraphicsProxyWidget):
         self.m_BPID = bpID
         self.m_NodeID = nodeID
         self.m_StartPos = None
+        self.m_IsNodeMove = False   # 是否节点有拖动
         self.m_NodeWidget = CNodeWidget(bpID, nodeID)
         self.InitUI()
         self.InitSlot()
@@ -41,6 +85,7 @@ class CNodeUI(QGraphicsProxyWidget):
             QGraphicsItem.ItemSendsGeometryChanges
         )
         self.setZValue(4)
+        self.SetUnpressStyle()
 
     def InitSlot(self):
         """四个槽的初始化,先手动设置"""
@@ -77,17 +122,27 @@ class CNodeUI(QGraphicsProxyWidget):
             return
         if event.button() == Qt.LeftButton:
             self.m_StartPos = event.pos()
+            self.m_IsNodeMove = False
 
     def mouseMoveEvent(self, event):
         super(CNodeUI, self).mouseMoveEvent(event)
         if self.IsDrawLine():
             return
-        self.SetMouseMovePos(self.m_StartPos, event.pos())
+        lst = statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID)
+        if self.m_NodeID not in lst:
+            statusmgr.GetStatusMgr().SelectOneNode(self.m_BPID, self.m_NodeID)
+        self.scene().SetNodeMove(event.pos() - self.m_StartPos)
+        print(event.pos(), self.m_StartPos)
 
     def mouseReleaseEvent(self, event):
         super(CNodeUI, self).mouseReleaseEvent(event)
-        self.m_StartPos = None
         self.setSelected(True)
+        oStatusMgr = statusmgr.GetStatusMgr()
+        if event.button() == Qt.LeftButton:
+            if event.modifiers() == Qt.ControlModifier:
+                oStatusMgr.AddSelectNode(self.m_BPID, self.m_NodeID)
+            elif not self.m_IsNodeMove:
+                oStatusMgr.SelectOneNode(self.m_BPID, self.m_NodeID)
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
@@ -96,58 +151,25 @@ class CNodeUI(QGraphicsProxyWidget):
                 oLineUI.UpdatePosition()
         return super(CNodeUI, self).itemChange(change, value)
 
-    def SetMouseMovePos(self, sPos, ePos):
-        if not (sPos and ePos):
+    def SetMouseMovePos(self, offpos):
+        if self.IsDrawLine():
             return
-        pos = self.pos()
-        x = pos.x() + ePos.x() - sPos.x()
-        y = pos.y() + ePos.y() - sPos.y()
-        self.setPos(x, y)
+        pos = self.pos() + offpos
+        self.setPos(pos)
+        self.m_IsNodeMove = True
 
     def S_OnDelNodeUI(self):
         interface.DelNode(self.m_BPID, self.m_NodeID)
         self.m_NodeWidget = None
         self.scene().DelNodeUI(self.m_NodeID)
 
+    def SetPressStyle(self):
+        self.m_NodeWidget.setStyleSheet(QSS_NODE_PRESS)
+        self.setZValue(self.zValue() + 10)
 
-QSS_STYLE = """
-QWidget#CNodeWidget{
-    background:transparent;
-}
-QWidget#BCWidget{
-    background:rgba(0, 0, 0, 200);
-    border-style:solid;
-    border-width:0px;
-    border-radius:10px;
-}
-QWidget#top{
-    border-style:solid;
-    border-width:0px;
-    background:qlineargradient(spread:pad, x1:0.00564972, y1:0.358, x2:1, y2:0.637, stop:0 rgba(0, 104, 183, 200), stop:1 rgba(0, 160, 233, 50));
-    border-top-left-radius:10px;
-    border-top-right-radius:10px;
-    border-bottom-left-radius:0px;
-    border-bottom-right-radius:0px;
-}
-QLabel{
-    color:white;
-}
-QPushButton{
-    background-color:transparent;
-    color:white;
-    border:none;
-}
-QPushButton:hover{
-    background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
-    border-image:transparent;
-    color:white;
-}
-QWidget#outline{
-    background:transparent;
-    border:4px solid rgb(244, 100, 0);
-    border-radius:14px;
-}
-"""
+    def SetUnpressStyle(self):
+        self.m_NodeWidget.setStyleSheet(QSS_NODE_UNPRESS)
+        self.setZValue(self.zValue() - 10)
 
 
 class CNodeWidget(QWidget):
@@ -183,12 +205,17 @@ class CNodeWidget(QWidget):
 
     def InitUI(self):
         self.setObjectName("CNodeWidget")
-        self.setStyleSheet(QSS_STYLE)
         self.setCursor(Qt.SizeAllCursor)
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.outline = QtWidgets.QWidget(self)
+        self.outline.setObjectName("outline")
+        self.verticalLayout_outline = QtWidgets.QVBoxLayout(self.outline)
+        self.verticalLayout_outline.setContentsMargins(4, 4, 4, 4)
+        self.verticalLayout_outline.setObjectName("verticalLayout_outline")
+
         self.BCWidget = QtWidgets.QWidget(self)
         self.BCWidget.setObjectName("BCWidget")
         self.verticalLayout_BCWidget = QtWidgets.QVBoxLayout(self.BCWidget)
@@ -227,7 +254,8 @@ class CNodeWidget(QWidget):
                 self.AddButton(oOutBtn)
             self.verticalLayout_BCWidget.addLayout(qHL)
 
-        self.verticalLayout.addWidget(self.BCWidget)
+        self.verticalLayout_outline.addWidget(self.BCWidget)
+        self.verticalLayout.addWidget(self.outline)
 
 
 class CNodeButtonUI(QPushButton):
