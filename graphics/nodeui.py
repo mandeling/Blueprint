@@ -42,7 +42,6 @@ QLabel{
 QPushButton{
     background-color:transparent;
     color:white;
-    border:none;
 }
 QPushButton:hover{
     background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
@@ -61,6 +60,8 @@ QWidget#outline{
 
 
 class CNodeUI(QGraphicsProxyWidget):
+    m_OutlineBorder = 4
+
     def __init__(self, bpID, nodeID, parent=None):
         super(CNodeUI, self).__init__(parent)
         self.m_BPID = bpID
@@ -89,7 +90,7 @@ class CNodeUI(QGraphicsProxyWidget):
 
     def InitSlot(self):
         """四个槽的初始化,先手动设置"""
-        iOffset = 10
+        iOffset = 8
         for pinID, oBtn in self.m_NodeWidget.m_ButtonInfo.items():
             if oBtn.IsOutput():
                 center = (oBtn.width() + iOffset, oBtn.height() / 2)
@@ -97,14 +98,9 @@ class CNodeUI(QGraphicsProxyWidget):
                 center = (0 - iOffset, oBtn.height() / 2)
             oPinUI = pinui.CPinUI(self.m_BPID, self.m_NodeID, pinID)
             oPinUI.SetCenter(center)
-            oPinUI.SetPolygon(oBtn.width(), oBtn.height())
             oPinUI.setParentItem(self)
-            x, y = self.pos().x(), self.pos().y()
-            x += oBtn.x()
-            y += oBtn.y()
-            mfsPos = oPinUI.mapFromScene(x, y)
-            mtpPos = oPinUI.mapToParent(mfsPos)
-            oPinUI.setPos(mtpPos.x(), mtpPos.y())
+            oPinUI.setPos(oBtn.x() + self.m_OutlineBorder, oBtn.y() + self.m_OutlineBorder)
+            oPinUI.SetPolygon(oBtn.width(), oBtn.height())
 
     def IsDrawLine(self):
         return self.scene().m_IsDrawLine

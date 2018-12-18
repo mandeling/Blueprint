@@ -47,7 +47,7 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
     def InitUI(self):
         self.setFlag(QtWidgets.QGraphicsItem.ItemSendsGeometryChanges)
         self.setFlag(QtWidgets.QGraphicsItem.ItemIsSelectable, False)
-        self.setZValue(4)
+        self.setZValue(2)
         self.setAcceptHoverEvents(True)
         self.setCursor(QtCore.Qt.CrossCursor)
 

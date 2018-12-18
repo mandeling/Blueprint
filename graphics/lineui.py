@@ -21,7 +21,7 @@ class CLineUI(QtWidgets.QGraphicsItem):
 
         self.m_StartPinUI = None
         self.m_EndPinUI = None
-        self.setZValue(-1000)
+        self.setZValue(-1)
         self.m_StartPoint = None
         self.m_EndPoint = None
         self.m_Path = None
