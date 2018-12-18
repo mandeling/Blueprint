@@ -7,7 +7,10 @@
 
 
 from PyQt5.QtWidgets import QGraphicsScene
-from PyQt5.QtGui import QTransform, QCursor
+from PyQt5.QtGui import QTransform, QCursor, QPolygonF
+from PyQt5.QtCore import QPointF
+
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 from . import nodeui, pinui, lineui, uimgr, statusmgr
 from editdata import interface
@@ -26,6 +29,18 @@ class CBlueprintScene(QGraphicsScene):
 
     def Init(self):
         self.setSceneRect(-10000, -10000, 20000, 20000)  # 场景大小，传入item里面
+
+        brush = QtGui.QBrush()
+        brush.setColor(QtGui.QColor(QtCore.Qt.darkGray))  # 线的颜色
+        brush.setStyle(QtCore.Qt.CrossPattern)
+        self.setBackgroundBrush(brush)
+        fillColor = QtGui.QColor(QtCore.Qt.black)   # 背景填充色
+        rect = QtCore.QRectF(-10000, -10000, 20000, 20000)
+        i = self.addRect(rect, QtCore.Qt.blue, fillColor)
+        i.setZValue(-1000)
+        # ---------------------边框颜色
+        i = self.addRect(rect, QtCore.Qt.yellow, brush)
+        i.setZValue(-1000)
 
     def GetBPID(self):
         return self.m_BPID
