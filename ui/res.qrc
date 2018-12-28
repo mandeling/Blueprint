@@ -1,8 +1,10 @@
 <RCC>
     <qresource>
-        <file>./bp/settings.png</file>
-        <file>./bp/debug.png</file>
-        <file>./bp/start.png</file>
+        <file>./menu/stop.png</file>
+        <file>./menu/save.png</file>
+        <file>./menu/debug.png</file>
+        <file>./menu/start.png</file>
+        <file>./menu/next.png</file>
     </qresource>
     <qresource>
         <file>./icon/btn_11.png</file>
@@ -12,6 +14,7 @@
         <file>./icon/btn_10.png</file>
         <file>./icon/btn_-1.png</file>
         <file>./icon/btn_2.png</file>
+        <file>./icon/debug.png</file>
         <file>./icon/btn_4.png</file>
         <file>./icon/btn_6.png</file>
         <file>./icon/btn_9.png</file>

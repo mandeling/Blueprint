@@ -5,14 +5,12 @@
 @Desc: 主窗口
 """
 
-from PyQt5.QtWidgets import QMainWindow, QStyleFactory,\
-    QWidget, QDockWidget, QSizePolicy, QApplication
+from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QColor
 
 from menu import menumgr, menudefine
 from graphics import bpwidget
-from bpwidget import detailui, variableui
+from bpwidget import detailui, variableui, menuui
 
 
 class CMainWindow(QMainWindow):
@@ -21,7 +19,7 @@ class CMainWindow(QMainWindow):
         self.m_BlutprintWidget = bpwidget.CBlueprintWidget(self)
         self.m_VariableWidget = variableui.CVariableWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
-        self.m_MenuWidget = None
+        self.m_MenuWidget = menuui.CMenuUI(self)
         self.m_LogWidget = None
         self.InitUI()
         self.InitView()
