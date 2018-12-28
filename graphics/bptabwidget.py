@@ -75,5 +75,5 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
         if bpID in self.m_PathInfo:
-            del self.m_PathInfo
+            del self.m_PathInfo[bpID]
         GetUIMgr().DelBPView(bpID)
