@@ -5,13 +5,12 @@
 @Desc: 引脚ui
 """
 
-import misc
+import editdata.define as eddefine
 
 from PyQt5 import QtWidgets, QtCore, QtGui
-
+from pubcode import functor
 from editdata import interface, pinmgr
 from . import uimgr
-import editdata.define as eddefine
 
 
 class CPinUI(QtWidgets.QGraphicsPolygonItem):
@@ -82,7 +81,7 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
             nodeID, _ = lstPin[index]
             sNodeName = interface.GetNodeAttr(self.m_BPID, nodeID, eddefine.NodeAttrName.NAME)
             sMsg = "删除与%s的连线" % sNodeName
-            func = misc.Functor(self.OnDelConnect, lineID)
+            func = functor.Functor(self.OnDelConnect, lineID)
             menu.addAction(sMsg, func)
         menu.exec_(QtGui.QCursor.pos())
 

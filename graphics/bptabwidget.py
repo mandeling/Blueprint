@@ -10,37 +10,6 @@ from PyQt5 import QtWidgets
 from . import view
 from editdata import interface
 
-# class CBlueprintWidget(QtWidgets.QWidget):
-#     def __init__(self, parent=None):
-#         super(CBlueprintWidget, self).__init__(parent)
-#         self.BPtabWidget = None
-#         self.InitUI()
-
-#     def InitUI(self):
-#         verticalLayout = QtWidgets.QVBoxLayout(self)
-#         horizontalLayout = QtWidgets.QHBoxLayout()
-#         self.m_BtnCompile = QtWidgets.QPushButton("编译", self)
-#         horizontalLayout.addWidget(self.m_BtnCompile)
-#         self.m_BtnStart = QtWidgets.QPushButton("开始", self)
-#         horizontalLayout.addWidget(self.m_BtnStart)
-#         self.m_BtnDebug = QtWidgets.QPushButton("调试", self)
-#         horizontalLayout.addWidget(self.m_BtnDebug)
-#         verticalLayout.addLayout(horizontalLayout)
-#         self.BPtabWidget = CBlueprintView(self)
-#         verticalLayout.addWidget(self.BPtabWidget)
-
-#     def NewBlueprint(self):
-#         self.BPtabWidget.AddBlueprint()
-
-#     def SaveBlueprint(self):
-#         self.BPtabWidget.SaveBlueprint()
-
-#     def OpenBlueprint(self):
-#         self.BPtabWidget.OpenBlueprint()
-
-
-
-
 
 class CBlueprintView(QtWidgets.QTabWidget):
     m_Filter = "*.xh"

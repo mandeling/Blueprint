@@ -4,7 +4,6 @@
 @Date: 2018-11-08 16:44:23
 @Desc: 蓝图view
 """
-import misc
 
 from . import scene, uimgr
 from editdata import interface
@@ -12,6 +11,8 @@ from editdata import interface
 from PyQt5.QtWidgets import QGraphicsView, QMenu
 from PyQt5.QtGui import QBrush, QColor
 from PyQt5.QtCore import Qt
+
+from pubcode import functor
 
 
 class CBlueprintView(QGraphicsView):
@@ -102,7 +103,7 @@ class CBlueprintView(QGraphicsView):
         tPos = sPos.x(), sPos.y()
         menu = QMenu(self)
         for sNodeName in interface.GetAllDefineNodeName():
-            func = misc.Functor(self.S_OnCreateNodeUI, sNodeName, tPos)
+            func = functor.Functor(self.S_OnCreateNodeUI, sNodeName, tPos)
             menu.addAction(sNodeName, func)
         menu.exec_(gPos)
 
