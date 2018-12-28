@@ -11,16 +11,16 @@ from . import view
 from editdata import interface
 
 
-class CBlueprintView(QtWidgets.QTabWidget):
+class CBPTabWidget(QtWidgets.QTabWidget):
     m_Filter = "*.xh"
 
     def __init__(self, parent=None):
-        super(CBlueprintView, self).__init__(parent)
+        super(CBPTabWidget, self).__init__(parent)
         self.setMovable(True)
         self.m_PathList = []    # 存放的路径
         self.m_ListBP = []      # 存放的蓝图对象
 
-    def AddBlueprint(self, sPath=None):
+    def NewBlueprint(self, sPath=None):
         if sPath:
             bpID = interface.OpenBlueprint(sPath)
             bpView = view.CBlueprintView(bpID)
@@ -46,7 +46,7 @@ class CBlueprintView(QtWidgets.QTabWidget):
     def OpenBlueprint(self):
         sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", filter=self.m_Filter)[0]
         if sPath:
-            self.AddBlueprint(sPath)
+            self.NewBlueprint(sPath)
 
     def SaveBlueprint(self):
         iIndex = self.currentIndex()

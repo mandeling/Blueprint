@@ -9,14 +9,14 @@ from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
 from PyQt5.QtCore import Qt
 
 from menu import menumgr, menudefine
-from graphics import bpwidget
+from graphics import bptabwidget
 from bpwidget import detailui, variableui, menuui
 
 
 class CMainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
-        self.m_BlutprintWidget = bpwidget.CBlueprintWidget(self)
+        self.m_BPTabWidget = bptabwidget.CBPTabWidget(self)
         self.m_VariableWidget = variableui.CVariableWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
         self.m_MenuWidget = menuui.CMenuUI(self)
@@ -76,23 +76,23 @@ class CMainWindow(QMainWindow):
         self.addDockWidget(Qt.TopDockWidgetArea, topDock)
         self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock)
         self.addDockWidget(Qt.LeftDockWidgetArea, leftDock)
-        self.setCentralWidget(self.m_BlutprintWidget)
+        self.setCentralWidget(self.m_BPTabWidget)
 
     def GetMenunInfo(self):
         return [
             {
                 menudefine.MENU_NAME: "文件/新建蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintWidget.NewBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BPTabWidget.NewBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+N"
             },
             {
                 menudefine.MENU_NAME: "文件/保存蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintWidget.SaveBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BPTabWidget.SaveBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+S"
             },
             {
                 menudefine.MENU_NAME: "文件/打开蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BlutprintWidget.OpenBlueprint,
+                menudefine.MENU_FUNCTION_NAME: self.m_BPTabWidget.OpenBlueprint,
                 menudefine.MENU_SHORTCUT_NAME: "Ctrl+O"
             },
         ]
