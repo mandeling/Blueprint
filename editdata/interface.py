@@ -5,28 +5,25 @@
 @Desc: 对ui层提供的接口
 """
 
+import misc
 import editdata.define as eddefine
 import bpdata.define as bddefine
+
 from . import nodemgr, variablemgr, linemgr, pinmgr
-
-
-g_BlueprintID = 0
 
 
 # -----------------------蓝图-----------------------------
 def NewBlueprint():
-    global g_BlueprintID
-    g_BlueprintID += 1
-    nodemgr.GetNodeMgr().NewBlueprint(g_BlueprintID)
-    linemgr.GetLineMgr().NewBlueprint(g_BlueprintID)
-    return g_BlueprintID
+    bpID = misc.uuid()
+    nodemgr.GetNodeMgr().NewBlueprint(bpID)
+    linemgr.GetLineMgr().NewBlueprint(bpID)
+    return bpID
 
 
 def OpenBlueprint(sPath):
-    global g_BlueprintID
-    g_BlueprintID += 1
-    # nodemgr.GetNodeMgr().NewBlueprint(g_BlueprintID)
-    return g_BlueprintID
+    bpID = misc.uuid()
+    # nodemgr.GetNodeMgr().NewBlueprint(bpID)
+    return bpID
 
 
 def SaveBlueprint(bpID, sPath):
@@ -38,18 +35,20 @@ def GetVariableData():
     oVariableMgr = variablemgr.GetVariableMgr()
     return oVariableMgr.GetAllVarInfo()
 
+
 def NewVariable(sName, iType=bddefine.Type.INT, value=None):
     oVariableMgr = variablemgr.GetVariableMgr()
     oVariableMgr.NewVariable(sName, iType, value)
+
 
 def SetVariableAttr(sName, sAttrName, value):
     oVariableMgr = variablemgr.GetVariableMgr()
     oVariableMgr.SetAttr(sName, sAttrName, value)
 
+
 def GetVariableAttr(sName, sAttrName):
     oVariableMgr = variablemgr.GetVariableMgr()
     return oVariableMgr.GetAttr(sName, sAttrName)
-
 
 
 # --------------------------节点--------------------------

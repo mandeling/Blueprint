@@ -6,9 +6,13 @@
 """
 
 import os
+
 from PyQt5 import QtWidgets
+
 from . import view
+from .uimgr import GetUIMgr
 from editdata import interface
+from pubcode import functor
 
 
 class CBPTabWidget(QtWidgets.QTabWidget):
@@ -17,8 +21,8 @@ class CBPTabWidget(QtWidgets.QTabWidget):
     def __init__(self, parent=None):
         super(CBPTabWidget, self).__init__(parent)
         self.setMovable(True)
-        self.m_PathList = []    # 存放的路径
-        self.m_ListBP = []      # 存放的蓝图对象
+        self.m_ShowID = 0
+        self.m_PathInfo = {}
 
     def NewBlueprint(self, sPath=None):
         if sPath:
@@ -30,17 +34,18 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         else:
             bpID = interface.NewBlueprint()
             bpView = view.CBlueprintView(bpID)
-            sTabTitle = "蓝图%s" % bpID
+            self.m_ShowID += 1
+            sTabTitle = "蓝图%s" % self.m_ShowID
             tabIndex = self.addTab(bpView, sTabTitle)
 
         self.setCurrentIndex(tabIndex)
-        self.m_ListBP.append(bpView)
-        self.m_PathList.append(sPath)
+        self.m_PathInfo[bpID] = sPath
 
         btn = QtWidgets.QPushButton("x")
         btn.setFlat(True)
         btn.setMaximumSize(16, 16)
-        btn.clicked.connect(self.S_CloseTab)
+        func = functor.Functor(self.S_CloseTab, bpID)
+        btn.clicked.connect(func)
         self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
 
     def OpenBlueprint(self):
@@ -49,35 +54,26 @@ class CBPTabWidget(QtWidgets.QTabWidget):
             self.NewBlueprint(sPath)
 
     def SaveBlueprint(self):
-        iIndex = self.currentIndex()
-        sPath = self.m_PathList[iIndex]
+        oView = self.currentWidget()
+        bpID = oView.GetBPID()
+        sPath = self.m_PathInfo.get(bpID, None)
         if not sPath:
             sPath = QtWidgets.QFileDialog.getSaveFileName(self, "保存蓝图", filter=self.m_Filter)[0]
             if not sPath:
                 return
-        bpID = self.GetBPID(iIndex)
         interface.SaveBlueprint(bpID, sPath)
-
         sTabTitle = os.path.split(sPath)[1]
+        iIndex = self.indexOf(oView)
         self.setTabText(iIndex, sTabTitle)
         self.setTabToolTip(iIndex, sPath)
 
-    def GetBPID(self, iIndex=None):
-        if not iIndex:
-            iIndex = self.currentIndex()
-        oView = self.m_ListBP[iIndex]
-        return oView.GetBPID()
-
-    def Delete(self, iIndex=None):
-        if iIndex is None:
-            iIndex = self.currentIndex()
-        if iIndex < len(self.m_PathList):
-            del self.m_PathList[iIndex]
-        if iIndex < len(self.m_ListBP):
-            del self.m_ListBP[iIndex]
-
-    def S_CloseTab(self):
-        iIndex = self.currentIndex()
-        self.Delete(iIndex)
+    def S_CloseTab(self, bpID, _):
+        oView = GetUIMgr().GetBPView(bpID)
+        if not oView:
+            return
+        iIndex = self.indexOf(oView)
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
+        if bpID in self.m_PathInfo:
+            del self.m_PathInfo
+        GetUIMgr().DelBPView(bpID)
