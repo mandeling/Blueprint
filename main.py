@@ -7,15 +7,17 @@
 
 import sys
 import mainwindow
-import misc
+
+from PyQt5 import QtWidgets, QtGui
 
 from ui import res_rc
 from bpdata import node
-from PyQt5 import QtWidgets, QtGui
+
+from pubcode.pubfunc import pubmisc
 
 
 def Start():
-    sys.excepthook = misc.HandleException
+    sys.excepthook = pubmisc.SysExceptHook
     Mainwindow()
 
 

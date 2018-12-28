@@ -5,18 +5,24 @@
 @Desc: 主窗口
 """
 
-from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QMainWindow, QStyleFactory,\
+    QWidget, QDockWidget, QSizePolicy, QApplication
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette, QColor
+
 from menu import menumgr, menudefine
 from graphics import bpwidget
 from bpwidget import detailui, variableui
 
 
-class CMainWindow(QtWidgets.QMainWindow):
+class CMainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
         self.m_BlutprintWidget = bpwidget.CBlueprintWidget(self)
         self.m_VariableWidget = variableui.CVariableWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
+        self.m_MenuWidget = None
+        self.m_LogWidget = None
         self.InitUI()
         self.InitView()
 
@@ -29,7 +35,6 @@ class CMainWindow(QtWidgets.QMainWindow):
         self.InitMenu()
         self.InitCorner()
         self.InitDock()
-        self.InitCenter()
 
     def InitMenu(self):
         menumgr.InitMgr(self)
@@ -40,49 +45,40 @@ class CMainWindow(QtWidgets.QMainWindow):
         self.setMenuBar(pMenuBar)
 
     def InitCorner(self):
-        self.setCorner(QtCore.Qt.TopLeftCorner, QtCore.Qt.LeftDockWidgetArea)
-        self.setCorner(QtCore.Qt.BottomLeftCorner, QtCore.Qt.BottomDockWidgetArea)
-        self.setCorner(QtCore.Qt.TopRightCorner, QtCore.Qt.RightDockWidgetArea)
-        self.setCorner(QtCore.Qt.BottomRightCorner, QtCore.Qt.RightDockWidgetArea)
+        self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
+        self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
+        self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
     def InitDock(self):
         # self.setDockNestingEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
-        leftDock = QtWidgets.QDockWidget("左侧面板", self)
+        topDock = QDockWidget("菜单", self)
+        topDock.setSizePolicy(sizePolicy)
+        topDock.setObjectName("topDock")
+        topDock.setWidget(self.m_MenuWidget)
+
+        bottomDock = QDockWidget("Log面板", self)
+        bottomDock.setSizePolicy(sizePolicy)
+        bottomDock.setObjectName("bottomDock")
+        bottomDock.setWidget(self.m_LogWidget)
+
+        leftDock = QDockWidget("变量", self)
         leftDock.setSizePolicy(sizePolicy)
         leftDock.setObjectName("leftDock")
         leftDock.setWidget(self.m_VariableWidget)
-        self.addDockWidget(QtCore.Qt.LeftDockWidgetArea, leftDock)
 
-        # rightDock = QtWidgets.QDockWidget("右侧面板", self)
-        # rightDock.setSizePolicy(sizePolicy)
-        # rightDock.setObjectName("m_RightDockt")
-        # self.addDockWidget(QtCore.Qt.RightDockWidgetArea, rightDock)
+        rightDock = QDockWidget("细节", self)
+        rightDock.setSizePolicy(sizePolicy)
+        rightDock.setObjectName("rightDock")
+        rightDock.setWidget(self.m_DeltailWidget)
 
-        # downDock = QtWidgets.QDockWidget("底部面板", self)
-        # downDock.setSizePolicy(sizePolicy)
-        # downDock.setObjectName("m_DownDockt")
-        # self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, downDock)
-
-        detailDock = QtWidgets.QDockWidget("细节", self)
-        detailDock.setSizePolicy(sizePolicy)
-        detailDock.setObjectName("detailDock")
-        detailDock.setWidget(self.m_DeltailWidget)
-        self.addDockWidget(QtCore.Qt.RightDockWidgetArea, detailDock)
-
-        blueprintDock = QtWidgets.QDockWidget("蓝图", self)
-        blueprintDock.setSizePolicy(sizePolicy)
-        blueprintDock.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        blueprintDock.setObjectName("blueprintDock")
-        blueprintDock.setWidget(self.m_BlutprintWidget)
-        self.addDockWidget(QtCore.Qt.TopDockWidgetArea, blueprintDock)
-
-        self.splitDockWidget(leftDock, blueprintDock, QtCore.Qt.Horizontal)
-        self.splitDockWidget(blueprintDock, detailDock, QtCore.Qt.Horizontal)
-
-    def InitCenter(self):
-        pass
+        self.addDockWidget(Qt.RightDockWidgetArea, rightDock)
+        self.addDockWidget(Qt.TopDockWidgetArea, topDock)
+        self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock)
+        self.addDockWidget(Qt.LeftDockWidgetArea, leftDock)
+        self.setCentralWidget(self.m_BlutprintWidget)
 
     def GetMenunInfo(self):
         return [
