@@ -34,18 +34,17 @@ class CUIManager:
     def GetBPView(self, bpID):
         return self.m_BPUI[bpID]()
 
-    def AddNodeUI(self, bpID, nodeID, oNodeUI):
-        dInfo = self.m_NodeUI.setdefault(bpID, {})
-        dInfo[nodeID] = weakref.ref(oNodeUI)
+    def AddNodeUI(self, nodeID, oNodeUI):
+        self.m_NodeUI[nodeID] = weakref.ref(oNodeUI)
 
-    def DelNodeUI(self, bpID, nodeID):
-        dInfo = self.m_NodeUI.setdefault(bpID, {})
-        if nodeID in dInfo:
-            del dInfo[nodeID]
+    def DelNodeUI(self, nodeID):
+        if nodeID in self.m_NodeUI:
+            del self.m_NodeUI[nodeID]
 
-    def GetNodeUI(self, bpID, nodeID):
-        dInfo = self.m_NodeUI[bpID]
-        return dInfo[nodeID]()
+    def GetNodeUI(self, nodeID):
+        if nodeID in self.m_NodeUI:
+            return self.m_NodeUI[nodeID]()
+        return None
 
     def AddPinUI(self, bpID, nodeID, pinID, oPinUI):
         dBPInfo = self.m_PinUI.setdefault(bpID, {})

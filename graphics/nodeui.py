@@ -62,19 +62,18 @@ QWidget#outline{
 class CNodeUI(QGraphicsProxyWidget):
     m_OutlineBorder = 4
 
-    def __init__(self, bpID, nodeID, parent=None):
+    def __init__(self, nodeID, parent=None):
         super(CNodeUI, self).__init__(parent)
-        self.m_BPID = bpID
         self.m_NodeID = nodeID
         self.m_StartPos = None
         self.m_IsNodeMove = False   # 是否节点有拖动
-        self.m_NodeWidget = CNodeWidget(bpID, nodeID)
+        self.m_NodeWidget = CNodeWidget(nodeID)
         self.InitUI()
         self.InitSlot()
-        uimgr.GetUIMgr().AddNodeUI(bpID, nodeID, self)
+        uimgr.GetUIMgr().AddNodeUI(nodeID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelNodeUI(self.m_BPID, self.m_NodeID)
+        uimgr.GetUIMgr().DelNodeUI(self.m_NodeID)
 
     def InitUI(self):
         self.setWidget(self.m_NodeWidget)
@@ -96,7 +95,7 @@ class CNodeUI(QGraphicsProxyWidget):
                 center = (oBtn.width() + iOffset, oBtn.height() / 2)
             else:
                 center = (0 - iOffset, oBtn.height() / 2)
-            oPinUI = pinui.CPinUI(self.m_BPID, self.m_NodeID, pinID)
+            oPinUI = pinui.CPinUI(self.m_NodeID, pinID)
             oPinUI.SetCenter(center)
             oPinUI.setParentItem(self)
             oPinUI.setPos(oBtn.x() + self.m_OutlineBorder, oBtn.y() + self.m_OutlineBorder)
@@ -124,9 +123,10 @@ class CNodeUI(QGraphicsProxyWidget):
         super(CNodeUI, self).mouseMoveEvent(event)
         if self.IsDrawLine():
             return
-        lst = statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID)
+        bpID = interface.GetBPIDByNodeID(self.m_NodeID)
+        lst = statusmgr.GetStatusMgr().GetSelectNode(bpID)
         if self.m_NodeID not in lst:
-            statusmgr.GetStatusMgr().SelectOneNode(self.m_BPID, self.m_NodeID)
+            statusmgr.GetStatusMgr().SelectOneNode(self.m_NodeID)
         self.scene().SetNodeMove(event.pos() - self.m_StartPos)
 
     def mouseReleaseEvent(self, event):
@@ -135,14 +135,14 @@ class CNodeUI(QGraphicsProxyWidget):
         oStatusMgr = statusmgr.GetStatusMgr()
         if event.button() == Qt.LeftButton:
             if event.modifiers() == Qt.ControlModifier:
-                oStatusMgr.AddSelectNode(self.m_BPID, self.m_NodeID)
+                oStatusMgr.AddSelectNode(self.m_NodeID)
             elif not self.m_IsNodeMove:
-                oStatusMgr.SelectOneNode(self.m_BPID, self.m_NodeID)
+                oStatusMgr.SelectOneNode(self.m_NodeID)
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
-            for lineID in interface.GetAllLineByNode(self.m_BPID, self.m_NodeID):
-                oLineUI = uimgr.GetUIMgr().GetLineUI(self.m_BPID, lineID)
+            for lineID in interface.GetAllLineByNode(self.m_NodeID):
+                oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
                 oLineUI.UpdatePosition()
         return super(CNodeUI, self).itemChange(change, value)
 
@@ -154,7 +154,7 @@ class CNodeUI(QGraphicsProxyWidget):
         self.m_IsNodeMove = True
 
     def S_OnDelNodeUI(self):
-        interface.DelNode(self.m_BPID, self.m_NodeID)
+        interface.DelNode(self.m_NodeID)
         self.m_NodeWidget = None
         self.scene().DelNodeUI(self.m_NodeID)
 
@@ -168,13 +168,11 @@ class CNodeUI(QGraphicsProxyWidget):
 
 
 class CNodeWidget(QWidget):
-    def __init__(self, bpID, nodeID, parent=None):
+    def __init__(self, nodeID, parent=None):
         super(CNodeWidget, self).__init__(parent)
-        self.m_BPID = bpID
         self.m_NodeID = nodeID
-
-        self.m_NodeName = interface.GetNodeAttr(bpID, nodeID, eddefine.NodeAttrName.NAME)
-        self.m_PinInfo = interface.GetNodeAttr(bpID, nodeID, eddefine.NodeAttrName.PININFO)
+        self.m_NodeName = interface.GetNodeAttr(nodeID, eddefine.NodeAttrName.NAME)
+        self.m_PinInfo = interface.GetNodeAttr(nodeID, eddefine.NodeAttrName.PININFO)
         self.m_InputInfo = []
         self.m_OutputInfo = []
         self.m_ButtonInfo = {}
@@ -184,14 +182,14 @@ class CNodeWidget(QWidget):
     def InitData(self):
         for pid, pinInfo in self.m_PinInfo.items():
             iPinType = pinInfo[bddefine.PinAttrName.PIN_TYPE]
-            if iPinType == bddefine.PIN_INPUT_TYPE:
+            if iPinType == bddefine.PIN_INPUT_DATA_TYPE:
                 tmp = self.m_InputInfo
             else:
                 tmp = self.m_OutputInfo
             if bddefine.PinAttrName.DATA_TYPE in pinInfo:
-                tmp.append([self.m_BPID, self.m_NodeID, pid])
+                tmp.append([self.m_NodeID, pid])
             else:
-                tmp.insert(0, [self.m_BPID, self.m_NodeID, pid])
+                tmp.insert(0, [self.m_NodeID, pid])
 
     def AddButton(self, oBtn):
         if not oBtn:
@@ -254,9 +252,8 @@ class CNodeWidget(QWidget):
 
 
 class CNodeButtonUI(QPushButton):
-    def __init__(self, bpID, nodeID, pinID, bOutput=False, parent=None):
+    def __init__(self, nodeID, pinID, bOutput=False, parent=None):
         super(CNodeButtonUI, self).__init__(parent)
-        self.m_BPID = bpID
         self.m_NodeID = nodeID
         self.m_PinID = pinID
         self.m_BOutPut = bOutput
@@ -268,7 +265,7 @@ class CNodeButtonUI(QPushButton):
         uimgr.GetUIMgr().AddPinBtnUI(bpID, nodeID, pinID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelPinBtnUI(self.m_BPID, self.m_NodeID, self.m_PinID)
+        uimgr.GetUIMgr().DelPinBtnUI(self.m_NodeID, self.m_PinID)
 
     def GetPinID(self):
         return self.m_PinID
@@ -277,7 +274,7 @@ class CNodeButtonUI(QPushButton):
         return self.m_BOutPut
 
     def GetPinInfo(self):
-        dNodeInfo = interface.GetNodeAttr(self.m_BPID, self.m_NodeID, eddefine.NodeAttrName.PININFO)
+        dNodeInfo = interface.GetNodeAttr(self.m_NodeID, eddefine.NodeAttrName.PININFO)
         return dNodeInfo[self.m_PinID]
 
     def SetIcon(self, iType=None):

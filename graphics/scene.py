@@ -20,7 +20,6 @@ class CBlueprintScene(QGraphicsScene):
     def __init__(self, bpID, parent=None):
         super(CBlueprintScene, self).__init__(parent)
         self.m_BPID = bpID
-        self.m_NodeUIInfo = {}
         self.m_PinInfo = {}
         self.m_IsDrawLine = False
         self.m_TempPinLine = None   # 临时引脚线
@@ -60,22 +59,20 @@ class CBlueprintScene(QGraphicsScene):
 
     def SetNodeMove(self, offpos):
         for nodeID in statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID):
-            oNodeUI = uimgr.GetUIMgr().GetNodeUI(self.m_BPID, nodeID)
+            oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
             oNodeUI.SetMouseMovePos(offpos)
 
     def AddNodeUI(self, nodeID, tPos):
-        oWidget = nodeui.CNodeUI(self.m_BPID, nodeID)
-        self.m_NodeUIInfo[nodeID] = oWidget
-        self.addItem(oWidget)
+        oNodeUI = nodeui.CNodeUI(nodeID)
+        self.addItem(oNodeUI)
         x, y = tPos
-        oWidget.setPos(x, y)
+        oNodeUI.setPos(x, y)
 
     def DelNodeUI(self, nodeID):
-        oWidget = self.m_NodeUIInfo.get(nodeID, None)
-        if not oWidget:
+        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        if not oNodeUI:
             return
-        self.removeItem(oWidget)
-        del self.m_NodeUIInfo[nodeID]
+        self.removeItem(oNodeUI)
 
     def BeginConnect(self, startPinUI):
         self.m_IsDrawLine = True

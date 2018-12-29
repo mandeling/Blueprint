@@ -9,25 +9,26 @@ import misc
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
-from . import nodemgr, variablemgr, linemgr, pinmgr
+from . import nodemgr, variablemgr, linemgr, pinmgr, idmgr, bpmgr
 
 
 # -----------------------蓝图-----------------------------
 def NewBlueprint():
-    bpID = misc.uuid()
-    nodemgr.GetNodeMgr().NewBlueprint(bpID)
-    linemgr.GetLineMgr().NewBlueprint(bpID)
+    bpID = bpmgr.GetBPMgr().NewBP()
     return bpID
 
 
 def OpenBlueprint(sPath):
     bpID = misc.uuid()
-    # nodemgr.GetNodeMgr().NewBlueprint(bpID)
     return bpID
 
 
 def SaveBlueprint(bpID, sPath):
     pass
+
+
+def GetBPIDByNodeID(nodeID):
+    return idmgr.GetIDMgr().GetBPIDByNodeID(nodeID)
 
 
 # --------------------变量--------------------------------
@@ -52,19 +53,20 @@ def GetVariableAttr(sName, sAttrName):
 
 
 # --------------------------节点--------------------------
-def AddNode(bpID, sName):
+def AddNode(bpID, sName, pos=(0, 0)):
+    nodeID = nodemgr.GetNodeMgr().NewNode(sName, pos)
+    idmgr.GetIDMgr().NewNode(bpID, nodeID)
+    return nodeID
+
+
+def SetNodeAttr(nodeID, sAttrName, value):
     oNodeMgr = nodemgr.GetNodeMgr()
-    return oNodeMgr.NewNode(bpID, sName)
+    oNodeMgr.SetNodeAttr(nodeID, sAttrName, value)
 
 
-def SetNodeAttr(bpID, nodeID, sAttrName, value):
+def GetNodeAttr(nodeID, sAttrName):
     oNodeMgr = nodemgr.GetNodeMgr()
-    oNodeMgr.SetNodeAttr(bpID, nodeID, sAttrName, value)
-
-
-def GetNodeAttr(bpID, nodeID, sAttrName):
-    oNodeMgr = nodemgr.GetNodeMgr()
-    return oNodeMgr.GetNodeAttr(bpID, nodeID, sAttrName)
+    return oNodeMgr.GetNodeAttr(nodeID, sAttrName)
 
 
 def GetAllDefineNodeName():
@@ -72,9 +74,9 @@ def GetAllDefineNodeName():
     return oNodeMgr.GetAllDefineNodeName()
 
 
-def DelNode(bpID, nodeID):
+def DelNode(nodeID):
     oNodeMgr = nodemgr.GetNodeMgr()
-    oNodeMgr.DelNode(bpID, nodeID)
+    oNodeMgr.DelNode(nodeID)
 
 
 # ---------------------引脚-------------------------------
@@ -102,7 +104,7 @@ def PinCanConnect(bpID, nodeID1, pinID1, nodeID2, pinID2):
 def IsInputPin(bpID, nodeID, pinID):
     pinInfo = GetPinInfo(bpID, nodeID, pinID)
     iPinType = pinInfo[bddefine.PinAttrName.PIN_TYPE]
-    if iPinType == bddefine.PIN_INPUT_TYPE:
+    if iPinType == bddefine.PIN_INPUT_DATA_TYPE:
         return True
     return False
 

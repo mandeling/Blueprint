@@ -28,7 +28,7 @@ class CStatusMgr:
     def AddSelectNode(self, bpID, nodeID):
         """添加一个选中的节点"""
         lst = self.GetSelectNode(bpID)
-        oNodeUI = uimgr.GetUIMgr().GetNodeUI(bpID, nodeID)
+        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
         if nodeID in lst:
             oNodeUI.SetUnpressStyle()
             lst.remove(nodeID)
@@ -41,15 +41,15 @@ class CStatusMgr:
         for nid in self.GetSelectNode(bpID):
             if nid == nodeID:
                 continue
-            oNodeUI = uimgr.GetUIMgr().GetNodeUI(bpID, nid)
+            oNodeUI = uimgr.GetUIMgr().GetNodeUI(nid)
             oNodeUI.SetUnpressStyle()
         self.m_SelectNode[bpID] = [nodeID]
-        oNodeUI = uimgr.GetUIMgr().GetNodeUI(bpID, nodeID)
+        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
         oNodeUI.SetPressStyle()
 
     def ClearNode(self, bpID):
         """清除节点选中状态"""
         for nid in self.GetSelectNode(bpID):
-            oNodeUI = uimgr.GetUIMgr().GetNodeUI(bpID, nid)
+            oNodeUI = uimgr.GetUIMgr().GetNodeUI(nid)
             oNodeUI.SetUnpressStyle()
         self.m_SelectNode[bpID] = []

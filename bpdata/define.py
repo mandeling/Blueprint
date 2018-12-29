@@ -6,8 +6,10 @@
 """
 
 
-PIN_INPUT_TYPE = 0
-PIN_OUTPUT_TYPE = 1
+PIN_INPUT_DATA_TYPE = 0
+PIN_OUTPUT_DATA_TYPE = 1
+PIN_INPUT_FLOW_TYPE = 2
+PIN_OUTPUT_FLOW_TYPE = 3
 
 
 class Type:
@@ -34,6 +36,7 @@ def GetDefauleValue(iType):
         return 0
     if iType in (Type.STR,):
         return ""
+    return None
 
 
 def ForceTransValue(iType, sValue):
@@ -72,5 +75,19 @@ PIN_ATTR_NAME_PREFIX = "pin_attr_name:"
 class PinAttrName:
     ID = PIN_ATTR_NAME_PREFIX + "id"
     NAME = PIN_ATTR_NAME_PREFIX + "name"
+    DISPLAYNAME = PIN_ATTR_NAME_PREFIX + "display_name"
     PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"
     DATA_TYPE = PIN_ATTR_NAME_PREFIX + "data_type"
+    VALUE = PIN_ATTR_NAME_PREFIX + "data_type"
+
+
+# ----------------------Node-------------------------------
+NODE_ATTR_NAME_PREFIX = "node_attr_name:"
+
+
+class NodeAttrName:
+    ID = NODE_ATTR_NAME_PREFIX + "id"
+    NAME = NODE_ATTR_NAME_PREFIX + "name"
+    DISPLAYNAME = NODE_ATTR_NAME_PREFIX + "display_name"
+    POSITION = NODE_ATTR_NAME_PREFIX + "postion"
+    PINIDLIST = NODE_ATTR_NAME_PREFIX + "pin_list"

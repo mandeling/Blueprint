@@ -11,23 +11,55 @@ from editdata import nodemgr
 
 def Register(sNodeName):
     def Cls(cls):
-        cls(sNodeName)
+        obj = cls(sNodeName)
+        nodemgr.GetNodeMgr().Register(sNodeName, obj)
     return Cls
 
 
 class CBase:
     def __init__(self, sNodeName):
         self.m_NodeName = sNodeName
-        self.m_InputFlow = self.InputFlow()
-        self.m_OutputFlow = self.OutputFlow()
-        self.m_InputData = self.InputData()
-        self.m_OutputData = self.OutputData()
-        self.m_ID = 0
-        self.m_InputMap = {}    # 输入的映射
+        self.m_Info = {
+            define.NodeAttrName.ID: 0,
+            define.NodeAttrName.NAME: sNodeName,
+            define.NodeAttrName.DISPLAYNAME: sNodeName,
+            define.NodeAttrName.POSITION: (0, 0),
+            define.NodeAttrName.PINIDLIST: [],
+        }
         self.m_OutputFunc = {}  # 输出pin对应执行的函数
         self.m_PinInfo = {}
-        self.Init()
-        self.Register()
+        self.m_Name2PID = {}
+        self._Run()
+
+    def _Run(self):
+        lstInputFlow = self.InputFlow()
+        lstOutputFlow = self.OutputFlow()
+        lstInputData = self.InputData()
+        lstOutputData = self.OutputData()
+        for sPinName in lstInputFlow:
+            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_INPUT_FLOW_TYPE, 0, sPinName)
+
+        for sPinName in lstOutputFlow:
+            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_OUTPUT_FLOW_TYPE, 0, sPinName)
+
+        for lst in lstInputData:
+            sPinName, iDataType = lst[0], lst[1]
+            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_INPUT_DATA_TYPE, iDataType, sPinName)
+
+        for lst in lstOutputData:
+            sPinName, iDataType, func = lst[0], lst[1], lst[2]
+            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_OUTPUT_DATA_TYPE, iDataType, sPinName)
+            self.m_OutputFunc[sPinName] = func
+
+    def SetAttr(self, sAttrName, value):
+        self.m_Info[sAttrName] = value
+
+    def GetAttr(self, sAttrName):
+        return self.m_Info[sAttrName]
+
+    def GetValue(self, sPinName):
+        oPin = self.m_PinInfo[sPinName]
+        return oPin.GetAttr(define.PinAttrName.VALUE)
 
     def InputFlow(self):
         """输入流引脚的定义"""
@@ -45,110 +77,73 @@ class CBase:
         """输出数据引脚的定义"""
         return []
 
-    def NewID(self):
-        self.m_ID += 1
-        return self.m_ID
-
-    def Init(self):
-        for sName in self.m_InputFlow:
-            pid = self.NewID()
-            oPin = pin.CFlowPin(pid, define.PIN_INPUT_TYPE, sName)
-            self.m_PinInfo[pid] = oPin.GetInfo()
-
-        for sName in self.m_OutputFlow:
-            pid = self.NewID()
-            oPin = pin.CFlowPin(pid, define.PIN_OUTPUT_TYPE, sName)
-            self.m_PinInfo[pid] = oPin.GetInfo()
-
-        iInputID = 0
-        for lst in self.m_InputData:
-            iDataType, sName = lst[0], lst[1]
-            pid = self.NewID()
-            oPin = pin.CDataPin(pid, define.PIN_INPUT_TYPE, iDataType, sName)
-            self.m_PinInfo[pid] = oPin.GetInfo()
-            iInputID += 1
-            nodemgr.GetNodeMgr().BindInputID(self.m_NodeName, iInputID, pid)
-
-        for lst in self.m_OutputData:
-            iDataType, sName, func = lst[0], lst[1], lst[2]
-            pid = self.NewID()
-            oPin = pin.CDataPin(pid, define.PIN_OUTPUT_TYPE, iDataType, sName)
-            self.m_PinInfo[pid] = oPin.GetInfo()
-            self.m_OutputFunc[pid] = func
-
-    def GetValue(self, iInputID):
-        return nodemgr.GetNodeMgr().GetValue(self.m_NodeName, iInputID)
-
-    def Register(self):
-        nodemgr.GetNodeMgr().Register(self.m_NodeName, self.m_PinInfo)
-
 
 @Register(define.NodeName.ADD)
 class CAdd(CBase):
     def InputData(self):
         return [
-            (define.Type.INT, "输入1"),
-            (define.Type.INT, "输入2"),
+            ("输入1", define.Type.INT),
+            ("输入2", define.Type.INT),
         ]
 
     def OutputData(self):
         return [
-            (define.Type.INT, "输出", self.Output1),
+            ("输出", define.Type.INT, self.Output1),
         ]
 
     def Output1(self):
-        return self.GetValue(0) + self.GetValue(1)
+        return self.GetValue("输入1") + self.GetValue("输入2")
 
 
 @Register(define.NodeName.MIUNS)
 class CMiuns(CBase):
     def InputData(self):
         return [
-            (define.Type.INT, "输入1"),
-            (define.Type.INT, "输入2"),
+            ("输入1", define.Type.INT),
+            ("输入2", define.Type.INT),
         ]
 
     def OutputData(self):
         return [
-            (define.Type.INT, "输出", self.Output1),
+            ("输出", define.Type.INT, self.Output1),
         ]
 
     def Output1(self):
-        return self.GetValue(0) - self.GetValue(1)
+        return self.GetValue("输入1") - self.GetValue("输入2")
 
 
 @Register(define.NodeName.MULTIPLY)
 class CMultipyl(CBase):
     def InputData(self):
         return [
-            (define.Type.INT, "输入1"),
-            (define.Type.INT, "输入2"),
+            ("输入1", define.Type.INT),
+            ("输入2", define.Type.INT),
         ]
 
     def OutputData(self):
         return [
-            (define.Type.INT, "输出", self.Output1),
+            ("输出", define.Type.INT, self.Output1),
         ]
 
     def Output1(self):
-        return self.GetValue(0) * self.GetValue(1)
+        return self.GetValue("输入1") * self.GetValue("输入2")
 
 
 @Register(define.NodeName.DIVIDE)
 class CDivide(CBase):
     def InputData(self):
         return [
-            (define.Type.INT, "输入1"),
-            (define.Type.INT, "输入2"),
+            ("输入1", define.Type.INT),
+            ("输入2", define.Type.INT),
         ]
 
     def OutputData(self):
         return [
-            (define.Type.INT, "输出", self.Output1),
+            ("输出", define.Type.INT, self.Output1),
         ]
 
     def Output1(self):
-        return self.GetValue(0) / self.GetValue(1)
+        return self.GetValue("输入1") / self.GetValue("输入2")
 
 
 @Register(define.NodeName.PRINT)
@@ -156,7 +151,7 @@ class CPrint(CBase):
 
     def InputData(self):
         return [
-            (define.Type.INT, "输入"),
+            ("输入1", define.Type.INT)
         ]
 
     def InputFlow(self):

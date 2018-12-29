@@ -21,6 +21,7 @@ class CBlueprintView(QGraphicsView):
         self.m_BPID = bpID
         self.m_Scale = 1
         self.m_StartPos = None
+        self.m_IsHasMove = False    # view视图是否有移动
         self.m_Scene = scene.CBlueprintScene(bpID, self)
         self.Init()
         uimgr.GetUIMgr().AddBPView(bpID, self)
@@ -65,6 +66,7 @@ class CBlueprintView(QGraphicsView):
         offsetY /= self.m_Scale
         self.translate(offsetX, offsetY)
         self.m_StartPos = pos
+        self.m_IsHasMove = True
 
     def mouseReleaseEvent(self, event):
         super(CBlueprintView, self).mouseReleaseEvent(event)
@@ -95,6 +97,9 @@ class CBlueprintView(QGraphicsView):
     def contextMenuEvent(self, event):
         """右键上下文事件"""
         super(CBlueprintView, self).contextMenuEvent(event)
+        if self.m_IsHasMove:
+            self.m_IsHasMove = False
+            return
         if event.isAccepted():
             return
         lPos = event.pos()
@@ -140,10 +145,6 @@ class CBlueprintView(QGraphicsView):
         # TODO
         return True
 
-    def CreateNodeUI(self, nodeID, tPos):
-        self.m_Scene.AddNodeUI(nodeID, tPos)
-        interface.SetNodeAttr(self.m_BPID, nodeID, 1, 2)
-
     def S_OnCreateNodeUI(self, sNodeName, tPos):
-        nodeID = interface.AddNode(self.m_BPID, sNodeName)
-        self.CreateNodeUI(nodeID, tPos)
+        nodeID = interface.AddNode(self.m_BPID, sNodeName, tPos)
+        self.m_Scene.AddNodeUI(nodeID, tPos)

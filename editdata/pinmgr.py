@@ -5,6 +5,8 @@
 @Desc: 管理pin
 """
 
+import misc
+from bpdata import define
 
 g_PinMgr = None
 
@@ -20,6 +22,7 @@ class CPinMgr:
     def __init__(self):
         self.m_LineInfo = {}
         self.m_PinInfo = {}
+        self.m_ItemInfo = {}    # 存放pin信息
 
     def NewPin(self, bpID, nodeID, pinID):
         dLineBPInfo = self.m_LineInfo.setdefault(bpID, {})
@@ -49,3 +52,20 @@ class CPinMgr:
 
     def GetAllConnectPin(self, bpID, nodeID, pinID):
         return self.m_PinInfo[bpID][nodeID][pinID]
+
+    def AddPin(self, dPin):
+        pinID = misc.uuid()
+        oPin = CPin(pinID, dPin)
+        self.m_ItemInfo[pinID] = oPin
+
+
+class CPin:
+    def __init__(self, pinID, dPin):
+        self.m_Info = dPin
+        self.m_Info[define.PinAttrName.ID] = pinID
+
+    def SetAttr(self, sAttrName, value):
+        self.m_Info[sAttrName] = value
+
+    def GetAttr(self, sAttrName):
+        return self.m_Info[sAttrName]
