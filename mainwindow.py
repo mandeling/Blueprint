@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
 from PyQt5.QtCore import Qt
 
 from menu import menumgr, menudefine
-from graphics import bptabwidget
+from bpwidget import bptabwidget
 from bpwidget import detailui, variableui, menuui
 
 

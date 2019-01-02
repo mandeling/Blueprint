@@ -9,8 +9,8 @@ import os
 
 from PyQt5 import QtWidgets
 
-from . import view
-from .uimgr import GetUIMgr
+from graphics import view
+from graphics.uimgr import GetUIMgr
 from editdata import interface
 from pubcode import functor
 
