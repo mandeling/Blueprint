@@ -25,11 +25,6 @@ class CLineMgr:
     def __init__(self):
         self.m_Info = {}
 
-    def GetLine(self, bpID, lineID):
-        oBpLine = self.m_Info[bpID]
-        oLine = oBpLine.GetLine(lineID)
-        return oLine
-
     def NewLine(self, bpID, oPinID, iPinID):
         # 删除input槽之前的连接
         lstLine = GetIDMgr().GetAllLineByPin(iPinID)
@@ -51,12 +46,12 @@ class CLineMgr:
         GetIDMgr().DelLine(lineID)
         del self.m_Info[lineID]
 
-    def SetLineAttr(self, bpID, lineID, sAttrName, value):
-        oLine = self.GetLine(bpID, lineID)
+    def SetLineAttr(self, lineID, sAttrName, value):
+        oLine = self.m_Info[lineID]
         oLine.SetAttr(sAttrName, value)
 
-    def GetLineAttr(self, bpID, lineID, sAttrName):
-        oLine = self.GetLine(bpID, lineID)
+    def GetLineAttr(self, lineID, sAttrName):
+        oLine = self.m_Info[lineID]
         return oLine.GetAttr(sAttrName)
 
 
