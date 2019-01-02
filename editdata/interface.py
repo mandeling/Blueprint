@@ -9,8 +9,8 @@ import misc
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
-from . import nodemgr, variablemgr, linemgr, pinmgr, idmgr, bpmgr
-from idmgr import GetIDMgr
+from . import nodemgr, variablemgr, linemgr, pinmgr, bpmgr
+from .idmgr import GetIDMgr
 
 
 # -----------------------蓝图-----------------------------

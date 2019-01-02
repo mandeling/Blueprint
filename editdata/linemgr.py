@@ -8,7 +8,7 @@
 import misc
 
 from signalmgr import GetSignal
-from idmgr import GetIDMgr
+from .idmgr import GetIDMgr
 from . import define
 
 g_LineMgr = None
