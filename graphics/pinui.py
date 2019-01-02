@@ -5,6 +5,8 @@
 @Desc: 引脚ui
 """
 
+
+import bpdata.define as bddefine
 import editdata.define as eddefine
 
 from PyQt5 import QtWidgets, QtCore, QtGui
@@ -19,12 +21,9 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
     def __init__(self, pinID, parent=None):
         super(CPinUI, self).__init__(parent)
         # 位置需要优化下
-        self.m_BPID = bpID
-        self.m_NodeID = nodeID
         self.m_PinID = pinID
         self.m_Center = None
         self.InitUI()
-        pinmgr.GetPinMgr().NewPin(bpID, nodeID, pinID)
         uimgr.GetUIMgr().AddPinUI(pinID, self)
 
     def __del__(self):
@@ -52,9 +51,6 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
         self.setAcceptHoverEvents(True)
         self.setCursor(QtCore.Qt.CrossCursor)
 
-    # def GetIDInfo(self):
-    #     return self.m_BPID, self.m_NodeID, self.m_PinID
-
     def mousePressEvent(self, event):
         super(CPinUI, self).mousePressEvent(event)
         event.accept()
@@ -74,15 +70,16 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
             self.scene().EndConnect(event)
 
     def contextMenuEvent(self, _):
-        lstLineID = interface.GetAllLineByPin(self.m_BPID, self.m_NodeID, self.m_PinID)
+        lstLineID = interface.GetAllLineByPin(self.m_PinID)
         if not lstLineID:
             return
-        lstPin = interface.GetAllConnectPin(self.m_BPID, self.m_NodeID, self.m_PinID)
         menu = QtWidgets.QMenu()
-        for index, lineID in enumerate(lstLineID):
-            nodeID, _ = lstPin[index]
-            sNodeName = interface.GetNodeAttr(nodeID, eddefine.NodeAttrName.NAME)
-            sMsg = "删除与%s的连线" % sNodeName
+        for lineID in lstLineID:
+            oPinID = interface.GetLineOtherPin(lineID, self.m_PinID)
+            sPinDisplayName = interface.GetPinAttr(oPinID, bddefine.PinAttrName.DISPLAYNAME)
+            nodeID = interface.GetNodeIDByPinID(oPinID)
+            sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
+            sMsg = "删除与%s节点%s引脚的连线" % (sNodeDisplayName, sPinDisplayName)
             func = functor.Functor(self.OnDelConnect, lineID)
             menu.addAction(sMsg, func)
         menu.exec_(QtGui.QCursor.pos())

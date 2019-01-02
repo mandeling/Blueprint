@@ -5,10 +5,10 @@
 @Desc: 
 """
 
-import weakref
 
-from . import uimgr
 from PyQt5 import QtWidgets, QtCore, QtGui
+
+from .uimgr import GetUIMgr
 
 
 class CLineUI(QtWidgets.QGraphicsItem):
@@ -17,22 +17,21 @@ class CLineUI(QtWidgets.QGraphicsItem):
     def __init__(self, lineID=-1, parent=None):
         super(CLineUI, self).__init__(parent)
         self.m_LineID = lineID
-
-        self.m_StartPinUI = None
-        self.m_EndPinUI = None
         self.setZValue(-1)
+        self.m_StartPinID = None
+        self.m_EndPinID = None
         self.m_StartPoint = None
         self.m_EndPoint = None
         self.m_Path = None
         self.m_Rect = None
         self.RecalculateShapeAndBount()
         if lineID != -1:    # -1为临时连线
-            uimgr.GetUIMgr().AddLineUI(lineID, self)
+            GetUIMgr().AddLineUI(lineID, self)
 
     def __del__(self):
         if self.m_LineID == -1:
             return
-        uimgr.GetUIMgr().DelLineUI(self.m_LineID)
+        GetUIMgr().DelLineUI(self.m_LineID)
 
     def GetStartPinChartName(self):
         oPinUI = self.GetStartPinUI()
@@ -60,30 +59,21 @@ class CLineUI(QtWidgets.QGraphicsItem):
         self.m_Path.addEllipse(self.m_EndPoint, 4, 4)
         self.m_Rect = self.m_Path.boundingRect()
 
-    def SetStartReceiver(self, startPinID):
-        self.m_StartPinUI = oPinUI
-        self.UpdatePosition()
+    def SetStartPinID(self, pinID):
+        self.m_StartPinID = pinID
 
-    def GetStartPinUI(self):
-        if self.m_StartPinUI:
-            return self.m_StartPinUI()
-        return None
+    def GetStartPinID(self):
+        return self.m_StartPinID
 
-    def SetEndReceiver(self, oPinUI):
-        self.m_EndPinUI = weakref.ref(oPinUI)
-        self.UpdatePosition()
-
-    def GetEndPinUI(self):
-        if self.m_EndPinUI:
-            return self.m_EndPinUI()
-        return None
+    def SetEndPinID(self, pinID):
+        self.m_EndPinID = pinID
 
     def UpdatePosition(self):
-        startPinUI = self.GetStartPinUI()
+        startPinUI = GetUIMgr().GetPinUI(self.m_StartPinID)
         if startPinUI:
             self.m_StartPoint = self.mapFromItem(startPinUI, *startPinUI.GetCenter())
-        endPinUI = self.GetEndPinUI()
-        if endPinUI:
+        if self.m_EndPinID:
+            endPinUI = GetUIMgr().GetPinUI(self.m_EndPinID)
             self.m_EndPoint = self.mapFromItem(endPinUI, *endPinUI.GetCenter())
         else:
             self.m_EndPoint = self.mapFromScene(self.scene().GetMouseScenePos())

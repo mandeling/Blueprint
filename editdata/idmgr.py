@@ -67,6 +67,9 @@ class CIDMgr:
             lst.remove(nodeID)
         del self.m_Node2BP[nodeID]
 
+    def GetNodeIDByPinID(self, pinID):
+        return self.m_Pin2Node[pinID]
+
     # -----------------------引脚-------------------------
     def NewPin(self, nodeID, pinID):
         lst = self.m_NodePinInfo.setdefault(nodeID, [])

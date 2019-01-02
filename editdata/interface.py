@@ -12,9 +12,8 @@ import bpdata.define as bddefine
 from . import nodemgr, variablemgr, linemgr, pinmgr, idmgr, bpmgr
 from idmgr import GetIDMgr
 
+
 # -----------------------蓝图-----------------------------
-
-
 def NewBlueprint():
     bpID = bpmgr.GetBPMgr().NewBP()
     return bpID
@@ -30,7 +29,7 @@ def SaveBlueprint(bpID, sPath):
 
 
 def GetBPIDByNodeID(nodeID):
-    return idmgr.GetIDMgr().GetBPIDByNodeID(nodeID)
+    return GetIDMgr().GetBPIDByNodeID(nodeID)
 
 
 # --------------------变量--------------------------------
@@ -80,47 +79,55 @@ def DelNode(nodeID):
     oNodeMgr.DelNode(nodeID)
 
 
+def GetNodeIDByPinID(pinID):
+    return GetIDMgr().GetNodeIDByPinID(pinID)
+
+
 # ---------------------引脚-------------------------------
-def GetPinInfo(bpID, nodeID, pinID):
-    dInfo = GetNodeAttr(bpID, nodeID, eddefine.NodeAttrName.PININFO)
-    return dInfo[pinID]
-
-
 def GetPinAttr(pinID, sAttrName):
     oPinMgr = pinmgr.GetPinMgr()
     return oPinMgr.GetAttr(pinID, sAttrName)
 
 
-def PinCanConnect(bpID, nodeID1, pinID1, nodeID2, pinID2):
-    if nodeID1 == nodeID2:
+def PinCanConnect(inputPinID, outputPinID):
+    if inputPinID == outputPinID:
         return False
-    pinInfo1 = GetPinInfo(bpID, nodeID1, pinID1)
-    pinInfo2 = GetPinInfo(bpID, nodeID2, pinID2)
-    iPinTyp1 = pinInfo1[bddefine.PinAttrName.PIN_TYPE]
-    iPinTyp2 = pinInfo2[bddefine.PinAttrName.PIN_TYPE]
-    if iPinTyp1 == iPinTyp2:    # 同为输入、输出引脚
+    inputNodeID = GetNodeIDByPinID(inputPinID)
+    OutputNodeID = GetNodeIDByPinID(outputPinID)
+    if inputNodeID == OutputNodeID:
         return False
-    iDataType1 = pinInfo1.get(bddefine.PinAttrName.DATA_TYPE, -1)
-    iDataType2 = pinInfo2.get(bddefine.PinAttrName.DATA_TYPE, -1)
-    if iDataType1 != iDataType2:    # 相同数据类型才可以连接
+
+    iPinType = GetPinAttr(inputPinID, bddefine.PinAttrName.PIN_TYPE)
+    oPinType = GetPinAttr(outputPinID, bddefine.PinAttrName.PIN_TYPE)
+    if bddefine.PinIsFlow(iPinType) and bddefine.PinIsFlow(oPinType):   # 同为flow引脚
+        if iPinType == oPinType:    # 同为输入、输出引脚返回false
+            return False
+        return True
+
+    if not (bddefine.PinIsFlow(iPinType) or bddefine.PinIsFlow(oPinType)):  # 同为数据引脚
+        iDataType = GetPinAttr(inputPinID, bddefine.PinAttrName.DATA_TYPE)
+        oDataType = GetPinAttr(outputPinID, bddefine.PinAttrName.DATA_TYPE)
+        if iDataType == oDataType:  # 相同数据类型才可以连接
+            return True
         return False
-    return True
+
+    return False
 
 
-def IsInputPin(bpID, nodeID, pinID):
-    pinInfo = GetPinInfo(bpID, nodeID, pinID)
-    iPinType = pinInfo[bddefine.PinAttrName.PIN_TYPE]
-    if iPinType == bddefine.PIN_INPUT_DATA_TYPE:
+def IsInputPin(pinID):
+    iPinType = GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
+    if bddefine.PinIsInput(iPinType):
         return True
     return False
 
 
-def GetAllPinByNode(bpID, nodeID):
-    dInfo = GetNodeAttr(bpID, nodeID, eddefine.NodeAttrName.PININFO)
-    lstPin = []
-    for pinID in dInfo.keys():
-        lstPin.append(pinID)
-    return lstPin
+def GetLineOtherPin(lineID, pinID):
+    """获取line下的另一个pinID"""
+    iPinID = GetLineAttr(lineID, eddefine.LineAttrName.INPUT_PINID)
+    oPinID = GetLineAttr(lineID, eddefine.LineAttrName.OUTPUT_PINID)
+    if iPinID == pinID:
+        return oPinID
+    return iPinID
 
 
 # ----------------------连线------------------------------
@@ -138,24 +145,21 @@ def DelLine(lineID):
     oLineMgr.DelLine(lineID)
 
 
-def GetAllLineByNode(bpID, nodeID):
-    lstPin = GetAllPinByNode(bpID, nodeID)
+def GetLineAttr(lineID, sAttrName):
+    oLineMgr = linemgr.GetLineMgr()
+    return oLineMgr.GetLineAttr(lineID, sAttrName)
+
+
+def GetAllLineByNode(nodeID):
+    """获取所有与node连接的lineID"""
+    lstPin = GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
     lstLine = set([])
     for pinID in lstPin:
-        tmpLine = GetAllLineByPin(bpID, nodeID, pinID)
+        tmpLine = GetAllLineByPin(pinID)
         lstLine |= set(tmpLine)
     return lstLine
 
 
-# --------------------other--------------------------------
 def GetAllLineByPin(pinID):
     """获取与pin相连的所有lineid"""
     return GetIDMgr().GetAllLineByPin(pinID)
-
-
-def GetAllConnectPin(pinID):
-    """
-    获取所有的与之相连的槽
-    返回 [pinID]
-    """
-    return GetIDMgr().GetAllConnectPin(pinID)
