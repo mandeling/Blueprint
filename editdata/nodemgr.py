@@ -9,6 +9,7 @@ import copy
 import misc
 
 from .idmgr import GetIDMgr
+from .pinmgr import GetPinMgr
 from bpdata import define as bddefine
 
 g_NodeMgr = None
@@ -49,6 +50,7 @@ class CNodeMgr:
             oPin.SetAttr(bddefine.PinAttrName.ID, pinID)
             lstPin.append(pinID)
             GetIDMgr().NewPin(nodeID, pinID)
+            GetPinMgr().NewPin(pinID, oPin)
         oNode.SetAttr(bddefine.NodeAttrName.PINIDLIST, lstPin)
         self.m_Info[nodeID] = oNode
         return nodeID

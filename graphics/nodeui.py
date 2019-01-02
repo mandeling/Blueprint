@@ -95,7 +95,7 @@ class CNodeUI(QGraphicsProxyWidget):
                 center = (oBtn.width() + iOffset, oBtn.height() / 2)
             else:
                 center = (0 - iOffset, oBtn.height() / 2)
-            oPinUI = pinui.CPinUI(self.m_NodeID, pinID)
+            oPinUI = pinui.CPinUI(pinID)
             oPinUI.SetCenter(center)
             oPinUI.setParentItem(self)
             oPinUI.setPos(oBtn.x() + self.m_OutlineBorder, oBtn.y() + self.m_OutlineBorder)
