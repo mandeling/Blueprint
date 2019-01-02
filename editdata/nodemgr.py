@@ -8,8 +8,8 @@
 import copy
 import misc
 
-from .import define
-from bpdata import bddefine
+from .idmgr import GetIDMgr
+from bpdata import define as bddefine
 
 g_NodeMgr = None
 
@@ -25,7 +25,6 @@ class CNodeMgr:
     def __init__(self):
         self.m_Info = {}
         self.m_DefineInfo = {}  # 节点定义的信息
-        self.m_InputMap = {}    # 输入ID和pid映射
 
     # --------------定义节点的信息-----------------------
     def Register(self, sNodeName, oDefineNode):
@@ -36,18 +35,21 @@ class CNodeMgr:
         return self.m_DefineInfo.keys()
 
     # ----------------编辑器节点信息-----------------------------
-    def NewNode(self, sNodeName, pos):
+    def NewNode(self, bpID, sNodeName, pos):
         oDefineNode = self.m_DefineInfo[sNodeName]
         oNode = copy.deepcopy(oDefineNode)
         nodeID = misc.uuid()
+        GetIDMgr().NewNode(bpID, nodeID)
         oNode.SetAttr(bddefine.NodeAttrName.ID, nodeID)
-        for sPinName, otPin in oNode.m_PinInfo.items():
+        oNode.SetAttr(bddefine.NodeAttrName.POSITION, pos)
+        lstPin = []
+        for _, otPin in oNode.m_PinInfo.items():
             pinID = misc.uuid()
             oPin = copy.deepcopy(otPin)
-            pass
-
-        dAllDefinePinInfo = self.m_DefineInfo[sNodeName]
-        oNode = CNode(nodeID, sNodeName, pos, dAllDefinePinInfo)
+            oPin.SetAttr(bddefine.PinAttrName.ID, pinID)
+            lstPin.append(pinID)
+            GetIDMgr().NewPin(nodeID, pinID)
+        oNode.SetAttr(bddefine.NodeAttrName.PINIDLIST, lstPin)
         self.m_Info[nodeID] = oNode
         return nodeID
 
@@ -69,25 +71,3 @@ class CNodeMgr:
         if oNode:
             return
         return oNode.GetAttr(sAttrName)
-
-
-class CNode:
-    def __init__(self, uid, sNodeName, pos, dAllDefinePinInfo):
-        dPinInfo = {}
-        for sPinName, dPinInfo in dAllDefinePinInfo.items():
-
-        self.m_Info = {
-            define.NodeAttrName.ID: uid,
-            define.NodeAttrName.NAME: sNodeName,
-            define.NodeAttrName.POSITION: pos,
-            define.NodeAttrName.PININFO: GetNodeMgr().NewALlPin(sNodeName)
-        }
-
-    def SetAttr(self, sAttrName, value):
-        self.m_Info[sAttrName] = value
-
-    def GetAttr(self, sAttrName):
-        return self.m_Info[sAttrName]
-
-    def Delete(self):
-        pass

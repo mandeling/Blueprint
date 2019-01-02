@@ -69,17 +69,6 @@ class NodeName:
     PRINT = "打印节点"
 
 
-PIN_ATTR_NAME_PREFIX = "pin_attr_name:"
-
-
-class PinAttrName:
-    ID = PIN_ATTR_NAME_PREFIX + "id"
-    NAME = PIN_ATTR_NAME_PREFIX + "name"
-    DISPLAYNAME = PIN_ATTR_NAME_PREFIX + "display_name"
-    PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"
-    DATA_TYPE = PIN_ATTR_NAME_PREFIX + "data_type"
-    VALUE = PIN_ATTR_NAME_PREFIX + "data_type"
-
 
 # ----------------------Node-------------------------------
 NODE_ATTR_NAME_PREFIX = "node_attr_name:"
@@ -91,3 +80,16 @@ class NodeAttrName:
     DISPLAYNAME = NODE_ATTR_NAME_PREFIX + "display_name"
     POSITION = NODE_ATTR_NAME_PREFIX + "postion"
     PINIDLIST = NODE_ATTR_NAME_PREFIX + "pin_list"
+
+
+# ----------------------pin-------------------------------
+PIN_ATTR_NAME_PREFIX = "pin_attr_name:"
+
+
+class PinAttrName:
+    ID = PIN_ATTR_NAME_PREFIX + "id"
+    NAME = PIN_ATTR_NAME_PREFIX + "name"
+    DISPLAYNAME = PIN_ATTR_NAME_PREFIX + "display_name"
+    PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"
+    DATA_TYPE = PIN_ATTR_NAME_PREFIX + "data_type"
+    VALUE = PIN_ATTR_NAME_PREFIX + "data_type"

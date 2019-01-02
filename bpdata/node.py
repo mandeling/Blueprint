@@ -18,7 +18,6 @@ def Register(sNodeName):
 
 class CBase:
     def __init__(self, sNodeName):
-        self.m_NodeName = sNodeName
         self.m_Info = {
             define.NodeAttrName.ID: 0,
             define.NodeAttrName.NAME: sNodeName,
@@ -28,7 +27,6 @@ class CBase:
         }
         self.m_OutputFunc = {}  # 输出pin对应执行的函数
         self.m_PinInfo = {}
-        self.m_Name2PID = {}
         self._Run()
 
     def _Run(self):

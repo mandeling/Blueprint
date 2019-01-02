@@ -19,18 +19,8 @@ class VariableAttrName:
     VALUE = VARIABLE_ATTR_NAME_PREFIX + "value"
 
 
-# ----------------------Node-------------------------------
-NODE_ATTR_NAME_PREFIX = "node_attr_name:"
 
-
-class NodeAttrName:
-    ID = NODE_ATTR_NAME_PREFIX + "id"
-    NAME = NODE_ATTR_NAME_PREFIX + "name"
-    POSITION = NODE_ATTR_NAME_PREFIX + "postion"
-    PININFO = NODE_ATTR_NAME_PREFIX + "pin_info"
-
-
-# ----------------------Node-------------------------------
+# ----------------------Line-------------------------------
 LINE_ATTR_NAME_PREFIX = "line_attr_name:"
 
 

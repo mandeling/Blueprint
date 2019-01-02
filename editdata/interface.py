@@ -54,8 +54,7 @@ def GetVariableAttr(sName, sAttrName):
 
 # --------------------------节点--------------------------
 def AddNode(bpID, sName, pos=(0, 0)):
-    nodeID = nodemgr.GetNodeMgr().NewNode(sName, pos)
-    idmgr.GetIDMgr().NewNode(bpID, nodeID)
+    nodeID = nodemgr.GetNodeMgr().NewNode(bpID, sName, pos)
     return nodeID
 
 
