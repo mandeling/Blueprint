@@ -33,7 +33,7 @@ class CIDMgr:
         self.m_Node2BP = {}     # {nodeID:bpID}
         self.m_NodePinInfo = {}  # {nodeID:[pinID,]}
         self.m_Pin2Node = {}    # {pinID:nodeID}
-        snodeID, elf.m_PinLineInfo = {}  # {pinid:[lineid,]}
+        self.m_PinLineInfo = {}  # {pinid:[lineid,]}
         self.m_PinInfo = {}     # {pinid:[pinid,]}
         self.m_BPLineInfo = {}  # {bpID:[lineID,]}
         self.m_Line2BP = {}     # {lineID:bpID}
