@@ -29,10 +29,14 @@ class CUIManager:
         self.m_BPUI[bpID] = weakref.ref(oBPView)
 
     def DelBPView(self, bpID):
-        del self.m_BPUI[bpID]
+        if bpID in self.m_BPUI:
+            del self.m_BPUI[bpID]
 
     def GetBPView(self, bpID):
-        return self.m_BPUI[bpID]()
+        wObj = self.m_BPUI.get(bpID, None)
+        if wObj:
+            wObj = wObj()
+        return wObj
 
     def AddNodeUI(self, nodeID, oNodeUI):
         self.m_NodeUI[nodeID] = weakref.ref(oNodeUI)
@@ -42,34 +46,40 @@ class CUIManager:
             del self.m_NodeUI[nodeID]
 
     def GetNodeUI(self, nodeID):
-        if nodeID in self.m_NodeUI:
-            return self.m_NodeUI[nodeID]()
-        return None
+        wObj = self.m_NodeUI.get(nodeID, None)
+        if wObj:
+            wObj = wObj()
+        return wObj
 
-    def AddPinUI(self, bpID, nodeID, pinID, oPinUI):
-        dBPInfo = self.m_PinUI.setdefault(bpID, {})
-        dNodeInfo = dBPInfo.setdefault(nodeID, {})
-        dNodeInfo[pinID] = weakref.ref(oPinUI)
+    def AddPinUI(self, pinID, oPinUI):
+        self.m_PinUI[pinID] = weakref.ref(oPinUI)
 
-    def DelPinUI(self, bpID, nodeID, pinID):
-        del self.m_PinUI[bpID][nodeID][pinID]
+    def DelPinUI(self, pinID):
+        if pinID in self.m_PinUI:
+            del self.m_PinUI[pinID]
 
-    def AddPinBtnUI(self, bpID, nodeID, pinID, oPinbtnUI):
-        dBPInfo = self.m_PinBtnUI.setdefault(bpID, {})
-        dNodeInfo = dBPInfo.setdefault(nodeID, {})
-        dNodeInfo[pinID] = weakref.ref(oPinbtnUI)
+    def GetPinUI(self, pinID):
+        wObj = self.m_PinUI.get(pinID, None)
+        if wObj:
+            wObj = wObj()
+        return wObj
 
-    def DelPinBtnUI(self, bpID, nodeID, pinID):
-        del self.m_PinBtnUI[bpID][nodeID][pinID]
+    def AddPinBtnUI(self, pinID, oPinbtnUI):
+        self.m_PinBtnUI[pinID] = weakref.ref(oPinbtnUI)
 
-    def AddLineUI(self, bpID, lineID, oLineUI):
-        dInfo = self.m_LineUI.setdefault(bpID, {})
-        dInfo[lineID] = weakref.ref(oLineUI)
+    def DelPinBtnUI(self, pinID):
+        if pinID in self.m_PinBtnUI:
+            del self.m_PinBtnUI[pinID]
 
-    def GetLineUI(self, bpID, lineID):
-        return self.m_LineUI[bpID][lineID]()
+    def AddLineUI(self, lineID, oLineUI):
+        self.m_LineUI[lineID] = weakref.ref(oLineUI)
 
-    def DelLineUI(self, bpID, lineID):
-        dInfo = self.m_LineUI.setdefault(bpID, {})
-        if lineID in dInfo:
-            del dInfo[lineID]
+    def DelLineUI(self, lineID):
+        if lineID in self.m_LineUI:
+            del self.m_LineUI[lineID]
+
+    def GetLineUI(self, lineID):
+        wObj = self.m_LineUI.get(lineID, None)
+        if wObj:
+            wObj = wObj()
+        return wObj

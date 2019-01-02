@@ -6,7 +6,7 @@
 """
 
 from . import uimgr
-
+from editdata import interface
 
 g_StatusMgr = None
 
@@ -25,8 +25,9 @@ class CStatusMgr:
     def GetSelectNode(self, bpID):
         return self.m_SelectNode.setdefault(bpID, [])
 
-    def AddSelectNode(self, bpID, nodeID):
+    def AddSelectNode(self, nodeID):
         """添加一个选中的节点"""
+        bpID = interface.GetBPIDByNodeID(nodeID)
         lst = self.GetSelectNode(bpID)
         oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
         if nodeID in lst:
@@ -36,8 +37,9 @@ class CStatusMgr:
             oNodeUI.SetPressStyle()
             lst.append(nodeID)
 
-    def SelectOneNode(self, bpID, nodeID):
+    def SelectOneNode(self, nodeID):
         """选中一个节点"""
+        bpID = interface.GetBPIDByNodeID(nodeID)
         for nid in self.GetSelectNode(bpID):
             if nid == nodeID:
                 continue
