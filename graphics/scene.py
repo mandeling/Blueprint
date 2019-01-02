@@ -14,6 +14,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 from . import nodeui, pinui, lineui, uimgr, statusmgr
 from editdata import interface
+from signalmgr import GetSignal
 
 
 class CBlueprintScene(QGraphicsScene):
@@ -24,9 +25,10 @@ class CBlueprintScene(QGraphicsScene):
         self.m_IsDrawLine = False
         self.m_TempPinLine = None   # 临时引脚线
         self.m_SelectPin = None
-        self.Init()
+        self._Init()
+        self._InitSignal()
 
-    def Init(self):
+    def _Init(self):
         rect = QtCore.QRectF(-10000, -10000, 20000, 20000)
         self.setSceneRect(rect)  # 场景大小，传入item里面
 
@@ -40,6 +42,9 @@ class CBlueprintScene(QGraphicsScene):
         # # ---------------------边框颜色
         # i = self.addRect(rect, QtCore.Qt.yellow, brush)
         # i.setZValue(-1000)
+
+    def _InitSignal(self):
+        GetSignal().DEL_LINE.emit(self.S_DelLineUI)
 
     def GetBPID(self):
         return self.m_BPID
@@ -102,6 +107,10 @@ class CBlueprintScene(QGraphicsScene):
     def DelConnect(self, lineID):
         oLineUI = uimgr.GetUIMgr().GetLineUI(self.m_BPID, lineID)
         interface.DelLine(self.m_BPID, lineID)
+        self.removeItem(oLineUI)
+
+    def S_DelLineUI(self, lineID):
+        oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
         self.removeItem(oLineUI)
 
     def OnAddConnect(self, inputPinUI, outputPinUI):

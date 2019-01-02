@@ -5,8 +5,8 @@
 @Desc: 节点连线管理
 """
 
+from signalmgr import GetSignal
 from . import define, pinmgr
-from graphics import graphinterface
 
 g_LineMgr = None
 
@@ -34,7 +34,7 @@ class CLineMgr:
         # 删除input槽之前的连接
         lstLine = pinmgr.GetPinMgr().GetAllLineByPin(bpID, iNodeID, iPinID)
         for lineID in lstLine:
-            graphinterface.DelLine(bpID, lineID)
+            GetSignal().DEL_LINE.emit(lineID)
 
         oBpLine = self.m_Info[bpID]
         lineID = oBpLine.NewLine(oNodeID, oPinID, iNodeID, iPinID)
