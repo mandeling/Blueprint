@@ -5,8 +5,11 @@
 @Desc: 节点连线管理
 """
 
+import misc
+
 from signalmgr import GetSignal
-from . import define, pinmgr
+from idmgr import GetIDMgr
+from . import define
 
 g_LineMgr = None
 
@@ -22,40 +25,31 @@ class CLineMgr:
     def __init__(self):
         self.m_Info = {}
 
-    def NewBlueprint(self, bpID):
-        self.m_Info[bpID] = CBPLineMgr()
-
     def GetLine(self, bpID, lineID):
         oBpLine = self.m_Info[bpID]
         oLine = oBpLine.GetLine(lineID)
         return oLine
 
-    def NewLine(self, bpID, oNodeID, oPinID, iNodeID, iPinID):
+    def NewLine(self, bpID, oPinID, iPinID):
         # 删除input槽之前的连接
-        lstLine = pinmgr.GetPinMgr().GetAllLineByPin(bpID, iNodeID, iPinID)
+        lstLine = GetIDMgr().GetAllLineByPin(iPinID)
         for lineID in lstLine:
+            GetIDMgr().DelPinLine(oPinID, iPinID, lineID)
             GetSignal().DEL_LINE.emit(lineID)
-
-        oBpLine = self.m_Info[bpID]
-        lineID = oBpLine.NewLine(oNodeID, oPinID, iNodeID, iPinID)
-        oPinMgr = pinmgr.GetPinMgr()
-        oPinMgr.NewLine(bpID, oNodeID, oPinID, iNodeID, iPinID, lineID)
+        lineID = misc.uuid()
+        oLine = CLine(lineID, oPinID, iPinID)
+        self.m_Info[lineID] = oLine
+        GetIDMgr().NewPinLine(oPinID, iPinID, lineID)
+        GetIDMgr().AddLine2BP(bpID, lineID)
         return lineID
 
-    def DelPin(self, bpID, lineID):
-        oLine = self.GetLine(bpID, lineID)
-        dInfo = oLine.m_Info
-        oNodeID = dInfo[define.LineAttrName.OUTPUT_NODEID]
-        iNodeID = dInfo[define.LineAttrName.INPUT_NODEID]
-        oPinID = dInfo[define.LineAttrName.OUTPUT_PINID]
-        iPinID = dInfo[define.LineAttrName.INPUT_PINID]
-        oPinMgr = pinmgr.GetPinMgr()
-        oPinMgr.DelLine(bpID, oNodeID, oPinID, iNodeID, iPinID, lineID)
-
-    def DelLine(self, bpID, lineID):
-        self.DelPin(bpID, lineID)
-        oBpLine = self.m_Info[bpID]
-        oBpLine.DelLine(lineID)
+    def DelLine(self, lineID):
+        oLine = self.m_Info[lineID]
+        oPinID = oLine.GetAttr(define.LineAttrName.OUTPUT_PINID)
+        iPinID = oLine.GetAttr(define.LineAttrName.INPUT_PINID)
+        GetIDMgr().DelPinLine(oPinID, iPinID, lineID)
+        GetIDMgr().DelLine(lineID)
+        del self.m_Info[lineID]
 
     def SetLineAttr(self, bpID, lineID, sAttrName, value):
         oLine = self.GetLine(bpID, lineID)
@@ -66,33 +60,10 @@ class CLineMgr:
         return oLine.GetAttr(sAttrName)
 
 
-class CBPLineMgr:
-    def __init__(self):
-        self.m_ID = 0
-        self.m_Info = {}
-
-    def NewID(self):
-        self.m_ID += 1
-        return self.m_ID
-
-    def NewLine(self, oNodeID, oPinID, iNodeID, iPinID):
-        uid = self.NewID()
-        self.m_Info[uid] = CLine(uid, oNodeID, oPinID, iNodeID, iPinID)
-        return uid
-
-    def GetLine(self, lineID):
-        return self.m_Info[lineID]
-
-    def DelLine(self, lineID):
-        del self.m_Info[lineID]
-
-
 class CLine:
-    def __init__(self, uid, oNodeID, oPinID, iNodeID, iPinID):
+    def __init__(self, uid, oPinID, iPinID):
         self.m_Info = {
             define.LineAttrName.ID: uid,
-            define.LineAttrName.OUTPUT_NODEID: oNodeID,
-            define.LineAttrName.INPUT_NODEID: iNodeID,
             define.LineAttrName.OUTPUT_PINID: oPinID,
             define.LineAttrName.INPUT_PINID: iPinID,
         }

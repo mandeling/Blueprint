@@ -16,20 +16,22 @@ from . import uimgr
 class CPinUI(QtWidgets.QGraphicsPolygonItem):
     """节点的槽UI"""
 
-    def __init__(self, bpID, nodeID, pinID, parent=None):
+    def __init__(self, pinID, parent=None):
         super(CPinUI, self).__init__(parent)
         # 位置需要优化下
         self.m_BPID = bpID
         self.m_NodeID = nodeID
         self.m_PinID = pinID
         self.m_Center = None
-        self.m_IsInput = interface.IsInputPin(bpID, nodeID, pinID)
         self.InitUI()
         pinmgr.GetPinMgr().NewPin(bpID, nodeID, pinID)
-        uimgr.GetUIMgr().AddPinUI(bpID, nodeID, pinID, self)
+        uimgr.GetUIMgr().AddPinUI(pinID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelPinUI(self.m_BPID, self.m_NodeID, self.m_PinID)
+        uimgr.GetUIMgr().DelPinUI(self.m_PinID)
+
+    def GetPID(self):
+        return self.m_PinID
 
     def SetCenter(self, center):
         """设置连线中心，相对于父类"""
@@ -50,14 +52,14 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
         self.setAcceptHoverEvents(True)
         self.setCursor(QtCore.Qt.CrossCursor)
 
-    def GetIDInfo(self):
-        return self.m_BPID, self.m_NodeID, self.m_PinID
+    # def GetIDInfo(self):
+    #     return self.m_BPID, self.m_NodeID, self.m_PinID
 
     def mousePressEvent(self, event):
         super(CPinUI, self).mousePressEvent(event)
         event.accept()
         if event.button() == QtCore.Qt.LeftButton:
-            self.scene().BeginConnect(self)
+            self.scene().BeginConnect(self.m_PinID)
 
     def mouseMoveEvent(self, event):
         super(CPinUI, self).mouseMoveEvent(event)
@@ -79,7 +81,7 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
         menu = QtWidgets.QMenu()
         for index, lineID in enumerate(lstLineID):
             nodeID, _ = lstPin[index]
-            sNodeName = interface.GetNodeAttr(self.m_BPID, nodeID, eddefine.NodeAttrName.NAME)
+            sNodeName = interface.GetNodeAttr(nodeID, eddefine.NodeAttrName.NAME)
             sMsg = "删除与%s的连线" % sNodeName
             func = functor.Functor(self.OnDelConnect, lineID)
             menu.addAction(sMsg, func)

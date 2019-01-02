@@ -15,18 +15,39 @@ def GetIDMgr():
     return g_IDMgr
 
 
+def MyListAppend(dInfo, key, value):
+    lst = dInfo.setdefault(key, [])
+    if value not in lst:
+        lst.append(value)
+
+
+def MyListRemove(dInfo, key, value):
+    lst = dInfo.setdefault(key, [])
+    if value in lst:
+        lst.remove(value)
+
+
 class CIDMgr:
     def __init__(self):
         self.m_BPNodeInfo = {}  # {bpID:[nodeID,]}
         self.m_Node2BP = {}     # {nodeID:bpID}
         self.m_NodePinInfo = {}  # {nodeID:[pinID,]}
         self.m_Pin2Node = {}    # {pinID:nodeID}
+        snodeID, elf.m_PinLineInfo = {}  # {pinid:[lineid,]}
+        self.m_PinInfo = {}     # {pinid:[pinid,]}
+        self.m_BPLineInfo = {}  # {bpID:[lineID,]}
+        self.m_Line2BP = {}     # {lineID:bpID}
 
+    # ---------------------蓝图---------------------------
     def DelPB(self, bpID):
         for nodeID in self.m_BPNodeInfo[bpID]:
             self.DelNode(nodeID)
         del self.m_BPNodeInfo[bpID]
 
+    def GetBPIDByNodeID(self, nodeID):
+        return self.m_Node2BP[nodeID]
+
+    # ----------------------节点--------------------------
     def NewNode(self, bpID, nodeID):
         lst = self.m_BPNodeInfo.setdefault(bpID, [])
         if nodeID not in lst:
@@ -46,11 +67,40 @@ class CIDMgr:
             lst.remove(nodeID)
         del self.m_Node2BP[nodeID]
 
-    def GetBPIDByNodeID(self, nodeID):
-        return self.m_Node2BP[nodeID]
-
+    # -----------------------引脚-------------------------
     def NewPin(self, nodeID, pinID):
         lst = self.m_NodePinInfo.setdefault(nodeID, [])
         if pinID not in lst:
             lst.append(pinID)
         self.m_Pin2Node[pinID] = nodeID
+
+    def GetAllConnectPin(self, pinID):
+        return self.m_PinInfo[pinID]
+
+    # ------------------------连线------------------------
+    def GetAllLineByPin(self, pinID):
+        return self.m_PinLineInfo[pinID]
+
+    def AddLine2BP(self, bpID, lineID):
+        MyListAppend(self.m_BPLineInfo, bpID, lineID)
+        self.m_Line2BP[lineID] = bpID
+
+    def DelLine(self, lineID):
+        bpID = self.m_Line2BP[lineID]
+        MyListRemove(self.m_BPLineInfo, bpID, lineID)
+        del self.m_Line2BP[lineID]
+
+    # ------------------------引脚和连线------------------------
+    def NewPinLine(self, oPinID, iPinID, lineID):
+        MyListAppend(self.m_PinInfo, oPinID, iPinID)
+        MyListAppend(self.m_PinInfo, iPinID, oPinID)
+
+        MyListAppend(self.m_PinLineInfo, oPinID, lineID)
+        MyListAppend(self.m_PinLineInfo, iPinID, lineID)
+
+    def DelPinLine(self, oPinID, iPinID, lineID):
+        self.m_PinLineInfo[oPinID].remove(lineID)
+        self.m_PinLineInfo[iPinID].remove(lineID)
+
+        self.m_PinInfo[oPinID].remove(iPinID)
+        self.m_PinInfo[iPinID].remove(oPinID)

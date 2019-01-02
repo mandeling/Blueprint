@@ -14,9 +14,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 class CLineUI(QtWidgets.QGraphicsItem):
     """引脚连线"""
 
-    def __init__(self, bpID, lineID=-1, parent=None):
+    def __init__(self, lineID=-1, parent=None):
         super(CLineUI, self).__init__(parent)
-        self.m_BPID = bpID
         self.m_LineID = lineID
 
         self.m_StartPinUI = None
@@ -28,12 +27,12 @@ class CLineUI(QtWidgets.QGraphicsItem):
         self.m_Rect = None
         self.RecalculateShapeAndBount()
         if lineID != -1:    # -1为临时连线
-            uimgr.GetUIMgr().AddLineUI(bpID, lineID, self)
+            uimgr.GetUIMgr().AddLineUI(lineID, self)
 
     def __del__(self):
         if self.m_LineID == -1:
             return
-        uimgr.GetUIMgr().DelLineUI(self.m_BPID, self.m_LineID)
+        uimgr.GetUIMgr().DelLineUI(self.m_LineID)
 
     def GetStartPinChartName(self):
         oPinUI = self.GetStartPinUI()
@@ -61,8 +60,8 @@ class CLineUI(QtWidgets.QGraphicsItem):
         self.m_Path.addEllipse(self.m_EndPoint, 4, 4)
         self.m_Rect = self.m_Path.boundingRect()
 
-    def SetStartReceiver(self, oPinUI):
-        self.m_StartPinUI = weakref.ref(oPinUI)
+    def SetStartReceiver(self, startPinID):
+        self.m_StartPinUI = oPinUI
         self.UpdatePosition()
 
     def GetStartPinUI(self):

@@ -23,8 +23,11 @@ class CBlueprintScene(QGraphicsScene):
         self.m_BPID = bpID
         self.m_PinInfo = {}
         self.m_IsDrawLine = False
+
+        # 临时引脚连线
         self.m_TempPinLine = None   # 临时引脚线
-        self.m_SelectPin = None
+        self.m_StartLinePinID = None
+
         self._Init()
         self._InitSignal()
 
@@ -76,30 +79,30 @@ class CBlueprintScene(QGraphicsScene):
             return
         self.removeItem(oNodeUI)
 
-    def BeginConnect(self, startPinUI):
+    def BeginConnect(self, startPinID):
         self.m_IsDrawLine = True
-        self.m_TempPinLine = lineui.CLineUI(self.m_BPID)
+        self.m_TempPinLine = lineui.CLineUI()
+        self.m_StartLinePinID = startPinID
         self.addItem(self.m_TempPinLine)
-        self.m_TempPinLine.SetStartReceiver(startPinUI)
 
     def EndConnect(self, event):
         sPos = event.scenePos()
         endPinUI = self.itemAt(sPos, QTransform())
         if isinstance(endPinUI, pinui.CPinUI):    # 如果是pinui
             startPinUI = self.m_TempPinLine.GetStartPinUI()
-            bpID, sNodeID, sPinID = startPinUI.GetIDInfo()
-            bpID, eNodeID, ePinID = endPinUI.GetIDInfo()
-            if interface.PinCanConnect(bpID, sNodeID, sPinID, eNodeID, ePinID):
-                if interface.IsInputPin(bpID, sNodeID, sPinID):
-                    inputPinUI, outputPinUI = startPinUI, endPinUI
+            sPinID = self.m_StartLinePinID
+            ePinID = endPinUI.GetPID()
+            if interface.PinCanConnect(sPinID, ePinID):
+                if interface.IsInputPin(sPinID):
+                    inputPinID, outputPinID = sPinID, ePinID
                 else:
-                    inputPinUI, outputPinUI = endPinUI, startPinUI
-                self.OnAddConnect(inputPinUI, outputPinUI)
+                    inputPinID, outputPinID = ePinID, sPinID
+                self.OnAddConnect(inputPinID, outputPinID)
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
-        self.m_SelectPin = None
+        self.m_StartLinePinID = None
 
     def DelConnect(self, lineID):
         oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
@@ -110,18 +113,14 @@ class CBlueprintScene(QGraphicsScene):
         oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
         self.removeItem(oLineUI)
 
-    def OnAddConnect(self, inputPinUI, outputPinUI):
-        bpID, iNodeID, iPinID = inputPinUI.GetIDInfo()
-        bpID, oNodeID, oPinID = outputPinUI.GetIDInfo()
-        lineID = interface.AddLine(bpID, oNodeID, oPinID, iNodeID, iPinID)
-        self.AddConnect(lineID, inputPinUI, outputPinUI)
+    def OnAddConnect(self, inputPinID, outputPinID):
+        lineID = interface.AddLine(self.m_BPID, outputPinID, inputPinID)
+        self.AddConnect(lineID, inputPinID, outputPinID)
 
-    def AddConnect(self, lineID, inputPinUI, outputPinUI):
+    def AddConnect(self, lineID, inputPinID, outputPinID):
         """真正执行添加连接线"""
-        line = lineui.CLineUI(self.m_BPID, lineID)
+        line = lineui.CLineUI(lineID)
         self.addItem(line)  # 这个顺序不能变
-        line.SetStartReceiver(inputPinUI)
-        line.SetEndReceiver(outputPinUI)
 
     def GetMouseScenePos(self):
         view = self.views()[0]

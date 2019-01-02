@@ -10,9 +10,11 @@ import editdata.define as eddefine
 import bpdata.define as bddefine
 
 from . import nodemgr, variablemgr, linemgr, pinmgr, idmgr, bpmgr
-
+from idmgr import GetIDMgr
 
 # -----------------------蓝图-----------------------------
+
+
 def NewBlueprint():
     bpID = bpmgr.GetBPMgr().NewBP()
     return bpID
@@ -122,18 +124,18 @@ def GetAllPinByNode(bpID, nodeID):
 
 
 # ----------------------连线------------------------------
-def AddLine(bpID, oNodeID, oPinID, iNodeID, iPinID):
+def AddLine(bpID, oPinID, iPinID):
     """
     oNodeID：输出节点ID
     iNodeID：输入节点ID
     """
-    oLineMgr = linemgr.GetLineMgr()
-    return oLineMgr.NewLine(bpID, oNodeID, oPinID, iNodeID, iPinID)
+    lineID = linemgr.GetLineMgr().NewLine(bpID, oPinID, iPinID)
+    return lineID
 
 
-def DelLine(bpID, lineID):
+def DelLine(lineID):
     oLineMgr = linemgr.GetLineMgr()
-    oLineMgr.DelLine(bpID, lineID)
+    oLineMgr.DelLine(lineID)
 
 
 def GetAllLineByNode(bpID, nodeID):
@@ -146,16 +148,14 @@ def GetAllLineByNode(bpID, nodeID):
 
 
 # --------------------other--------------------------------
-def GetAllLineByPin(bpID, nodeID, pinID):
+def GetAllLineByPin(pinID):
     """获取与pin相连的所有lineid"""
-    oPinMgr = pinmgr.GetPinMgr()
-    return oPinMgr.GetAllLineByPin(bpID, nodeID, pinID)
+    return GetIDMgr().GetAllLineByPin(pinID)
 
 
-def GetAllConnectPin(bpID, nodeID, pinID):
+def GetAllConnectPin(pinID):
     """
     获取所有的与之相连的槽
-    返回 [nodeID, pinID]
+    返回 [pinID]
     """
-    oPinMgr = pinmgr.GetPinMgr()
-    return oPinMgr.GetAllConnectPin(bpID, nodeID, pinID)
+    return GetIDMgr().GetAllConnectPin(pinID)
