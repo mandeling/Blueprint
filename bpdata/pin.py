@@ -9,41 +9,6 @@ import copy
 from . import define
 
 
-class CFlowPin:
-    """节点的流引脚"""
-
-    def __init__(self, iPinType, sName):
-        self.m_Info = {
-            define.PinAttrName.ID: 0,
-            define.PinAttrName.NAME: sName,
-            define.PinAttrName.PIN_TYPE: iPinType,
-        }
-
-    def GetInfo(self):
-        return copy.deepcopy(self.m_Info)
-
-
-class CDataPin:
-    """节点的数据引脚"""
-
-    def __init__(self, iPinType, iDataType, sName):
-        self.m_Info = {
-            define.PinAttrName.ID: 0,
-            define.PinAttrName.NAME: sName,
-            define.PinAttrName.DISPLAYNAME: sName,
-            define.PinAttrName.PIN_TYPE: iPinType,
-        }
-        if iPinType in (define.PIN_INPUT_DATA_TYPE, define.PIN_OUTPUT_DATA_TYPE):
-            self.m_Info[define.PinAttrName.DATA_TYPE] = iDataType
-            self.m_Info[define.PinAttrName.VALUE] = define.GetDefauleValue(iDataType),
-
-    def SetAttr(self, sAttrName, value):
-        self.m_Info[sAttrName] = value
-
-    def GetAttr(self, sAttrName):
-        return self.m_Info[sAttrName]
-
-
 class CPin:
     def __init__(self, iPinType, iDataType, sName):
         self.m_Info = {
