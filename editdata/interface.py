@@ -84,6 +84,11 @@ def GetPinInfo(bpID, nodeID, pinID):
     return dInfo[pinID]
 
 
+def GetPinAttr(pinID, sAttrName):
+    oPinMgr = pinmgr.GetPinMgr()
+    return oPinMgr.GetAttr(pinID, sAttrName)
+
+
 def PinCanConnect(bpID, nodeID1, pinID1, nodeID2, pinID2):
     if nodeID1 == nodeID2:
         return False

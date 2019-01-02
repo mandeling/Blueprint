@@ -171,8 +171,7 @@ class CNodeWidget(QWidget):
     def __init__(self, nodeID, parent=None):
         super(CNodeWidget, self).__init__(parent)
         self.m_NodeID = nodeID
-        self.m_NodeName = interface.GetNodeAttr(nodeID, eddefine.NodeAttrName.NAME)
-        self.m_PinInfo = interface.GetNodeAttr(nodeID, eddefine.NodeAttrName.PININFO)
+        self.m_NodeName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.NAME)
         self.m_InputInfo = []
         self.m_OutputInfo = []
         self.m_ButtonInfo = {}
@@ -180,16 +179,14 @@ class CNodeWidget(QWidget):
         self.InitUI()
 
     def InitData(self):
-        for pid, pinInfo in self.m_PinInfo.items():
-            iPinType = pinInfo[bddefine.PinAttrName.PIN_TYPE]
-            if iPinType == bddefine.PIN_INPUT_DATA_TYPE:
+        lstPin = interface.GetNodeAttr(self.m_NodeID, bddefine.NodeAttrName.PINIDLIST)
+        for pinID in lstPin:
+            iPinType = interface.GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
+            if bddefine.PinIsInput(iPinType):
                 tmp = self.m_InputInfo
             else:
                 tmp = self.m_OutputInfo
-            if bddefine.PinAttrName.DATA_TYPE in pinInfo:
-                tmp.append([self.m_NodeID, pid])
-            else:
-                tmp.insert(0, [self.m_NodeID, pid])
+            tmp.append(pinID)
 
     def AddButton(self, oBtn):
         if not oBtn:
@@ -234,9 +231,9 @@ class CNodeWidget(QWidget):
             qHL = QtWidgets.QHBoxLayout()
             oInBtn = oOutBtn = None
             if i < len(self.m_InputInfo) and self.m_InputInfo[i]:
-                oInBtn = CNodeButtonUI(*self.m_InputInfo[i], False, self.BCWidget)
+                oInBtn = CNodeButtonUI(self.m_InputInfo[i], False, self.BCWidget)
             if i < len(self.m_OutputInfo) and self.m_OutputInfo[i]:
-                oOutBtn = CNodeButtonUI(*self.m_OutputInfo[i], True, self.BCWidget)
+                oOutBtn = CNodeButtonUI(self.m_OutputInfo[i], True, self.BCWidget)
             spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
             if oInBtn:
                 qHL.addWidget(oInBtn)
@@ -252,9 +249,8 @@ class CNodeWidget(QWidget):
 
 
 class CNodeButtonUI(QPushButton):
-    def __init__(self, nodeID, pinID, bOutput=False, parent=None):
+    def __init__(self, pinID, bOutput=False, parent=None):
         super(CNodeButtonUI, self).__init__(parent)
-        self.m_NodeID = nodeID
         self.m_PinID = pinID
         self.m_BOutPut = bOutput
         self.setCursor(Qt.PointingHandCursor)
@@ -262,10 +258,10 @@ class CNodeButtonUI(QPushButton):
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.SetIcon()
         self.SetText()
-        uimgr.GetUIMgr().AddPinBtnUI(bpID, nodeID, pinID, self)
+        uimgr.GetUIMgr().AddPinBtnUI(pinID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelPinBtnUI(self.m_NodeID, self.m_PinID)
+        uimgr.GetUIMgr().DelPinBtnUI(self.m_PinID)
 
     def GetPinID(self):
         return self.m_PinID
@@ -273,22 +269,20 @@ class CNodeButtonUI(QPushButton):
     def IsOutput(self):
         return self.m_BOutPut
 
-    def GetPinInfo(self):
-        dNodeInfo = interface.GetNodeAttr(self.m_NodeID, eddefine.NodeAttrName.PININFO)
-        return dNodeInfo[self.m_PinID]
-
-    def SetIcon(self, iType=None):
-        if iType is None:
-            pinInfo = self.GetPinInfo()
-            iType = pinInfo.get(bddefine.PinAttrName.DATA_TYPE, -1)
+    def SetIcon(self, iDataType=None):
+        if iDataType is None:
+            iPinType = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.PIN_TYPE)
+            if bddefine.PinIsFlow(iPinType):
+                iDataType = -1
+            else:
+                iDataType = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DATA_TYPE)
         icon = QtGui.QIcon()
-        pix = ":/icon/btn_%s.png" % iType
+        pix = ":/icon/btn_%s.png" % iDataType
         icon.addPixmap(QtGui.QPixmap(pix), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setIcon(icon)
         self.setIconSize(QtCore.QSize(20, 20))
 
     def SetText(self, sText=None):
         if sText is None:
-            pinInfo = self.GetPinInfo()
-            sText = pinInfo[bddefine.PinAttrName.NAME]
+            sText = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DISPLAYNAME)
         self.setText(sText)

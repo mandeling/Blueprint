@@ -31,6 +31,18 @@ TYPE_NAME = {
 }
 
 
+def PinIsFlow(iPinType):
+    if iPinType in (PIN_INPUT_FLOW_TYPE, PIN_OUTPUT_FLOW_TYPE):
+        return True
+    return False
+
+
+def PinIsInput(iPinType):
+    if iPinType in (PIN_INPUT_FLOW_TYPE, PIN_INPUT_DATA_TYPE):
+        return True
+    return False
+
+
 def GetDefauleValue(iType):
     if iType in (Type.INT, Type.FLOAT):
         return 0
@@ -90,6 +102,6 @@ class PinAttrName:
     ID = PIN_ATTR_NAME_PREFIX + "id"
     NAME = PIN_ATTR_NAME_PREFIX + "name"
     DISPLAYNAME = PIN_ATTR_NAME_PREFIX + "display_name"
-    PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"
+    PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"    # 引脚类型
     DATA_TYPE = PIN_ATTR_NAME_PREFIX + "data_type"
     VALUE = PIN_ATTR_NAME_PREFIX + "data_type"

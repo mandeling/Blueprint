@@ -49,9 +49,6 @@ class CBlueprintScene(QGraphicsScene):
     def GetBPID(self):
         return self.m_BPID
 
-    def SetSelectPin(self, nodeID, pinID):
-        self.m_SelectPin = (nodeID, pinID)
-
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
         if self.m_TempPinLine:
@@ -105,7 +102,7 @@ class CBlueprintScene(QGraphicsScene):
         self.m_SelectPin = None
 
     def DelConnect(self, lineID):
-        oLineUI = uimgr.GetUIMgr().GetLineUI(self.m_BPID, lineID)
+        oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
         interface.DelLine(self.m_BPID, lineID)
         self.removeItem(oLineUI)
 

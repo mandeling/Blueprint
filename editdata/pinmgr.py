@@ -58,6 +58,10 @@ class CPinMgr:
         oPin = CPin(pinID, dPin)
         self.m_ItemInfo[pinID] = oPin
 
+    def GetAttr(self, pinID, sAttrName):
+        oPin = self.m_ItemInfo[pinID]
+        return oPin.GetAttr(sAttrName)
+
 
 class CPin:
     def __init__(self, pinID, dPin):
