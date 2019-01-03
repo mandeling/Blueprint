@@ -78,8 +78,8 @@ class CBlueprintScene(QGraphicsScene):
     def BeginConnect(self, startPinID):
         self.m_IsDrawLine = True
         self.m_TempPinLine = lineui.CLineUI()
-        self.m_TempPinLine.SetStartPinID(startPinID)
         self.addItem(self.m_TempPinLine)
+        self.m_TempPinLine.SetStartPinID(startPinID)
 
     def EndConnect(self, event):
         sPos = event.scenePos()

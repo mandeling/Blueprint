@@ -12,14 +12,16 @@ from . import define
 class CPin:
     def __init__(self, iPinType, iDataType, sName):
         self.m_Info = {
-            define.PinAttrName.ID: 0,
+            define.PinAttrName.ID: -1,
             define.PinAttrName.NAME: sName,
             define.PinAttrName.DISPLAYNAME: sName,
             define.PinAttrName.PIN_TYPE: iPinType,
+            define.PinAttrName.DATA_TYPE: -1,
+            define.PinAttrName.VALUE: -1,
         }
         if iPinType in (define.PIN_INPUT_DATA_TYPE, define.PIN_OUTPUT_DATA_TYPE):
             self.m_Info[define.PinAttrName.DATA_TYPE] = iDataType
-            self.m_Info[define.PinAttrName.VALUE] = define.GetDefauleValue(iDataType),
+            self.m_Info[define.PinAttrName.VALUE] = define.GetDefauleValue(iDataType)
 
     def GetInfo(self):
         return copy.deepcopy(self.m_Info)

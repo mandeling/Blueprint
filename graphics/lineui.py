@@ -61,12 +61,14 @@ class CLineUI(QtWidgets.QGraphicsItem):
 
     def SetStartPinID(self, pinID):
         self.m_StartPinID = pinID
+        self.UpdatePosition()
 
     def GetStartPinID(self):
         return self.m_StartPinID
 
     def SetEndPinID(self, pinID):
         self.m_EndPinID = pinID
+        self.UpdatePosition()
 
     def UpdatePosition(self):
         startPinUI = GetUIMgr().GetPinUI(self.m_StartPinID)
