@@ -8,7 +8,7 @@
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 
-from .uimgr import GetUIMgr
+from viewmgr.uimgr import GetUIMgr
 
 
 class CLineUI(QtWidgets.QGraphicsItem):

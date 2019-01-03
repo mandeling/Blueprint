@@ -5,7 +5,7 @@
 @Desc: 蓝图ui的各种状态管理
 """
 
-from . import uimgr
+from viewmgr.uimgr import GetUIMgr
 from editdata import interface
 
 g_StatusMgr = None
@@ -28,7 +28,7 @@ class CStatusMgr:
     def DelNode(self, nodeID):
         bpID = interface.GetBPIDByNodeID(nodeID)
         lst = self.GetSelectNode(bpID)
-        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         oNodeUI.SetUnpressStyle()
         if nodeID in lst:
             lst.remove(nodeID)
@@ -37,7 +37,7 @@ class CStatusMgr:
         """添加一个选中的节点"""
         bpID = interface.GetBPIDByNodeID(nodeID)
         lst = self.GetSelectNode(bpID)
-        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         if nodeID in lst:
             oNodeUI.SetUnpressStyle()
             lst.remove(nodeID)
@@ -51,15 +51,15 @@ class CStatusMgr:
         for nid in self.GetSelectNode(bpID):
             if nid == nodeID:
                 continue
-            oNodeUI = uimgr.GetUIMgr().GetNodeUI(nid)
+            oNodeUI = GetUIMgr().GetNodeUI(nid)
             oNodeUI.SetUnpressStyle()
         self.m_SelectNode[bpID] = [nodeID]
-        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         oNodeUI.SetPressStyle()
 
     def ClearNode(self, bpID):
         """清除节点选中状态"""
         for nid in self.GetSelectNode(bpID):
-            oNodeUI = uimgr.GetUIMgr().GetNodeUI(nid)
+            oNodeUI = GetUIMgr().GetNodeUI(nid)
             oNodeUI.SetUnpressStyle()
         self.m_SelectNode[bpID] = []

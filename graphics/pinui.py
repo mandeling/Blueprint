@@ -7,12 +7,11 @@
 
 
 import bpdata.define as bddefine
-import editdata.define as eddefine
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 from pubcode import functor
-from editdata import interface, pinmgr
-from . import uimgr
+from editdata import interface
+from viewmgr.uimgr import GetUIMgr
 
 
 class CPinUI(QtWidgets.QGraphicsPolygonItem):
@@ -24,10 +23,10 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
         self.m_PinID = pinID
         self.m_Center = None
         self.InitUI()
-        uimgr.GetUIMgr().AddPinUI(pinID, self)
+        GetUIMgr().AddPinUI(pinID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelPinUI(self.m_PinID)
+        GetUIMgr().DelPinUI(self.m_PinID)
 
     def GetPID(self):
         return self.m_PinID

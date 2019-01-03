@@ -6,15 +6,16 @@
 """
 
 
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform, QCursor, QPolygonF
 from PyQt5.QtCore import QPointF, Qt
 
-from PyQt5 import QtWidgets, QtCore, QtGui
-
-from . import nodeui, pinui, lineui, uimgr, statusmgr
+from . import nodeui, pinui, lineui
 from editdata import interface
 from signalmgr import GetSignal
+from viewmgr.uimgr import GetUIMgr
+from viewmgr.statusmgr import GetStatusMgr
 
 
 class CBlueprintScene(QGraphicsScene):
@@ -61,20 +62,20 @@ class CBlueprintScene(QGraphicsScene):
     def RubberBandSelecNodeUI(self, path, mode, trans):
         selectItems = self.items(path, mode, Qt.DescendingOrder, trans)
         allItems = self.items()
-        selectNode = statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID)
+        selectNode = GetStatusMgr().GetSelectNode(self.m_BPID)
         for item in allItems:
             if not isinstance(item, nodeui.CNodeUI):
                 continue
             nodeID = item.m_NodeID
             if item in selectItems:
                 if nodeID not in selectNode:
-                    statusmgr.GetStatusMgr().AddSelectNode(nodeID)
+                    GetStatusMgr().AddSelectNode(nodeID)
             elif nodeID in selectNode:
-                statusmgr.GetStatusMgr().DelNode(nodeID)
+                GetStatusMgr().DelNode(nodeID)
 
     def SetNodeMove(self, offpos):
-        for nodeID in statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID):
-            oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        for nodeID in GetStatusMgr().GetSelectNode(self.m_BPID):
+            oNodeUI = GetUIMgr().GetNodeUI(nodeID)
             oNodeUI.SetMouseMovePos(offpos)
 
     def AddNodeUI(self, nodeID, tPos):
@@ -84,11 +85,10 @@ class CBlueprintScene(QGraphicsScene):
         oNodeUI.setPos(x, y)
 
     def DelNodeUI(self, nodeID):
-        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         if not oNodeUI:
             return
         self.removeItem(oNodeUI)
-        # TODO
 
     def BeginConnect(self, startPinID):
         self.m_IsDrawLine = True
@@ -118,7 +118,7 @@ class CBlueprintScene(QGraphicsScene):
         self.S_DelLineUI(lineID)
 
     def S_DelLineUI(self, lineID):
-        oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
+        oLineUI = GetUIMgr().GetLineUI(lineID)
         self.removeItem(oLineUI)
 
     def OnAddConnect(self, inputPinID, outputPinID):

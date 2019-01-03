@@ -10,10 +10,11 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsItem, QPushButton, QWidget
 from PyQt5.QtCore import Qt
 
-from . import uimgr, pinui, statusmgr
+from . import pinui
 from editdata import interface
+from viewmgr.uimgr import GetUIMgr
+from viewmgr.statusmgr import GetStatusMgr
 
-import editdata.define as eddefine
 import bpdata.define as bddefine
 
 
@@ -71,10 +72,10 @@ class CNodeUI(QGraphicsProxyWidget):
         self.m_NodeWidget = CNodeWidget(nodeID)
         self.InitUI()
         self.InitSlot()
-        uimgr.GetUIMgr().AddNodeUI(nodeID, self)
+        GetUIMgr().AddNodeUI(nodeID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelNodeUI(self.m_NodeID)
+        GetUIMgr().DelNodeUI(self.m_NodeID)
 
     def InitUI(self):
         self.setWidget(self.m_NodeWidget)
@@ -126,15 +127,15 @@ class CNodeUI(QGraphicsProxyWidget):
         if self.IsDrawLine():
             return
         bpID = interface.GetBPIDByNodeID(self.m_NodeID)
-        lst = statusmgr.GetStatusMgr().GetSelectNode(bpID)
+        lst = GetStatusMgr().GetSelectNode(bpID)
         if self.m_NodeID not in lst:
-            statusmgr.GetStatusMgr().SelectOneNode(self.m_NodeID)
+            GetStatusMgr().SelectOneNode(self.m_NodeID)
         self.scene().SetNodeMove(event.pos() - self.m_StartPos)
 
     def mouseReleaseEvent(self, event):
         super(CNodeUI, self).mouseReleaseEvent(event)
         self.setSelected(True)
-        oStatusMgr = statusmgr.GetStatusMgr()
+        oStatusMgr = GetStatusMgr()
         if event.button() == Qt.LeftButton:
             if event.modifiers() == Qt.ControlModifier:
                 oStatusMgr.AddSelectNode(self.m_NodeID)
@@ -144,7 +145,7 @@ class CNodeUI(QGraphicsProxyWidget):
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
             for lineID in interface.GetAllLineByNode(self.m_NodeID):
-                oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
+                oLineUI = GetUIMgr().GetLineUI(lineID)
                 oLineUI.UpdatePosition()
         return super(CNodeUI, self).itemChange(change, value)
 
@@ -158,7 +159,7 @@ class CNodeUI(QGraphicsProxyWidget):
 
     def S_OnDelNodeUI(self):
         interface.DelNode(self.m_NodeID)
-        statusmgr.GetStatusMgr().DelNode(self.m_NodeID)
+        GetStatusMgr().DelNode(self.m_NodeID)
         self.m_NodeWidget = None
         self.scene().DelNodeUI(self.m_NodeID)
 
@@ -263,10 +264,10 @@ class CNodeButtonUI(QPushButton):
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
         self.SetIcon()
         self.SetText()
-        uimgr.GetUIMgr().AddPinBtnUI(pinID, self)
+        GetUIMgr().AddPinBtnUI(pinID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelPinBtnUI(self.m_PinID)
+        GetUIMgr().DelPinBtnUI(self.m_PinID)
 
     def GetPinID(self):
         return self.m_PinID

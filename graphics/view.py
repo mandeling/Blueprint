@@ -5,7 +5,7 @@
 @Desc: 蓝图view
 """
 
-from . import scene, uimgr
+from . import scene
 from editdata import interface
 
 from PyQt5.QtWidgets import QGraphicsView, QMenu, QRubberBand
@@ -13,6 +13,7 @@ from PyQt5.QtGui import QBrush, QColor, QPainterPath
 from PyQt5.QtCore import Qt, QRect
 
 from pubcode import functor
+from viewmgr.uimgr import GetUIMgr
 
 
 class CBlueprintView(QGraphicsView):
@@ -26,10 +27,10 @@ class CBlueprintView(QGraphicsView):
         self.m_RubberBand = None    # 框选框对象
         self.m_Scene = scene.CBlueprintScene(bpID, self)
         self.Init()
-        uimgr.GetUIMgr().AddBPView(bpID, self)
+        GetUIMgr().AddBPView(bpID, self)
 
     def __del__(self):
-        uimgr.GetUIMgr().DelBPView(self.m_BPID)
+        GetUIMgr().DelBPView(self.m_BPID)
 
     def Init(self):
         self.setWindowTitle("蓝图")
