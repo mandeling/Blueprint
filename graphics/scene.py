@@ -8,7 +8,7 @@
 
 from PyQt5.QtWidgets import QGraphicsScene
 from PyQt5.QtGui import QTransform, QCursor, QPolygonF
-from PyQt5.QtCore import QPointF
+from PyQt5.QtCore import QPointF, Qt
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 
@@ -57,6 +57,20 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).wheelEvent(event)
         # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
         event.accept()
+
+    def RubberBandSelecNodeUI(self, path, mode, trans):
+        selectItems = self.items(path, mode, Qt.DescendingOrder, trans)
+        allItems = self.items()
+        selectNode = statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID)
+        for item in allItems:
+            if not isinstance(item, nodeui.CNodeUI):
+                continue
+            nodeID = item.m_NodeID
+            if item in selectItems:
+                if nodeID not in selectNode:
+                    statusmgr.GetStatusMgr().AddSelectNode(nodeID)
+            elif nodeID in selectNode:
+                statusmgr.GetStatusMgr().DelNode(nodeID)
 
     def SetNodeMove(self, offpos):
         for nodeID in statusmgr.GetStatusMgr().GetSelectNode(self.m_BPID):

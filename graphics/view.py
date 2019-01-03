@@ -8,9 +8,9 @@
 from . import scene, uimgr
 from editdata import interface
 
-from PyQt5.QtWidgets import QGraphicsView, QMenu
-from PyQt5.QtGui import QBrush, QColor
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QGraphicsView, QMenu, QRubberBand
+from PyQt5.QtGui import QBrush, QColor, QPainterPath
+from PyQt5.QtCore import Qt, QRect
 
 from pubcode import functor
 
@@ -22,6 +22,8 @@ class CBlueprintView(QGraphicsView):
         self.m_Scale = 1
         self.m_StartPos = None
         self.m_IsHasMove = False    # view视图是否有移动
+        self.m_SelectPos = None     # 框选初始坐标
+        self.m_RubberBand = None    # 框选框对象
         self.m_Scene = scene.CBlueprintScene(bpID, self)
         self.Init()
         uimgr.GetUIMgr().AddBPView(bpID, self)
@@ -32,9 +34,8 @@ class CBlueprintView(QGraphicsView):
     def Init(self):
         self.setWindowTitle("蓝图")
         self.setScene(self.m_Scene)
-        # self.setGeometry(300, 150, 1200, 800)
         self.setBackgroundBrush(QBrush(QColor(103, 103, 103), Qt.SolidPattern))
-        self.setDragMode(QGraphicsView.RubberBandDrag)
+        self.setDragMode(QGraphicsView.NoDrag)
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
         self.setResizeAnchor(QGraphicsView.NoAnchor)
         # 隐藏滚动条
@@ -47,9 +48,12 @@ class CBlueprintView(QGraphicsView):
     def mousePressEvent(self, event):
         super(CBlueprintView, self).mousePressEvent(event)
         if event.button() == Qt.LeftButton:
-            self.setDragMode(QGraphicsView.RubberBandDrag)
-        else:
-            self.setDragMode(QGraphicsView.NoDrag)
+            if self.itemAt(event.pos()) is None:
+                self.m_SelectPos = event.pos()
+                self.setDragMode(QGraphicsView.NoDrag)
+                self.setTransformationAnchor(QGraphicsView.NoAnchor)
+                self.m_RubberBand = QRubberBand(QRubberBand.Rectangle, self.viewport())
+                self.m_RubberBand.show()
 
         if event.button() == Qt.MidButton:
             self.setTransformationAnchor(QGraphicsView.NoAnchor)
@@ -58,21 +62,38 @@ class CBlueprintView(QGraphicsView):
 
     def mouseMoveEvent(self, event):
         super(CBlueprintView, self).mouseMoveEvent(event)
-        if not self.m_StartPos:
-            return
         pos = event.pos()
-        offsetX, offsetY = pos.x() - self.m_StartPos.x(), pos.y()-self.m_StartPos.y()
-        offsetX /= self.m_Scale
-        offsetY /= self.m_Scale
-        self.translate(offsetX, offsetY)
-        self.m_StartPos = pos
-        self.m_IsHasMove = True
+        if self.m_StartPos:
+            offsetX, offsetY = pos.x() - self.m_StartPos.x(), pos.y()-self.m_StartPos.y()
+            offsetX /= self.m_Scale
+            offsetY /= self.m_Scale
+            self.translate(offsetX, offsetY)
+            self.m_StartPos = pos
+            self.m_IsHasMove = True
+
+        if self.m_SelectPos:
+            rect = QRect(
+                min(self.m_SelectPos.x(), pos.x()),
+                min(self.m_SelectPos.y(), pos.y()),
+                abs(self.m_SelectPos.x() - pos.x()),
+                abs(self.m_SelectPos.y() - pos.y())
+            )
+            path = QPainterPath()
+            path.addPolygon(self.mapToScene(rect))
+            path.closeSubpath()
+            self.m_Scene.RubberBandSelecNodeUI(path, self.rubberBandSelectionMode(), self.viewportTransform())
+            self.m_RubberBand.setGeometry(rect)
 
     def mouseReleaseEvent(self, event):
         super(CBlueprintView, self).mouseReleaseEvent(event)
         if event.button() == Qt.MidButton:
             self.m_StartPos = None
-        self.setDragMode(QGraphicsView.RubberBandDrag)
+            self.setDragMode(QGraphicsView.NoDrag)
+        if event.button() == Qt.LeftButton:
+            self.m_SelectPos = None
+            if self.m_RubberBand:
+                self.m_RubberBand.setParent(None)
+                self.m_RubberBand = None
 
     def wheelEvent(self, event):
         """ctrl+滑轮滚动缩放"""
