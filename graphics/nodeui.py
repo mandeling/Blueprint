@@ -47,6 +47,7 @@ QPushButton:hover{
     background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
     border-image:transparent;
     color:white;
+    border:none;
 }
 """
 
@@ -82,7 +83,8 @@ class CNodeUI(QGraphicsProxyWidget):
         self.setFlags(
             QGraphicsItem.ItemIsSelectable |
             QGraphicsItem.ItemIsMovable |
-            QGraphicsItem.ItemSendsGeometryChanges
+            QGraphicsItem.ItemSendsGeometryChanges |
+            QGraphicsItem.ItemIsFocusable
         )
         self.setZValue(4)
         self.SetUnpressStyle()
@@ -152,9 +154,11 @@ class CNodeUI(QGraphicsProxyWidget):
         pos = self.pos() + offpos
         self.setPos(pos)
         self.m_IsNodeMove = True
+        interface.SetNodeAttr(self.m_NodeID, bddefine.NodeAttrName.POSITION, (pos.x(), pos.y()))
 
     def S_OnDelNodeUI(self):
         interface.DelNode(self.m_NodeID)
+        statusmgr.GetStatusMgr().DelNode(self.m_NodeID)
         self.m_NodeWidget = None
         self.scene().DelNodeUI(self.m_NodeID)
 
@@ -171,7 +175,7 @@ class CNodeWidget(QWidget):
     def __init__(self, nodeID, parent=None):
         super(CNodeWidget, self).__init__(parent)
         self.m_NodeID = nodeID
-        self.m_NodeName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.NAME)
+        self.m_NodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
         self.m_InputInfo = []
         self.m_OutputInfo = []
         self.m_ButtonInfo = {}
@@ -206,7 +210,7 @@ class CNodeWidget(QWidget):
         self.verticalLayout_outline.setContentsMargins(4, 4, 4, 4)
         self.verticalLayout_outline.setObjectName("verticalLayout_outline")
 
-        self.BCWidget = QtWidgets.QWidget(self)
+        self.BCWidget = QtWidgets.QWidget(self.outline)
         self.BCWidget.setObjectName("BCWidget")
         self.verticalLayout_BCWidget = QtWidgets.QVBoxLayout(self.BCWidget)
         self.verticalLayout_BCWidget.setObjectName("verticalLayout_BCWidget")
@@ -219,10 +223,11 @@ class CNodeWidget(QWidget):
         self.horizontalLayout_top.setObjectName("horizontalLayout_top")
         self.lb_Title = QtWidgets.QLabel(self.top)
         self.lb_Title.setObjectName("lb_Title")
-        self.lb_Title.setText(self.m_NodeName)
+        self.lb_Title.setText(self.m_NodeDisplayName)
         self.horizontalLayout_top.addWidget(self.lb_Title)
         spacerItem = QtWidgets.QSpacerItem(67, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_top.addItem(spacerItem)
+        # TODO 调试label图标
         self.verticalLayout_BCWidget.addWidget(self.top)
 
         # for attr

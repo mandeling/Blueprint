@@ -25,6 +25,14 @@ class CStatusMgr:
     def GetSelectNode(self, bpID):
         return self.m_SelectNode.setdefault(bpID, [])
 
+    def DelNode(self, nodeID):
+        bpID = interface.GetBPIDByNodeID(nodeID)
+        lst = self.GetSelectNode(bpID)
+        oNodeUI = uimgr.GetUIMgr().GetNodeUI(nodeID)
+        oNodeUI.SetUnpressStyle()
+        if nodeID in lst:
+            lst.remove(nodeID)
+
     def AddSelectNode(self, nodeID):
         """添加一个选中的节点"""
         bpID = interface.GetBPIDByNodeID(nodeID)

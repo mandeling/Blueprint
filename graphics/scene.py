@@ -74,6 +74,7 @@ class CBlueprintScene(QGraphicsScene):
         if not oNodeUI:
             return
         self.removeItem(oNodeUI)
+        # TODO
 
     def BeginConnect(self, startPinID):
         self.m_IsDrawLine = True
@@ -99,9 +100,8 @@ class CBlueprintScene(QGraphicsScene):
         self.m_IsDrawLine = False
 
     def DelConnect(self, lineID):
-        oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
         interface.DelLine(lineID)
-        self.removeItem(oLineUI)
+        self.S_DelLineUI(lineID)
 
     def S_DelLineUI(self, lineID):
         oLineUI = uimgr.GetUIMgr().GetLineUI(lineID)
