@@ -77,12 +77,12 @@ class CIDMgr:
             lst.append(pinID)
         self.m_Pin2Node[pinID] = nodeID
 
-    def GetAllConnectPin(self, pinID):
-        return self.m_PinInfo[pinID]
+    def GetAllConnectPin(self, pinID):#TODO 可以删除
+        return self.m_PinInfo.get(pinID, [])
 
     # ------------------------连线------------------------
     def GetAllLineByPin(self, pinID):
-        return self.m_PinLineInfo[pinID]
+        return self.m_PinLineInfo.get(pinID, [])
 
     def AddLine2BP(self, bpID, lineID):
         MyListAppend(self.m_BPLineInfo, bpID, lineID)

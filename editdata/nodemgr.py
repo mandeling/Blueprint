@@ -64,12 +64,12 @@ class CNodeMgr:
 
     def SetNodeAttr(self, nodeID, sAttrName, value):
         oNode = self.m_Info.get(nodeID, None)
-        if oNode:
+        if not oNode:
             return
         oNode.SetAttr(sAttrName, value)
 
     def GetNodeAttr(self, nodeID, sAttrName):
         oNode = self.m_Info.get(nodeID, None)
-        if oNode:
+        if not oNode:
             return
         return oNode.GetAttr(sAttrName)

@@ -24,7 +24,8 @@ class CBPMgr:
     def NewBP(self):
         uid = misc.uuid()
         oBP = CBP(uid)
-        self.m_Info = oBP
+        self.m_Info[uid] = oBP
+        return uid
 
     def DelBP(self, bpID):
         oBP = self.m_Info.get(bpID, None)
