@@ -104,4 +104,4 @@ class PinAttrName:
     DISPLAYNAME = PIN_ATTR_NAME_PREFIX + "display_name"
     PIN_TYPE = PIN_ATTR_NAME_PREFIX + "pin_type"    # 引脚类型
     DATA_TYPE = PIN_ATTR_NAME_PREFIX + "data_type"
-    VALUE = PIN_ATTR_NAME_PREFIX + "data_type"
+    VALUE = PIN_ATTR_NAME_PREFIX + "data_value"
