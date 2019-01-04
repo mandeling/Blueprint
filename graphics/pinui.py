@@ -79,9 +79,6 @@ class CPinUI(QtWidgets.QGraphicsPolygonItem):
             nodeID = interface.GetNodeIDByPinID(oPinID)
             sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
             sMsg = "删除与\"%s\"-\"%s\"的连线" % (sNodeDisplayName, sPinDisplayName)
-            func = functor.Functor(self.OnDelConnect, lineID)
+            func = functor.Functor(self.scene().OnDelLineUI, lineID)
             menu.addAction(sMsg, func)
         menu.exec_(QtGui.QCursor.pos())
-
-    def OnDelConnect(self, lineID):
-        self.scene().DelConnect(lineID)

@@ -29,8 +29,8 @@ class CLineMgr:
         # 删除input槽之前的连接
         lstLine = GetIDMgr().GetAllLineByPin(iPinID)
         for lineID in lstLine:
-            GetIDMgr().DelPinLine(oPinID, iPinID, lineID)
-            GetSignal().DEL_LINE.emit(lineID)
+            self.DelLine(lineID)
+            GetSignal().DEL_LINE.emit(bpID, lineID)
         lineID = misc.uuid()
         oLine = CLine(lineID, oPinID, iPinID)
         self.m_Info[lineID] = oLine

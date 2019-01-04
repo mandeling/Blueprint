@@ -31,7 +31,6 @@ class CBlueprintScene(QGraphicsScene):
     def _Init(self):
         rect = QtCore.QRectF(-10000, -10000, 20000, 20000)
         self.setSceneRect(rect)  # 场景大小，传入item里面
-
         # brush = QtGui.QBrush()
         # brush.setColor(QtGui.QColor(QtCore.Qt.darkGray))  # 线的颜色
         # brush.setStyle(QtCore.Qt.CrossPattern)
@@ -44,7 +43,7 @@ class CBlueprintScene(QGraphicsScene):
         # i.setZValue(-1000)
 
     def _InitSignal(self):
-        GetSignal().DEL_LINE.emit(self.S_DelLineUI)
+        GetSignal().DEL_LINE.emit(self.S_OnDelLineUI)
 
     def GetBPID(self):
         return self.m_BPID
@@ -113,11 +112,15 @@ class CBlueprintScene(QGraphicsScene):
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
 
-    def DelConnect(self, lineID):
+    def OnDelLineUI(self, lineID):
         interface.DelLine(lineID)
-        self.S_DelLineUI(lineID)
+        self._DelLineUI(lineID)
 
-    def S_DelLineUI(self, lineID):
+    def S_OnDelLineUI(self, bpID, lineID):
+        if bpID == self.m_BPID:
+            self._DelLineUI(lineID)
+
+    def _DelLineUI(self, lineID):
         oLineUI = GetUIMgr().GetLineUI(lineID)
         self.removeItem(oLineUI)
 

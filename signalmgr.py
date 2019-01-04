@@ -19,4 +19,4 @@ def GetSignal():
 
 class CSignal:
     # 数据层信号
-    DEL_LINE = CMySignal()
+    DEL_LINE = CMySignal()  # bpID, lineID

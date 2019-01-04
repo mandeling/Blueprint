@@ -54,16 +54,10 @@ class CIDMgr:
         self.m_Node2BP[nodeID] = bpID
 
     def DelNode(self, nodeID):
-        # 删除引脚槽
-        for pinID in self.m_NodePinInfo[nodeID]:
-            del self.m_Pin2Node[pinID]
-        del self.m_NodePinInfo[nodeID]
-
-        # 删除节点
+        if nodeID not in self.m_Node2BP:
+            return
         bpID = self.m_Node2BP[nodeID]
-        lst = self.m_BPNodeInfo.setdefault(bpID, [])
-        if nodeID not in lst:
-            lst.remove(nodeID)
+        MyListRemove(self.m_BPNodeInfo, bpID, nodeID)
         del self.m_Node2BP[nodeID]
 
     def GetNodeIDByPinID(self, pinID):
@@ -71,10 +65,15 @@ class CIDMgr:
 
     # -----------------------引脚-------------------------
     def NewPin(self, nodeID, pinID):
-        lst = self.m_NodePinInfo.setdefault(nodeID, [])
-        if pinID not in lst:
-            lst.append(pinID)
+        MyListAppend(self.m_NodePinInfo, nodeID, pinID)
         self.m_Pin2Node[pinID] = nodeID
+
+    def DelPin(self, pinID):
+        if pinID not in self.m_Pin2Node:
+            return
+        nodeID = self.m_Pin2Node[pinID]
+        MyListRemove(self.m_NodePinInfo, nodeID, pinID)
+        del self.m_Pin2Node[pinID]
 
     # ------------------------连线------------------------
     def GetAllLineByPin(self, pinID):
