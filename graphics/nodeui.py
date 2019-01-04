@@ -104,8 +104,8 @@ class CNodeUI(QGraphicsProxyWidget):
             oPinUI.setPos(oBtn.x() + self.m_OutlineBorder, oBtn.y() + self.m_OutlineBorder)
             oPinUI.SetPolygon(oBtn.width(), oBtn.height())
 
-    def IsDrawLine(self):
-        return self.scene().m_IsDrawLine
+    def GetID(self):
+        return self.m_NodeID
 
     def contextMenuEvent(self, event):
         event.accept()
@@ -113,34 +113,34 @@ class CNodeUI(QGraphicsProxyWidget):
         menu.addAction("删除节点", self.S_OnDelNodeUI)
         menu.exec_(QtGui.QCursor.pos())
 
-    def mousePressEvent(self, event):
-        super(CNodeUI, self).mousePressEvent(event)
-        event.accept()
-        if self.IsDrawLine():
-            return
-        if event.button() == Qt.LeftButton:
-            self.m_StartPos = event.pos()
-            self.m_IsNodeMove = False
+    # def mousePressEvent(self, event):
+    #     super(CNodeUI, self).mousePressEvent(event)
+    #     event.accept()
+    #     if self.IsDrawLine():
+    #         return
+    #     if event.button() == Qt.LeftButton:
+    #         self.m_StartPos = event.pos()
+    #         self.m_IsNodeMove = False
 
-    def mouseMoveEvent(self, event):
-        super(CNodeUI, self).mouseMoveEvent(event)
-        if self.IsDrawLine():
-            return
-        bpID = interface.GetBPIDByNodeID(self.m_NodeID)
-        lst = GetStatusMgr().GetSelectNode(bpID)
-        if self.m_NodeID not in lst:
-            GetStatusMgr().SelectOneNode(self.m_NodeID)
-        self.scene().SetNodeMove(event.pos() - self.m_StartPos)
+    # def mouseMoveEvent(self, event):
+    #     super(CNodeUI, self).mouseMoveEvent(event)
+    #     if self.IsDrawLine():
+    #         return
+    #     bpID = interface.GetBPIDByNodeID(self.m_NodeID)
+    #     lst = GetStatusMgr().GetSelectNode(bpID)
+    #     if self.m_NodeID not in lst:
+    #         GetStatusMgr().SelectOneNode(self.m_NodeID)
+    #     self.scene().SetNodeMove(event.pos() - self.m_StartPos)
 
-    def mouseReleaseEvent(self, event):
-        super(CNodeUI, self).mouseReleaseEvent(event)
-        self.setSelected(True)
-        oStatusMgr = GetStatusMgr()
-        if event.button() == Qt.LeftButton:
-            if event.modifiers() == Qt.ControlModifier:
-                oStatusMgr.AddSelectNode(self.m_NodeID)
-            elif not self.m_IsNodeMove:
-                oStatusMgr.SelectOneNode(self.m_NodeID)
+    # def mouseReleaseEvent(self, event):
+    #     super(CNodeUI, self).mouseReleaseEvent(event)
+    #     self.setSelected(True)
+    #     oStatusMgr = GetStatusMgr()
+    #     if event.button() == Qt.LeftButton:
+    #         if event.modifiers() == Qt.ControlModifier:
+    #             oStatusMgr.ChangeSelectNode(self.m_NodeID)
+    #         elif not self.m_IsNodeMove:
+    #             oStatusMgr.SelectOneNode(self.m_NodeID)
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:
@@ -150,8 +150,6 @@ class CNodeUI(QGraphicsProxyWidget):
         return super(CNodeUI, self).itemChange(change, value)
 
     def SetMouseMovePos(self, offpos):
-        if self.IsDrawLine():
-            return
         pos = self.pos() + offpos
         self.setPos(pos)
         self.m_IsNodeMove = True

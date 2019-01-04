@@ -23,8 +23,9 @@ class CBlueprintScene(QGraphicsScene):
         super(CBlueprintScene, self).__init__(parent)
         self.m_BPID = bpID
         self.m_PinInfo = {}
-        self.m_IsDrawLine = False
         self.m_TempPinLine = None   # 临时引脚连线
+        self.m_IsNodeMove = False   # 节点是否有移动
+        self.m_StartPos = None      # 节点移动的起始坐标
         self._Init()
         self._InitSignal()
 
@@ -48,10 +49,58 @@ class CBlueprintScene(QGraphicsScene):
     def GetBPID(self):
         return self.m_BPID
 
+    def mousePressEvent(self, event):
+        super(CBlueprintScene, self).mousePressEvent(event)
+        if self.m_TempPinLine:
+            return
+        self.M_NodeMousePressEvent(event)
+
+    def M_NodeMousePressEvent(self, event):
+        item = self.itemAt(event.scenePos(), QTransform())
+        if event.button() == Qt.LeftButton:
+            if item and isinstance(item, nodeui.CNodeUI):
+                self.m_StartPos = event.scenePos()
+            else:
+                GetStatusMgr().ClearNode(self.m_BPID)
+
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
         if self.m_TempPinLine:
             self.m_TempPinLine.UpdatePosition()
+            return
+        self.M_NodeMouseMoveEvent(event)
+
+    def M_NodeMouseMoveEvent(self, event):
+        item = self.itemAt(event.scenePos(), QTransform())
+        if not (item and isinstance(item, nodeui.CNodeUI)):
+            return
+        if self.m_StartPos:
+            nodeID = item.GetID()
+            selectNode = GetStatusMgr().GetSelectNode(self.m_BPID)
+            if nodeID not in selectNode:
+                GetStatusMgr().SelectOneNode(self.m_BPID, nodeID)
+            self.SetNodeMove(event.scenePos() - self.m_StartPos)
+            self.m_StartPos = event.scenePos()
+            self.m_IsNodeMove = True
+
+    def mouseReleaseEvent(self, event):
+        super(CBlueprintScene, self).mouseReleaseEvent(event)
+        self.M_NodeMouseReleaseEvent(event)
+
+    def M_NodeMouseReleaseEvent(self, event):
+        self.m_StartPos = None
+        if self.m_IsNodeMove:
+            self.m_IsNodeMove = False
+            return
+        item = self.itemAt(event.scenePos(), QTransform())
+        if not (item and isinstance(item, nodeui.CNodeUI)):
+            return
+        if event.button() == Qt.LeftButton:
+            nodeID = item.GetID()
+            if event.modifiers() == Qt.ControlModifier:
+                GetStatusMgr().ChangeSelectNode(self.m_BPID, nodeID)
+            else:
+                GetStatusMgr().SelectOneNode(self.m_BPID, nodeID)
 
     def keyPressEvent(self, event):
         super(CBlueprintScene, self).keyPressEvent(event)
@@ -75,10 +124,11 @@ class CBlueprintScene(QGraphicsScene):
             nodeID = item.m_NodeID
             if item in selectItems:
                 if nodeID not in selectNode:
-                    GetStatusMgr().AddSelectNode(nodeID)
+                    GetStatusMgr().ChangeSelectNode(self.m_BPID, nodeID)
             elif nodeID in selectNode:
-                GetStatusMgr().DelNode(nodeID)
+                GetStatusMgr().DelSelectNode(self.m_BPID, nodeID)
 
+    # ----------------------node-------------------------------------
     def SetNodeMove(self, offpos):
         for nodeID in GetStatusMgr().GetSelectNode(self.m_BPID):
             oNodeUI = GetUIMgr().GetNodeUI(nodeID)
@@ -96,13 +146,12 @@ class CBlueprintScene(QGraphicsScene):
 
     def _DelNodeUI(self, nodeID):
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
-        GetStatusMgr().DelNode(nodeID)
+        GetStatusMgr().DelSelectNode(self.m_BPID, nodeID)
         if not oNodeUI:
             return
         self.removeItem(oNodeUI)
 
     def BeginConnect(self, startPinID):
-        self.m_IsDrawLine = True
         self.m_TempPinLine = lineui.CLineUI()
         self.addItem(self.m_TempPinLine)
         self.m_TempPinLine.SetStartPinID(startPinID)
@@ -122,7 +171,6 @@ class CBlueprintScene(QGraphicsScene):
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
-        self.m_IsDrawLine = False
 
     def _AddLineUI(self, inputPinID, outputPinID):
         """真正执行添加连接线"""

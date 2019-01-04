@@ -32,7 +32,7 @@ class CStatusMgr:
     def GetSelectNode(self, bpID):
         return self.m_SelectNode.setdefault(bpID, [])
 
-    def DelNode(self, nodeID):
+    def DelSelectNode(self, bpID, nodeID):
         bpID = interface.GetBPIDByNodeID(nodeID)
         lst = self.GetSelectNode(bpID)
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
@@ -40,9 +40,8 @@ class CStatusMgr:
         if nodeID in lst:
             lst.remove(nodeID)
 
-    def AddSelectNode(self, nodeID):
+    def ChangeSelectNode(self, bpID, nodeID):
         """添加一个选中的节点"""
-        bpID = interface.GetBPIDByNodeID(nodeID)
         lst = self.GetSelectNode(bpID)
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         if nodeID in lst:
@@ -52,9 +51,8 @@ class CStatusMgr:
             oNodeUI.SetPressStyle()
             lst.append(nodeID)
 
-    def SelectOneNode(self, nodeID):
+    def SelectOneNode(self, bpID, nodeID):
         """选中一个节点"""
-        bpID = interface.GetBPIDByNodeID(nodeID)
         for nid in self.GetSelectNode(bpID):
             if nid == nodeID:
                 continue
