@@ -20,7 +20,14 @@ def GetStatusMgr():
 
 class CStatusMgr:
     def __init__(self):
-        self.m_SelectNode = {}
+        self.m_SelectNode = {}  # 当前选择的节点
+        self.m_CurBPID = None   # 当前选择的蓝图id
+
+    def SetCurBPID(self, bpID):
+        self.m_CurBPID = bpID
+
+    def GetCurBPID(self):
+        return self.m_CurBPID
 
     def GetSelectNode(self, bpID):
         return self.m_SelectNode.setdefault(bpID, [])

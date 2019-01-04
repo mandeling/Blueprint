@@ -9,10 +9,11 @@ import os
 
 from PyQt5 import QtWidgets
 
-from graphics import view
-from viewmgr.uimgr import GetUIMgr
-from editdata import interface
 from pubcode import functor
+from graphics import view
+from editdata import interface
+from viewmgr.uimgr import GetUIMgr
+from viewmgr.statusmgr import GetStatusMgr
 
 
 class CBPTabWidget(QtWidgets.QTabWidget):
@@ -23,6 +24,10 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self.setMovable(True)
         self.m_ShowID = 0
         self.m_PathInfo = {}
+        self._InitSignal()
+
+    def _InitSignal(self):
+        self.currentChanged.connect(self.S_OnBPTabChange)
 
     def NewBlueprint(self, sPath=None):
         if sPath:
@@ -77,3 +82,8 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         if bpID in self.m_PathInfo:
             del self.m_PathInfo[bpID]
         GetUIMgr().DelBPView(bpID)
+
+    def S_OnBPTabChange(self):
+        oView = self.currentWidget()
+        bpID = oView.GetBPID()
+        GetStatusMgr().SetCurBPID(bpID)
