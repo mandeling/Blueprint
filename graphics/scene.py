@@ -53,6 +53,13 @@ class CBlueprintScene(QGraphicsScene):
         if self.m_TempPinLine:
             self.m_TempPinLine.UpdatePosition()
 
+    def keyPressEvent(self, event):
+        super(CBlueprintScene, self).keyPressEvent(event)
+        if event.key() == Qt.Key_Delete:
+            lstNode = GetStatusMgr().GetSelectNode(self.m_BPID)
+            for nodeID in lstNode:
+                self.OnDelNodeUI(nodeID)
+
     def wheelEvent(self, event):
         super(CBlueprintScene, self).wheelEvent(event)
         # 吞噬信号，不再将信号返回父窗口，禁止父窗口滑动条操作
@@ -83,8 +90,13 @@ class CBlueprintScene(QGraphicsScene):
         x, y = tPos
         oNodeUI.setPos(x, y)
 
-    def DelNodeUI(self, nodeID):
+    def OnDelNodeUI(self, nodeID):
+        interface.DelNode(nodeID)
+        self._DelNodeUI(nodeID)
+
+    def _DelNodeUI(self, nodeID):
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
+        GetStatusMgr().DelNode(nodeID)
         if not oNodeUI:
             return
         self.removeItem(oNodeUI)
@@ -106,11 +118,19 @@ class CBlueprintScene(QGraphicsScene):
                     inputPinID, outputPinID = sPinID, ePinID
                 else:
                     inputPinID, outputPinID = ePinID, sPinID
-                self.OnAddConnect(inputPinID, outputPinID)
+                self._AddLineUI(inputPinID, outputPinID)
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
         self.m_IsDrawLine = False
+
+    def _AddLineUI(self, inputPinID, outputPinID):
+        """真正执行添加连接线"""
+        lineID = interface.AddLine(self.m_BPID, outputPinID, inputPinID)
+        line = lineui.CLineUI(lineID)
+        self.addItem(line)
+        line.SetStartPinID(outputPinID)
+        line.SetEndPinID(inputPinID)
 
     def OnDelLineUI(self, lineID):
         interface.DelLine(lineID)
@@ -123,14 +143,6 @@ class CBlueprintScene(QGraphicsScene):
     def _DelLineUI(self, lineID):
         oLineUI = GetUIMgr().GetLineUI(lineID)
         self.removeItem(oLineUI)
-
-    def OnAddConnect(self, inputPinID, outputPinID):
-        """真正执行添加连接线"""
-        lineID = interface.AddLine(self.m_BPID, outputPinID, inputPinID)
-        line = lineui.CLineUI(lineID)
-        self.addItem(line)
-        line.SetStartPinID(outputPinID)
-        line.SetEndPinID(inputPinID)
 
     def GetMouseScenePos(self):
         view = self.views()[0]

@@ -158,10 +158,7 @@ class CNodeUI(QGraphicsProxyWidget):
         interface.SetNodeAttr(self.m_NodeID, bddefine.NodeAttrName.POSITION, (pos.x(), pos.y()))
 
     def S_OnDelNodeUI(self):
-        interface.DelNode(self.m_NodeID)
-        GetStatusMgr().DelNode(self.m_NodeID)
-        self.m_NodeWidget = None
-        self.scene().DelNodeUI(self.m_NodeID)
+        self.scene().OnDelNodeUI(self.m_NodeID)
 
     def SetPressStyle(self):
         self.m_NodeWidget.setStyleSheet(QSS_NODE_PRESS)
