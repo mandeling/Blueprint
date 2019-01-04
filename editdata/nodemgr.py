@@ -63,7 +63,7 @@ class CNodeMgr:
 
     def DelNode(self, nodeID):
         oNode = self.m_Info.get(nodeID, None)
-        if oNode:
+        if not oNode:
             return
         bpID = GetIDMgr().GetBPIDByNodeID(nodeID)
         lstLine = interface.GetAllLineByNode(nodeID)

@@ -43,7 +43,7 @@ class CBlueprintScene(QGraphicsScene):
         # i.setZValue(-1000)
 
     def _InitSignal(self):
-        GetSignal().DEL_LINE.emit(self.S_OnDelLineUI)
+        GetSignal().DEL_LINE.connect(self.S_OnDelLineUI)
 
     def GetBPID(self):
         return self.m_BPID
