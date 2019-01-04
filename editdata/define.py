@@ -6,6 +6,18 @@
 """
 
 
+# ----------------------blueprint-------------------------------
+BP_ATTR_NAME_PREFIX = "line_attr_name:"
+
+
+class BlueprintAttrName:
+    ID = BP_ATTR_NAME_PREFIX + "id"
+    NAME = BP_ATTR_NAME_PREFIX + "name"
+    LINE_LIST = BP_ATTR_NAME_PREFIX + "line_list"
+    NODE_LIST = BP_ATTR_NAME_PREFIX + "node_list"
+    VARIABLE_LIST = BP_ATTR_NAME_PREFIX + "variable_list"
+
+
 # ----------------------Variable-------------------------------
 VARIABLE_ATTR_NAME_PREFIX = "variable_attr_name:"
 VARIABLE_TYPE_GLOBAL = 0

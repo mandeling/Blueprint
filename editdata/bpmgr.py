@@ -7,6 +7,8 @@
 
 import misc
 
+from . import define as eddefine
+
 g_BPMgr = None
 
 
@@ -23,7 +25,7 @@ class CBPMgr:
 
     def NewBP(self):
         uid = misc.uuid()
-        oBP = CBP(uid)
+        oBP = CBP(uid, "name")
         self.m_Info[uid] = oBP
         return uid
 
@@ -35,8 +37,14 @@ class CBPMgr:
 
 
 class CBP:
-    def __init__(self, bpid):
-        self.m_ID = bpid
+    def __init__(self, ID, sName):
+        self.m_Info = {
+            eddefine.BlueprintAttrName.ID: ID,
+            eddefine.BlueprintAttrName.NAME: sName,
+            eddefine.BlueprintAttrName.LINE_LIST: [],
+            eddefine.BlueprintAttrName.NODE_LIST: [],
+            eddefine.BlueprintAttrName.VARIABLE_LIST: [],
+        }
 
     def Delete(self):
         pass  # TODO
