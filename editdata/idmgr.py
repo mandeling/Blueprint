@@ -34,7 +34,6 @@ class CIDMgr:
         self.m_NodePinInfo = {}  # {nodeID:[pinID,]}
         self.m_Pin2Node = {}    # {pinID:nodeID}
         self.m_PinLineInfo = {}  # {pinid:[lineid,]}
-        self.m_PinInfo = {}     # {pinid:[pinid,]}
         self.m_BPLineInfo = {}  # {bpID:[lineID,]}
         self.m_Line2BP = {}     # {lineID:bpID}
 
@@ -77,9 +76,6 @@ class CIDMgr:
             lst.append(pinID)
         self.m_Pin2Node[pinID] = nodeID
 
-    def GetAllConnectPin(self, pinID):#TODO 可以删除
-        return self.m_PinInfo.get(pinID, [])
-
     # ------------------------连线------------------------
     def GetAllLineByPin(self, pinID):
         return self.m_PinLineInfo.get(pinID, [])
@@ -95,15 +91,9 @@ class CIDMgr:
 
     # ------------------------引脚和连线------------------------
     def NewPinLine(self, oPinID, iPinID, lineID):
-        MyListAppend(self.m_PinInfo, oPinID, iPinID)
-        MyListAppend(self.m_PinInfo, iPinID, oPinID)
-
         MyListAppend(self.m_PinLineInfo, oPinID, lineID)
         MyListAppend(self.m_PinLineInfo, iPinID, lineID)
 
     def DelPinLine(self, oPinID, iPinID, lineID):
         self.m_PinLineInfo[oPinID].remove(lineID)
         self.m_PinLineInfo[iPinID].remove(lineID)
-
-        self.m_PinInfo[oPinID].remove(iPinID)
-        self.m_PinInfo[iPinID].remove(oPinID)
