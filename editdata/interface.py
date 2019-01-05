@@ -102,18 +102,16 @@ def PinCanConnect(inputPinID, outputPinID):
 
     iPinType = GetPinAttr(inputPinID, bddefine.PinAttrName.PIN_TYPE)
     oPinType = GetPinAttr(outputPinID, bddefine.PinAttrName.PIN_TYPE)
+    if iPinType == oPinType:    # 同为输入、输出引脚返回false
+        return False
     if bddefine.PinIsFlow(iPinType) and bddefine.PinIsFlow(oPinType):   # 同为flow引脚
-        if iPinType == oPinType:    # 同为输入、输出引脚返回false
-            return False
         return True
-
     if not (bddefine.PinIsFlow(iPinType) or bddefine.PinIsFlow(oPinType)):  # 同为数据引脚
         iDataType = GetPinAttr(inputPinID, bddefine.PinAttrName.DATA_TYPE)
         oDataType = GetPinAttr(outputPinID, bddefine.PinAttrName.DATA_TYPE)
         if iDataType == oDataType:  # 相同数据类型才可以连接
             return True
         return False
-
     return False
 
 

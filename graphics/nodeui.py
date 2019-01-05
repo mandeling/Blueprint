@@ -131,11 +131,11 @@ class CNodeUI(QGraphicsProxyWidget):
 
     def SetPressStyle(self):
         self.m_NodeWidget.setStyleSheet(QSS_NODE_PRESS)
-        self.setZValue(self.zValue() + 10)
+        self.setZValue(self.zValue() + 2)
 
     def SetUnpressStyle(self):
         self.m_NodeWidget.setStyleSheet(QSS_NODE_UNPRESS)
-        self.setZValue(self.zValue() - 10)
+        self.setZValue(self.zValue() - 2)
 
 
 class CNodeWidget(QWidget):
