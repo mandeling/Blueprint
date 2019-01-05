@@ -65,12 +65,12 @@ def AddNode(bpID, sName, pos=(0, 0)):
 
 def SetNodeAttr(nodeID, sAttrName, value):
     oNodeMgr = GetNodeMgr()
-    oNodeMgr.SetNodeAttr(nodeID, sAttrName, value)
+    oNodeMgr.SetItemAttr(nodeID, sAttrName, value)
 
 
 def GetNodeAttr(nodeID, sAttrName):
     oNodeMgr = GetNodeMgr()
-    return oNodeMgr.GetNodeAttr(nodeID, sAttrName)
+    return oNodeMgr.GetItemAttr(nodeID, sAttrName)
 
 
 def GetAllDefineNodeName():

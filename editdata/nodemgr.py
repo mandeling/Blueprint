@@ -13,6 +13,7 @@ from .idmgr import GetIDMgr
 from .pinmgr import GetPinMgr
 from bpdata import define as bddefine
 from signalmgr import GetSignal
+from . import basemgr
 
 g_NodeMgr = None
 
@@ -24,9 +25,9 @@ def GetNodeMgr():
     return g_NodeMgr
 
 
-class CNodeMgr:
+class CNodeMgr(basemgr.CBaseMgr):
     def __init__(self):
-        self.m_Info = {}
+        super(CNodeMgr, self).__init__()
         self.m_DefineInfo = {}  # 节点定义的信息
 
     # --------------定义节点的信息-----------------------
@@ -58,11 +59,11 @@ class CNodeMgr:
             GetIDMgr().NewPin(nodeID, pinID)
             GetPinMgr().NewPin(pinID, oPin)
         oNode.SetAttr(bddefine.NodeAttrName.PINIDLIST, lstPin)
-        self.m_Info[nodeID] = oNode
+        self.m_ItemInfo[nodeID] = oNode
         return nodeID
 
     def DelNode(self, nodeID):
-        oNode = self.m_Info.get(nodeID, None)
+        oNode = self.m_ItemInfo.get(nodeID, None)
         if not oNode:
             return
         bpID = GetIDMgr().GetBPIDByNodeID(nodeID)
@@ -73,16 +74,4 @@ class CNodeMgr:
         lstPin = oNode.GetAttr(bddefine.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
             GetPinMgr().DelPin(pinID)
-        del self.m_Info[nodeID]
-
-    def SetNodeAttr(self, nodeID, sAttrName, value):
-        oNode = self.m_Info.get(nodeID, None)
-        if not oNode:
-            return
-        oNode.SetAttr(sAttrName, value)
-
-    def GetNodeAttr(self, nodeID, sAttrName):
-        oNode = self.m_Info.get(nodeID, None)
-        if not oNode:
-            return
-        return oNode.GetAttr(sAttrName)
+        del self.m_ItemInfo[nodeID]

@@ -7,6 +7,7 @@
 
 from .import define, pin
 from editdata import nodemgr
+from editdata import basemgr
 
 
 def Register(sNodeName):
@@ -16,8 +17,9 @@ def Register(sNodeName):
     return Cls
 
 
-class CBase:
+class CBase(basemgr.CBase):
     def __init__(self, sNodeName):
+        super(CBase, self).__init__()
         self.m_Info = {
             define.NodeAttrName.ID: 0,
             define.NodeAttrName.NAME: sNodeName,
@@ -48,12 +50,6 @@ class CBase:
             sPinName, iDataType, func = lst[0], lst[1], lst[2]
             self.m_PinInfo[sPinName] = pin.CPin(define.PIN_OUTPUT_DATA_TYPE, iDataType, sPinName)
             self.m_OutputFunc[sPinName] = func
-
-    def SetAttr(self, sAttrName, value):
-        self.m_Info[sAttrName] = value
-
-    def GetAttr(self, sAttrName):
-        return self.m_Info[sAttrName]
 
     def GetValue(self, sPinName):
         oPin = self.m_PinInfo[sPinName]
