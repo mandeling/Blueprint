@@ -9,6 +9,11 @@
 class CBaseMgr:
     def __init__(self):
         self.m_ItemInfo = {}
+        self.m_ID = 0
+
+    def NewID(self):
+        self.m_ID += 1
+        return self.m_ID
 
     def GetItem(self, key):
         return self.m_ItemInfo.get(key, None)
@@ -17,9 +22,19 @@ class CBaseMgr:
         if key in self.m_ItemInfo:
             del self.m_ItemInfo[key]
 
+    def SetItemAttr(self, ID, key, value):
+        oLine = self.GetItem(ID)
+        assert oLine is not None
+        oLine.SetAttr(key, value)
+
+    def GetItemAttr(self, ID, key):
+        oLine = self.GetItem(ID)
+        assert oLine is not None
+        return oLine.GetAttr(key)
+
 
 class CBase:
-    def __init__(self):
+    def __init__(self, *args):
         self.m_Info = {}
 
     def SetAttr(self, sAttrName, value):

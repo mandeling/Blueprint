@@ -9,13 +9,17 @@ import misc
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
-from . import nodemgr, variablemgr, linemgr, pinmgr, bpmgr
 from .idmgr import GetIDMgr
+from .nodemgr import GetNodeMgr
+from .variablemgr import GetVariableMgr
+from .linemgr import GetLineMgr
+from .pinmgr import GetPinMgr
+from .bpmgr import GetBPMgr
 
 
 # -----------------------蓝图-----------------------------
 def NewBlueprint():
-    bpID = bpmgr.GetBPMgr().NewBP()
+    bpID = GetBPMgr().NewItem()
     return bpID
 
 
@@ -34,48 +38,48 @@ def GetBPIDByNodeID(nodeID):
 
 # --------------------变量--------------------------------
 def GetVariableData():
-    oVariableMgr = variablemgr.GetVariableMgr()
+    oVariableMgr = GetVariableMgr()
     return oVariableMgr.GetAllVarInfo()
 
 
 def NewVariable(sName, iType=bddefine.Type.INT, value=None):
-    oVariableMgr = variablemgr.GetVariableMgr()
+    oVariableMgr = GetVariableMgr()
     oVariableMgr.NewVariable(sName, iType, value)
 
 
 def SetVariableAttr(sName, sAttrName, value):
-    oVariableMgr = variablemgr.GetVariableMgr()
+    oVariableMgr = GetVariableMgr()
     oVariableMgr.SetAttr(sName, sAttrName, value)
 
 
 def GetVariableAttr(sName, sAttrName):
-    oVariableMgr = variablemgr.GetVariableMgr()
+    oVariableMgr = GetVariableMgr()
     return oVariableMgr.GetAttr(sName, sAttrName)
 
 
 # --------------------------节点--------------------------
 def AddNode(bpID, sName, pos=(0, 0)):
-    nodeID = nodemgr.GetNodeMgr().NewNode(bpID, sName, pos)
+    nodeID = GetNodeMgr().NewNode(bpID, sName, pos)
     return nodeID
 
 
 def SetNodeAttr(nodeID, sAttrName, value):
-    oNodeMgr = nodemgr.GetNodeMgr()
+    oNodeMgr = GetNodeMgr()
     oNodeMgr.SetNodeAttr(nodeID, sAttrName, value)
 
 
 def GetNodeAttr(nodeID, sAttrName):
-    oNodeMgr = nodemgr.GetNodeMgr()
+    oNodeMgr = GetNodeMgr()
     return oNodeMgr.GetNodeAttr(nodeID, sAttrName)
 
 
 def GetAllDefineNodeName():
-    oNodeMgr = nodemgr.GetNodeMgr()
+    oNodeMgr = GetNodeMgr()
     return oNodeMgr.GetAllDefineNodeName()
 
 
 def DelNode(nodeID):
-    oNodeMgr = nodemgr.GetNodeMgr()
+    oNodeMgr = GetNodeMgr()
     oNodeMgr.DelNode(nodeID)
 
 
@@ -85,8 +89,7 @@ def GetNodeIDByPinID(pinID):
 
 # ---------------------引脚-------------------------------
 def GetPinAttr(pinID, sAttrName):
-    oPinMgr = pinmgr.GetPinMgr()
-    return oPinMgr.GetAttr(pinID, sAttrName)
+    return GetPinMgr().GetAttr(pinID, sAttrName)
 
 
 def PinCanConnect(inputPinID, outputPinID):
@@ -136,18 +139,18 @@ def AddLine(bpID, oPinID, iPinID):
     oNodeID：输出节点ID
     iNodeID：输入节点ID
     """
-    lineID = linemgr.GetLineMgr().NewLine(bpID, oPinID, iPinID)
+    lineID = GetLineMgr().NewLine(bpID, oPinID, iPinID)
     return lineID
 
 
 def DelLine(lineID):
-    oLineMgr = linemgr.GetLineMgr()
+    oLineMgr = GetLineMgr()
     oLineMgr.DelLine(lineID)
 
 
 def GetLineAttr(lineID, sAttrName):
-    oLineMgr = linemgr.GetLineMgr()
-    return oLineMgr.GetLineAttr(lineID, sAttrName)
+    oLineMgr = GetLineMgr()
+    return oLineMgr.GetItemAttr(lineID, sAttrName)
 
 
 def GetAllLineByNode(nodeID):

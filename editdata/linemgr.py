@@ -9,7 +9,7 @@ import misc
 
 from signalmgr import GetSignal
 from .idmgr import GetIDMgr
-from . import define
+from . import define, basemgr
 
 g_LineMgr = None
 
@@ -21,9 +21,7 @@ def GetLineMgr():
     return g_LineMgr
 
 
-class CLineMgr:
-    def __init__(self):
-        self.m_Info = {}
+class CLineMgr(basemgr.CBaseMgr):
 
     def NewLine(self, bpID, oPinID, iPinID):
         # 删除input槽之前的连接
@@ -33,38 +31,25 @@ class CLineMgr:
             GetSignal().DEL_LINE.emit(bpID, lineID)
         lineID = misc.uuid()
         oLine = CLine(lineID, oPinID, iPinID)
-        self.m_Info[lineID] = oLine
+        self.m_ItemInfo[lineID] = oLine
         GetIDMgr().NewPinLine(oPinID, iPinID, lineID)
         GetIDMgr().AddLine2BP(bpID, lineID)
         return lineID
 
     def DelLine(self, lineID):
-        oLine = self.m_Info[lineID]
+        oLine = self.m_ItemInfo[lineID]
         oPinID = oLine.GetAttr(define.LineAttrName.OUTPUT_PINID)
         iPinID = oLine.GetAttr(define.LineAttrName.INPUT_PINID)
         GetIDMgr().DelPinLine(oPinID, iPinID, lineID)
         GetIDMgr().DelLine(lineID)
-        del self.m_Info[lineID]
-
-    def SetLineAttr(self, lineID, sAttrName, value):
-        oLine = self.m_Info[lineID]
-        oLine.SetAttr(sAttrName, value)
-
-    def GetLineAttr(self, lineID, sAttrName):
-        oLine = self.m_Info[lineID]
-        return oLine.GetAttr(sAttrName)
+        del self.m_ItemInfo[lineID]
 
 
-class CLine:
+class CLine(basemgr.CBase):
     def __init__(self, uid, oPinID, iPinID):
+        super(CLine, self).__init__()
         self.m_Info = {
             define.LineAttrName.ID: uid,
             define.LineAttrName.OUTPUT_PINID: oPinID,
             define.LineAttrName.INPUT_PINID: iPinID,
         }
-
-    def SetAttr(self, sAttrName, value):
-        self.m_Info[sAttrName] = value
-
-    def GetAttr(self, sAttrName):
-        return self.m_Info[sAttrName]

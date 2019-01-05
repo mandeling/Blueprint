@@ -7,6 +7,7 @@
 
 import misc
 
+from . import basemgr
 from . import define as eddefine
 
 g_BPMgr = None
@@ -19,25 +20,25 @@ def GetBPMgr():
     return g_BPMgr
 
 
-class CBPMgr:
-    def __init__(self):
-        self.m_Info = {}
+class CBPMgr(basemgr.CBaseMgr):
 
-    def NewBP(self):
+    def NewItem(self):
         uid = misc.uuid()
-        oBP = CBP(uid, "name")
-        self.m_Info[uid] = oBP
+        sName = "蓝图%s" % self.NewID()
+        oBP = CBP(uid, sName)
+        self.m_ItemInfo[uid] = oBP
         return uid
 
     def DelBP(self, bpID):
-        oBP = self.m_Info.get(bpID, None)
+        oBP = self.m_ItemInfo.get(bpID, None)
         if oBP:
             oBP.Delete()
-            del self.m_Info[bpID]
+            del self.m_ItemInfo[bpID]
 
 
-class CBP:
+class CBP(basemgr.CBase):
     def __init__(self, ID, sName):
+        super(CBP, self).__init__()
         self.m_Info = {
             eddefine.BlueprintAttrName.ID: ID,
             eddefine.BlueprintAttrName.NAME: sName,
