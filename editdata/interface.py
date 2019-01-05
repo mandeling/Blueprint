@@ -89,7 +89,7 @@ def GetNodeIDByPinID(pinID):
 
 # ---------------------引脚-------------------------------
 def GetPinAttr(pinID, sAttrName):
-    return GetPinMgr().GetAttr(pinID, sAttrName)
+    return GetPinMgr().GetItemAttr(pinID, sAttrName)
 
 
 def PinCanConnect(inputPinID, outputPinID):

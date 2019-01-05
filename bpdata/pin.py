@@ -7,10 +7,12 @@
 
 import copy
 from . import define
+from editdata import basemgr
 
 
-class CPin:
+class CPin(basemgr.CBase):
     def __init__(self, iPinType, iDataType, sName):
+        super(CPin, self).__init__()
         self.m_Info = {
             define.PinAttrName.ID: -1,
             define.PinAttrName.NAME: sName,
@@ -25,9 +27,3 @@ class CPin:
 
     def GetInfo(self):
         return copy.deepcopy(self.m_Info)
-
-    def SetAttr(self, sAttrName, value):
-        self.m_Info[sAttrName] = value
-
-    def GetAttr(self, sAttrName):
-        return self.m_Info[sAttrName]

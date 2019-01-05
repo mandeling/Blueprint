@@ -7,6 +7,7 @@
 
 
 from .idmgr import GetIDMgr
+from . import basemgr
 
 g_PinMgr = None
 
@@ -18,18 +19,11 @@ def GetPinMgr():
     return g_PinMgr
 
 
-class CPinMgr:
-    def __init__(self):
-        self.m_Info = {}    # 存放pin信息
+class CPinMgr(basemgr.CBaseMgr):
 
     def NewPin(self, pinID, oPin):
-        self.m_Info[pinID] = oPin
+        self.m_ItemInfo[pinID] = oPin
 
     def DelPin(self, pinID):
-        if pinID in self.m_Info:
-            del self.m_Info[pinID]
+        self.DelItem(pinID)
         GetIDMgr().DelPin(pinID)
-
-    def GetAttr(self, pinID, sAttrName):
-        oPin = self.m_Info[pinID]
-        return oPin.GetAttr(sAttrName)
