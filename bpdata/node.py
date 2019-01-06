@@ -150,3 +150,6 @@ class CPrint(CBase):
 
     def InputFlow(self):
         return ["输入"]
+
+    def OutputFlow(self):
+        return ["输出"]

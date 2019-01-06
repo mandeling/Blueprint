@@ -21,6 +21,9 @@ def GetBPMgr():
 
 
 class CBPMgr(basemgr.CBaseMgr):
+    def __init__(self):
+        super(CBPMgr, self).__init__()
+        self.m_Node2BP = {}
 
     def NewItem(self):
         uid = misc.uuid()
@@ -29,11 +32,16 @@ class CBPMgr(basemgr.CBaseMgr):
         self.m_ItemInfo[uid] = oBP
         return uid
 
-    def DelBP(self, bpID):
-        oBP = self.m_ItemInfo.get(bpID, None)
-        if oBP:
-            oBP.Delete()
-            del self.m_ItemInfo[bpID]
+    def AddNode2BP(self, bpID, nodeID):
+        self.m_Node2BP[nodeID] = bpID
+        self.AddToAttrList(bpID, eddefine.BlueprintAttrName.NODE_LIST, nodeID)
+
+    def DelNode4BP(self, nodeID):
+        bpID = self.m_Node2BP.pop(nodeID, None)
+        self.DelFromAttrList(bpID, eddefine.BlueprintAttrName.NODE_LIST, nodeID)
+
+    def GetBpIDByNodeID(self, nodeID):
+        return self.m_Node2BP[nodeID]
 
 
 class CBP(basemgr.CBase):

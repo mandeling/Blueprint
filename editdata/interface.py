@@ -33,7 +33,7 @@ def SaveBlueprint(bpID, sPath):
 
 
 def GetBPIDByNodeID(nodeID):
-    return GetIDMgr().GetBPIDByNodeID(nodeID)
+    return GetBPMgr().GetBpIDByNodeID(nodeID)
 
 
 # --------------------变量--------------------------------
@@ -59,8 +59,15 @@ def GetVariableAttr(sName, sAttrName):
 
 # --------------------------节点--------------------------
 def AddNode(bpID, sName, pos=(0, 0)):
-    nodeID = GetNodeMgr().NewNode(bpID, sName, pos)
+    """添加节点"""
+    nodeID = GetNodeMgr().NewNode(sName, pos)
+    GetBPMgr().AddNode2BP(bpID, nodeID)
     return nodeID
+
+
+def DelNode(nodeID):
+    GetBPMgr().DelNode4BP(nodeID)
+    GetNodeMgr().DelNode(nodeID)
 
 
 def SetNodeAttr(nodeID, sAttrName, value):
@@ -76,11 +83,6 @@ def GetNodeAttr(nodeID, sAttrName):
 def GetAllDefineNodeName():
     oNodeMgr = GetNodeMgr()
     return oNodeMgr.GetAllDefineNodeName()
-
-
-def DelNode(nodeID):
-    oNodeMgr = GetNodeMgr()
-    oNodeMgr.DelNode(nodeID)
 
 
 def GetNodeIDByPinID(pinID):

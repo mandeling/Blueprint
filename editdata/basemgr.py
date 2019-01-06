@@ -20,6 +20,9 @@ class CBaseMgr:
 
     def DelItem(self, key):
         if key in self.m_ItemInfo:
+            oItem = self.m_ItemInfo[key]
+            if hasattr(oItem, "Delete"):
+                oItem.Delete()
             del self.m_ItemInfo[key]
 
     def SetItemAttr(self, ID, key, value):
@@ -32,6 +35,16 @@ class CBaseMgr:
         assert oLine is not None
         return oLine.GetAttr(key)
 
+    def AddToAttrList(self, ID, sAttrName, value):
+        oItem = self.GetItem(ID)
+        if oItem:
+            oItem.AppendToAttr(sAttrName, value)
+
+    def DelFromAttrList(self, ID, sAttrName, value):
+        oItem = self.GetItem(ID)
+        if oItem:
+            oItem.RemoveFromAttr(sAttrName, value)
+
 
 class CBase:
     def __init__(self, *args):
@@ -42,3 +55,13 @@ class CBase:
 
     def GetAttr(self, sAttrName):
         return self.m_Info[sAttrName]
+
+    def AppendToAttr(self, sAttrName, value):
+        lst = self.m_Info[sAttrName]
+        if value not in lst:
+            lst.append(value)
+
+    def RemoveFromAttr(self, sAttrName, value):
+        lst = self.m_Info[sAttrName]
+        if value in lst:
+            lst.remove(value)

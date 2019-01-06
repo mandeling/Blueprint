@@ -29,7 +29,6 @@ def MyListRemove(dInfo, key, value):
 
 class CIDMgr:
     def __init__(self):
-        self.m_BPNodeInfo = {}  # {bpID:[nodeID,]}
         self.m_Node2BP = {}     # {nodeID:bpID}
         self.m_NodePinInfo = {}  # {nodeID:[pinID,]}
         self.m_Pin2Node = {}    # {pinID:nodeID}
@@ -38,27 +37,12 @@ class CIDMgr:
         self.m_Line2BP = {}     # {lineID:bpID}
 
     # ---------------------蓝图---------------------------
-    def DelPB(self, bpID):
-        for nodeID in self.m_BPNodeInfo[bpID]:
-            self.DelNode(nodeID)
-        del self.m_BPNodeInfo[bpID]
+
 
     def GetBPIDByNodeID(self, nodeID):
         return self.m_Node2BP[nodeID]
 
     # ----------------------节点--------------------------
-    def NewNode(self, bpID, nodeID):
-        lst = self.m_BPNodeInfo.setdefault(bpID, [])
-        if nodeID not in lst:
-            lst.append(nodeID)
-        self.m_Node2BP[nodeID] = bpID
-
-    def DelNode(self, nodeID):
-        if nodeID not in self.m_Node2BP:
-            return
-        bpID = self.m_Node2BP[nodeID]
-        MyListRemove(self.m_BPNodeInfo, bpID, nodeID)
-        del self.m_Node2BP[nodeID]
 
     def GetNodeIDByPinID(self, pinID):
         return self.m_Pin2Node[pinID]

@@ -39,7 +39,7 @@ class CNodeMgr(basemgr.CBaseMgr):
         return self.m_DefineInfo.keys()
 
     # ----------------编辑器节点信息-----------------------------
-    def NewNode(self, bpID, sNodeName, pos):
+    def NewNode(self, sNodeName, pos):
         """
         因为预定义节点和上面的pin是预先定义的，可以生成很多实例
         所以每创建一个节点，复制节点以及pin
@@ -47,7 +47,6 @@ class CNodeMgr(basemgr.CBaseMgr):
         oDefineNode = self.m_DefineInfo[sNodeName]
         oNode = copy.deepcopy(oDefineNode)
         nodeID = misc.uuid()
-        GetIDMgr().NewNode(bpID, nodeID)
         oNode.SetAttr(bddefine.NodeAttrName.ID, nodeID)
         oNode.SetAttr(bddefine.NodeAttrName.POSITION, pos)
         lstPin = []
