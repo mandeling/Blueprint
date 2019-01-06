@@ -60,16 +60,12 @@ def GetVariableAttr(sName, sAttrName):
 # --------------------------节点--------------------------
 def AddNode(bpID, sName, pos=(0, 0)):
     """添加节点"""
-    nodeID = GetNodeMgr().NewNode(sName, pos)
-    GetIDMgr().SetNode2BP(bpID, nodeID)
-    GetBPMgr().AddNode2BP(nodeID)
+    nodeID = GetNodeMgr().NewNode(bpID, sName, pos)
     return nodeID
 
 
 def DelNode(nodeID):
-    GetBPMgr().DelNode4BP(nodeID)
     GetNodeMgr().DelNode(nodeID)
-    GetIDMgr().DelNode2BP(nodeID)
 
 
 def SetNodeAttr(nodeID, sAttrName, value):

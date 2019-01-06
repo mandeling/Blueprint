@@ -14,6 +14,7 @@ from .pinmgr import GetPinMgr
 from bpdata import define as bddefine
 from signalmgr import GetSignal
 from . import basemgr
+from .bpmgr import GetBPMgr
 
 g_NodeMgr = None
 
@@ -39,7 +40,7 @@ class CNodeMgr(basemgr.CBaseMgr):
         return self.m_DefineInfo.keys()
 
     # ----------------编辑器节点信息-----------------------------
-    def NewNode(self, sNodeName, pos):
+    def NewNode(self, bpID,  sNodeName, pos):
         """
         因为预定义节点和上面的pin是预先定义的，可以生成很多实例
         所以每创建一个节点，复制节点以及pin
@@ -47,6 +48,8 @@ class CNodeMgr(basemgr.CBaseMgr):
         oDefineNode = self.m_DefineInfo[sNodeName]
         oNode = copy.deepcopy(oDefineNode)
         nodeID = misc.uuid()
+        GetIDMgr().SetNode2BP(bpID, nodeID)     # 记录node对应的bp
+        GetBPMgr().AddNode2BP(nodeID)           # 添加到bp里面
         oNode.SetAttr(bddefine.NodeAttrName.ID, nodeID)
         oNode.SetAttr(bddefine.NodeAttrName.POSITION, pos)
         lstPin = []
@@ -68,3 +71,5 @@ class CNodeMgr(basemgr.CBaseMgr):
         for pinID in lstPin:
             interface.DelPin(pinID)
         del self.m_ItemInfo[nodeID]
+        GetBPMgr().DelNode4BP(nodeID)
+        GetIDMgr().DelNode2BP(nodeID)
