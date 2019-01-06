@@ -30,10 +30,8 @@ def MyListRemove(dInfo, key, value):
 class CIDMgr:
     def __init__(self):
         self.m_Node2BP = {}     # {nodeID:bpID}
-        self.m_NodePinInfo = {}  # {nodeID:[pinID,]}
         self.m_Pin2Node = {}    # {pinID:nodeID}
         self.m_PinLineInfo = {}  # {pinid:[lineid,]}
-        self.m_BPLineInfo = {}  # {bpID:[lineID,]}
         self.m_Line2BP = {}     # {lineID:bpID}
 
     # ---------------------节点ID:蓝图ID---------------------------
@@ -67,25 +65,16 @@ class CIDMgr:
 
     def DelLine2BP(self, lineID):
         if lineID in self.m_Line2BP:
-            del self.m_Line2BP[lineID]
-
-    def GetAllLineByPin(self, pinID):
-        return self.m_PinLineInfo.get(pinID, [])
-
-    def AddLine2BP(self, bpID, lineID):
-        MyListAppend(self.m_BPLineInfo, bpID, lineID)
-        self.m_Line2BP[lineID] = bpID
-
-    def DelLine(self, lineID):
-        bpID = self.m_Line2BP[lineID]
-        MyListRemove(self.m_BPLineInfo, bpID, lineID)
-        del self.m_Line2BP[lineID]
+            return self.m_Line2BP.pop(lineID)
 
     # ------------------------引脚和连线------------------------
-    def NewPinLine(self, oPinID, iPinID, lineID):
+    def AddLine2Pin(self, oPinID, iPinID, lineID):
         MyListAppend(self.m_PinLineInfo, oPinID, lineID)
         MyListAppend(self.m_PinLineInfo, iPinID, lineID)
 
-    def DelPinLine(self, oPinID, iPinID, lineID):
-        self.m_PinLineInfo[oPinID].remove(lineID)
-        self.m_PinLineInfo[iPinID].remove(lineID)
+    def DelLine4Pin(self, oPinID, iPinID, lineID):
+        MyListRemove(self.m_PinLineInfo, oPinID, lineID)
+        MyListRemove(self.m_PinLineInfo, iPinID, lineID)
+
+    def GetAllLineByPin(self, pinID):
+        return self.m_PinLineInfo.get(pinID, [])

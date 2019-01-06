@@ -10,6 +10,7 @@ import misc
 from signalmgr import GetSignal
 from .idmgr import GetIDMgr
 from . import define, basemgr
+from .bpmgr import GetBPMgr
 
 g_LineMgr = None
 
@@ -28,21 +29,23 @@ class CLineMgr(basemgr.CBaseMgr):
         lstLine = GetIDMgr().GetAllLineByPin(iPinID)
         for lineID in lstLine:
             self.DelLine(lineID)
-            GetSignal().DEL_LINE.emit(lineID)
         lineID = misc.uuid()
         oLine = CLine(lineID, oPinID, iPinID)
         self.m_ItemInfo[lineID] = oLine
-        GetIDMgr().NewPinLine(oPinID, iPinID, lineID)
-        GetIDMgr().AddLine2BP(bpID, lineID)
+        GetIDMgr().SetLine2BP(bpID, lineID)             # 记录line对应的bp
+        GetIDMgr().AddLine2Pin(oPinID, iPinID, lineID)  # 记录引脚对应的line
+        GetBPMgr().AddLine2BP(lineID)                   # 添加到bp属性里面
         return lineID
 
     def DelLine(self, lineID):
         oLine = self.m_ItemInfo[lineID]
         oPinID = oLine.GetAttr(define.LineAttrName.OUTPUT_PINID)
         iPinID = oLine.GetAttr(define.LineAttrName.INPUT_PINID)
-        GetIDMgr().DelPinLine(oPinID, iPinID, lineID)
-        GetIDMgr().DelLine(lineID)
+        GetIDMgr().DelLine4Pin(oPinID, iPinID, lineID)
+        GetBPMgr().DelLine4BP(lineID)
         del self.m_ItemInfo[lineID]
+        bpID = GetIDMgr().DelLine2BP(lineID)
+        GetSignal().DEL_LINE.emit(bpID, lineID)
 
 
 class CLine(basemgr.CBase):

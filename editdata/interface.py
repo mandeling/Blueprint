@@ -137,10 +137,15 @@ def IsInputPin(pinID):
     return False
 
 
-def GetLineOtherPin(lineID, pinID):
-    """获取line下的另一个pinID"""
+def GetLinePinInfo(lineID):
     iPinID = GetLineAttr(lineID, eddefine.LineAttrName.INPUT_PINID)
     oPinID = GetLineAttr(lineID, eddefine.LineAttrName.OUTPUT_PINID)
+    return iPinID, oPinID
+
+
+def GetLineOtherPin(lineID, pinID):
+    """获取line下的另一个pinID"""
+    iPinID, oPinID = GetLinePinInfo(lineID)
     if iPinID == pinID:
         return oPinID
     return iPinID
@@ -157,8 +162,7 @@ def AddLine(bpID, oPinID, iPinID):
 
 
 def DelLine(lineID):
-    oLineMgr = GetLineMgr()
-    oLineMgr.DelLine(lineID)
+    GetLineMgr().DelLine(lineID)
 
 
 def GetLineAttr(lineID, sAttrName):

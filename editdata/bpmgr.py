@@ -34,12 +34,20 @@ class CBPMgr(basemgr.CBaseMgr):
         return uid
 
     def AddNode2BP(self, nodeID):
+        bpID = GetIDMgr().GetBPByNode(nodeID)
         self.AddToAttrList(bpID, eddefine.BlueprintAttrName.NODE_LIST, nodeID)
 
     def DelNode4BP(self, nodeID):
-        bpID = GetIDMgr().GetBPIDByNodeID(nodeID)
+        bpID = GetIDMgr().GetBPByNode(nodeID)
         self.DelFromAttrList(bpID, eddefine.BlueprintAttrName.NODE_LIST, nodeID)
 
+    def AddLine2BP(self, lineID):
+        bpID = GetIDMgr().GetBPByLine(lineID)
+        self.AddToAttrList(bpID, eddefine.BlueprintAttrName.LINE_LIST, lineID)
+
+    def DelLine4BP(self, lineID):
+        bpID = GetIDMgr().GetBPByLine(lineID)
+        self.DelFromAttrList(bpID, eddefine.BlueprintAttrName.LINE_LIST, lineID)
 
 
 class CBP(basemgr.CBase):
