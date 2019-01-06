@@ -8,6 +8,7 @@
 import misc
 
 from . import basemgr
+from .idmgr import GetIDMgr
 from . import define as eddefine
 
 g_BPMgr = None
@@ -32,16 +33,13 @@ class CBPMgr(basemgr.CBaseMgr):
         self.m_ItemInfo[uid] = oBP
         return uid
 
-    def AddNode2BP(self, bpID, nodeID):
-        self.m_Node2BP[nodeID] = bpID
+    def AddNode2BP(self, nodeID):
         self.AddToAttrList(bpID, eddefine.BlueprintAttrName.NODE_LIST, nodeID)
 
     def DelNode4BP(self, nodeID):
-        bpID = self.m_Node2BP.pop(nodeID, None)
+        bpID = GetIDMgr().GetBPIDByNodeID(nodeID)
         self.DelFromAttrList(bpID, eddefine.BlueprintAttrName.NODE_LIST, nodeID)
 
-    def GetBpIDByNodeID(self, nodeID):
-        return self.m_Node2BP[nodeID]
 
 
 class CBP(basemgr.CBase):

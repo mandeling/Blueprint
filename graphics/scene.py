@@ -16,6 +16,7 @@ from editdata import interface
 from signalmgr import GetSignal
 from viewmgr.uimgr import GetUIMgr
 from viewmgr.statusmgr import GetStatusMgr
+from editdata.idmgr import GetIDMgr
 
 
 class CBlueprintScene(QGraphicsScene):
@@ -184,7 +185,8 @@ class CBlueprintScene(QGraphicsScene):
         interface.DelLine(lineID)
         self._DelLineUI(lineID)
 
-    def S_OnDelLineUI(self, bpID, lineID):
+    def S_OnDelLineUI(self, lineID):
+        bpID = GetIDMgr().GetBPByLine(lineID)
         if bpID == self.m_BPID:
             self._DelLineUI(lineID)
 

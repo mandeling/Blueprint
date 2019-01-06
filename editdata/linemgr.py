@@ -28,7 +28,7 @@ class CLineMgr(basemgr.CBaseMgr):
         lstLine = GetIDMgr().GetAllLineByPin(iPinID)
         for lineID in lstLine:
             self.DelLine(lineID)
-            GetSignal().DEL_LINE.emit(bpID, lineID)
+            GetSignal().DEL_LINE.emit(lineID)
         lineID = misc.uuid()
         oLine = CLine(lineID, oPinID, iPinID)
         self.m_ItemInfo[lineID] = oLine
