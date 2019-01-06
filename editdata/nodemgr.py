@@ -50,13 +50,9 @@ class CNodeMgr(basemgr.CBaseMgr):
         oNode.SetAttr(bddefine.NodeAttrName.ID, nodeID)
         oNode.SetAttr(bddefine.NodeAttrName.POSITION, pos)
         lstPin = []
-        for _, otPin in oNode.m_PinInfo.items():
-            pinID = misc.uuid()
-            oPin = copy.deepcopy(otPin)
-            oPin.SetAttr(bddefine.PinAttrName.ID, pinID)
+        for _, oDefinePin in oNode.m_PinInfo.items():
+            pinID = interface.AddPin(nodeID, oDefinePin)
             lstPin.append(pinID)
-            GetIDMgr().SetPin2Node(nodeID, pinID)
-            GetPinMgr().NewPin(pinID, oPin)
         oNode.SetAttr(bddefine.NodeAttrName.PINIDLIST, lstPin)
         self.m_ItemInfo[nodeID] = oNode
         return nodeID
@@ -68,8 +64,7 @@ class CNodeMgr(basemgr.CBaseMgr):
         lstLine = interface.GetAllLineByNode(nodeID)
         for lineID in lstLine:
             interface.DelLine(lineID)
-            GetSignal().DEL_LINE.emit(lineID)
         lstPin = oNode.GetAttr(bddefine.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
-            GetPinMgr().DelPin(pinID)
+            interface.DelPin(pinID)
         del self.m_ItemInfo[nodeID]

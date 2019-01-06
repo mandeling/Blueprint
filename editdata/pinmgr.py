@@ -5,9 +5,10 @@
 @Desc: 管理pin
 """
 
-
-from .idmgr import GetIDMgr
+import copy
+import misc
 from . import basemgr
+from bpdata import define as bddefine
 
 g_PinMgr = None
 
@@ -21,9 +22,9 @@ def GetPinMgr():
 
 class CPinMgr(basemgr.CBaseMgr):
 
-    def NewPin(self, pinID, oPin):
+    def NewPin(self, oDefinePin):
+        oPin = copy.deepcopy(oDefinePin)
+        pinID = misc.uuid()
+        oPin.SetAttr(bddefine.PinAttrName.ID, pinID)
         self.m_ItemInfo[pinID] = oPin
-
-    def DelPin(self, pinID):
-        self.DelItem(pinID)
-        GetIDMgr().DelPin(pinID)
+        return pinID

@@ -69,7 +69,7 @@ def AddNode(bpID, sName, pos=(0, 0)):
 def DelNode(nodeID):
     GetBPMgr().DelNode4BP(nodeID)
     GetNodeMgr().DelNode(nodeID)
-    GetIDMgr().DelNode4BP(nodeID)
+    GetIDMgr().DelNode2BP(nodeID)
 
 
 def SetNodeAttr(nodeID, sAttrName, value):
@@ -88,10 +88,21 @@ def GetAllDefineNodeName():
 
 
 def GetNodeIDByPinID(pinID):
-    return GetIDMgr().GetNodeIDByPinID(pinID)
+    return GetIDMgr().GetNodeByPin(pinID)
 
 
 # ---------------------引脚-------------------------------
+def AddPin(nodeID, oDefinePin):
+    pinID = GetPinMgr().NewPin(oDefinePin)
+    GetIDMgr().SetPin2Node(nodeID, pinID)
+    return pinID
+
+
+def DelPin(pinID):
+    GetPinMgr().DelItem(pinID)
+    GetIDMgr().DelPin2Node(pinID)
+
+
 def GetPinAttr(pinID, sAttrName):
     return GetPinMgr().GetItemAttr(pinID, sAttrName)
 
