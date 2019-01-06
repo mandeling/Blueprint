@@ -47,6 +47,10 @@ def NewVariable(sName, iType=bddefine.Type.INT, value=None):
     oVariableMgr.NewVariable(sName, iType, value)
 
 
+def DelVariable(varID):
+    pass
+
+
 def SetVariableAttr(sName, sAttrName, value):
     oVariableMgr = GetVariableMgr()
     oVariableMgr.SetAttr(sName, sAttrName, value)

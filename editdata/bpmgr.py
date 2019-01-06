@@ -7,7 +7,7 @@
 
 import misc
 
-from . import basemgr
+from . import basemgr, interface
 from .idmgr import GetIDMgr
 from . import define as eddefine
 
@@ -48,6 +48,21 @@ class CBPMgr(basemgr.CBaseMgr):
     def DelLine4BP(self, lineID):
         bpID = GetIDMgr().GetBPByLine(lineID)
         self.DelFromAttrList(bpID, eddefine.BlueprintAttrName.LINE_LIST, lineID)
+
+    def DelBP(self, bpID):
+        oBP = self.m_ItemInfo.get(bpID, None)
+        if not oBP:
+            return
+        lstVar = oBP.GetAttr(eddefine.BlueprintAttrName.VARIABLE_LIST)
+        for varID in lstVar:
+            interface.DelVariable(varID)
+        lstLine = oBP.GetAttr(eddefine.BlueprintAttrName.LINE_LIST)
+        for lineID in lstLine:
+            interface.DelLine(lineID)
+        lstNode = oBP.GetAttr(eddefine.BlueprintAttrName.NODE_LIST)
+        for nodeID in lstNode:
+            interface.DelNode(nodeID)
+        self.DelItem(bpID)
 
 
 class CBP(basemgr.CBase):
