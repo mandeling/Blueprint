@@ -14,6 +14,8 @@ from PyQt5.QtCore import Qt, QRect
 
 from pubcode import functor
 from viewmgr.uimgr import GetUIMgr
+import editdata.define as eddefine
+import bpdata.define as bddefine
 
 
 class CBlueprintView(QGraphicsView):
@@ -26,13 +28,14 @@ class CBlueprintView(QGraphicsView):
         self.m_SelectPos = None     # 框选初始坐标
         self.m_RubberBand = None    # 框选框对象
         self.m_Scene = scene.CBlueprintScene(bpID, self)
-        self.Init()
+        self._InitUI()
         GetUIMgr().AddBPView(bpID, self)
+        self._LoadData()
 
     def __del__(self):
         GetUIMgr().DelBPView(self.m_BPID)
 
-    def Init(self):
+    def _InitUI(self):
         self.setWindowTitle("蓝图")
         self.setScene(self.m_Scene)
         self.setBackgroundBrush(QBrush(QColor(103, 103, 103), Qt.SolidPattern))
@@ -42,6 +45,16 @@ class CBlueprintView(QGraphicsView):
         # 隐藏滚动条
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def _LoadData(self):
+        lstNode = interface.GetBPAttr(self.m_BPID, eddefine.BlueprintAttrName.NODE_LIST)
+        for nodeID in lstNode:
+            tPos = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.POSITION)
+            self.m_Scene.AddNodeUI(nodeID, tPos)
+        lstLine = interface.GetBPAttr(self.m_BPID, eddefine.BlueprintAttrName.LINE_LIST)
+        for lineID in lstLine:
+            iPinID, oPinID = interface.GetLinePinInfo(lineID)
+            self.m_Scene.AddLineUI(lineID, iPinID, oPinID)
 
     def GetBPID(self):
         return self.m_BPID

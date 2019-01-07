@@ -42,6 +42,10 @@ def GetBPIDByNodeID(nodeID):
     return GetIDMgr().GetBPByNode(nodeID)
 
 
+def GetBPAttr(bpID, sAttrName):
+    return GetBPMgr().GetItemAttr(bpID, sAttrName)
+
+
 # --------------------变量--------------------------------
 def GetVariableData():
     oVariableMgr = GetVariableMgr()

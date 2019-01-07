@@ -117,7 +117,8 @@ class CNodeUI(QGraphicsProxyWidget):
         if change == QGraphicsItem.ItemPositionHasChanged:
             for lineID in interface.GetAllLineByNode(self.m_NodeID):
                 oLineUI = GetUIMgr().GetLineUI(lineID)
-                oLineUI.UpdatePosition()
+                if oLineUI:
+                    oLineUI.UpdatePosition()
         return super(CNodeUI, self).itemChange(change, value)
 
     def SetMouseMovePos(self, offpos):

@@ -155,6 +155,7 @@ class CBlueprintScene(QGraphicsScene):
         if oNodeUI:
             self.removeItem(oNodeUI)
 
+    # ----------------------line-------------------------------------
     def BeginConnect(self, startPinID):
         self.m_TempPinLine = lineui.CLineUI()
         self.addItem(self.m_TempPinLine)
@@ -171,18 +172,18 @@ class CBlueprintScene(QGraphicsScene):
                     inputPinID, outputPinID = sPinID, ePinID
                 else:
                     inputPinID, outputPinID = ePinID, sPinID
-                self._AddLineUI(inputPinID, outputPinID)
+                lineID = interface.AddLine(self.m_BPID, outputPinID, inputPinID)
+                self.AddLineUI(lineID, inputPinID, outputPinID)
 
         self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
 
-    def _AddLineUI(self, inputPinID, outputPinID):
+    def AddLineUI(self, lineID, iPin, oPin):
         """真正执行添加连接线"""
-        lineID = interface.AddLine(self.m_BPID, outputPinID, inputPinID)
         line = lineui.CLineUI(lineID)
         self.addItem(line)
-        line.SetStartPinID(outputPinID)
-        line.SetEndPinID(inputPinID)
+        line.SetStartPinID(oPin)
+        line.SetEndPinID(iPin)
 
     def OnDelLineUI(self, lineID):
         interface.DelLine(lineID)
