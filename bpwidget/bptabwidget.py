@@ -18,6 +18,7 @@ from viewmgr.statusmgr import GetStatusMgr
 
 class CBPTabWidget(QtWidgets.QTabWidget):
     m_Filter = "*.xh"
+    m_BPDir = "./bpfile"
 
     def __init__(self, parent=None):
         super(CBPTabWidget, self).__init__(parent)
@@ -57,7 +58,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
 
     def OpenBlueprint(self):
-        sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", filter=self.m_Filter)[0]
+        sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", self.m_BPDir, filter=self.m_Filter)[0]
         if not sPath:
             return
         if sPath in self.m_Path2BPID:
@@ -76,7 +77,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         bpID = oView.GetBPID()
         sPath = self.m_BPID2Path.get(bpID, None)
         if not sPath:
-            sPath = QtWidgets.QFileDialog.getSaveFileName(self, "保存蓝图", filter=self.m_Filter)[0]
+            sPath = QtWidgets.QFileDialog.getSaveFileName(self, "保存蓝图", self.m_BPDir, filter=self.m_Filter)[0]
             if not sPath:
                 return
         interface.SaveBlueprint(bpID, sPath)
