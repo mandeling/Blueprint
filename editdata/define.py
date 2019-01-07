@@ -7,7 +7,7 @@
 
 
 # ----------------------blueprint-------------------------------
-BP_ATTR_NAME_PREFIX = "line_attr_name:"
+BP_ATTR_NAME_PREFIX = "bp_attr_name:"
 
 
 class BlueprintAttrName:

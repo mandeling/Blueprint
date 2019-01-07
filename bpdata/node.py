@@ -32,6 +32,19 @@ class CBase(basemgr.CBase):
         self.m_PinInfo = {}
         self._Run()
 
+    def SetID(self, ID):
+        self.m_ID = ID
+        self.SetAttr(define.NodeAttrName.ID, ID)
+
+    def GetSaveInfo(self):
+        from editdata.pinmgr import GetPinMgr
+        dSaveInfo = super(CBase, self).GetSaveInfo()
+        lstPin = self.GetAttr(define.NodeAttrName.PINIDLIST)
+        for pinID in lstPin:
+            dTmp = GetPinMgr().GetItemSaveInfo(pinID)
+            dSaveInfo.update(dTmp)
+        return dSaveInfo
+
     def _Run(self):
         lstInputFlow = self.InputFlow()
         lstOutputFlow = self.OutputFlow()

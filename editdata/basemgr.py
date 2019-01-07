@@ -78,5 +78,5 @@ class CBase:
         return copy.deepcopy(self.m_Info)
 
     def GetSaveInfo(self):
-        dSaveInfo = {self.m_ID: self.GetInfo}
+        dSaveInfo = {self.m_ID: self.GetInfo()}
         return dSaveInfo

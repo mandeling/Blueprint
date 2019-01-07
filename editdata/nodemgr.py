@@ -50,7 +50,8 @@ class CNodeMgr(basemgr.CBaseMgr):
         nodeID = misc.uuid()
         GetIDMgr().SetNode2BP(bpID, nodeID)     # 记录node对应的bp
         GetBPMgr().AddNode2BP(nodeID)           # 添加到bp里面
-        oNode.SetAttr(bddefine.NodeAttrName.ID, nodeID)
+        # oNode.SetAttr(bddefine.NodeAttrName.ID, nodeID)
+        oNode.SetID(nodeID)
         oNode.SetAttr(bddefine.NodeAttrName.POSITION, pos)
         lstPin = []
         for _, oDefinePin in oNode.m_PinInfo.items():

@@ -31,8 +31,8 @@ def OpenBlueprint(sPath):
 
 def SaveBlueprint(bpID, sPath):
     dInfo = GetBPMgr().GetItemSaveInfo(bpID)
-    with open(sPath, "r", encoding="utf-8") as f:
-        json.dump(dInfo, f, indent=4)
+    with open(sPath, "w", encoding="utf-8") as f:
+        json.dump(dInfo, f, indent=4, ensure_ascii=False)
 
 
 def GetBPIDByNodeID(nodeID):

@@ -26,5 +26,9 @@ class CPin(basemgr.CBase):
             self.m_Info[define.PinAttrName.DATA_TYPE] = iDataType
             self.m_Info[define.PinAttrName.VALUE] = define.GetDefauleValue(iDataType)
 
+    def SetID(self, ID):
+        self.m_ID = ID
+        self.SetAttr(define.PinAttrName.ID, ID)
+
     def GetInfo(self):
         return copy.deepcopy(self.m_Info)

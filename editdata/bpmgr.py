@@ -68,7 +68,7 @@ class CBPMgr(basemgr.CBaseMgr):
     def GetItemSaveInfo(self, bpID):
         dTmp = super(CBPMgr, self).GetItemSaveInfo(bpID)
         dInfo = {
-            eddefine.BlueprintAttrName: bpID
+            eddefine.BP_ATTR_NAME_PREFIX: bpID
         }
         dInfo.update(dTmp)
         return dInfo
