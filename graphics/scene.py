@@ -46,6 +46,7 @@ class CBlueprintScene(QGraphicsScene):
 
     def _InitSignal(self):
         GetSignal().DEL_LINE.connect(self.S_OnDelLineUI)
+        GetSignal().DEL_NODE.connect(self.S_OnDelNodeUI)
 
     def GetBPID(self):
         return self.m_BPID
@@ -143,14 +144,16 @@ class CBlueprintScene(QGraphicsScene):
 
     def OnDelNodeUI(self, nodeID):
         interface.DelNode(nodeID)
-        self._DelNodeUI(nodeID)
+
+    def S_OnDelNodeUI(self, bpID, nodeID):
+        if bpID == self.m_BPID:
+            self._DelNodeUI(nodeID)
 
     def _DelNodeUI(self, nodeID):
-        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         GetStatusMgr().DelSelectNode(self.m_BPID, nodeID)
-        if not oNodeUI:
-            return
-        self.removeItem(oNodeUI)
+        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
+        if oNodeUI:
+            self.removeItem(oNodeUI)
 
     def BeginConnect(self, startPinID):
         self.m_TempPinLine = lineui.CLineUI()
@@ -183,16 +186,15 @@ class CBlueprintScene(QGraphicsScene):
 
     def OnDelLineUI(self, lineID):
         interface.DelLine(lineID)
-        self._DelLineUI(lineID)
 
-    def S_OnDelLineUI(self, lineID):
-        bpID = GetIDMgr().GetBPByLine(lineID)
+    def S_OnDelLineUI(self, bpID, lineID):
         if bpID == self.m_BPID:
             self._DelLineUI(lineID)
 
     def _DelLineUI(self, lineID):
         oLineUI = GetUIMgr().GetLineUI(lineID)
-        self.removeItem(oLineUI)
+        if oLineUI:
+            self.removeItem(oLineUI)
 
     def GetMouseScenePos(self):
         view = self.views()[0]

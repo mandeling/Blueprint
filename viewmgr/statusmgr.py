@@ -33,7 +33,6 @@ class CStatusMgr:
         return self.m_SelectNode.setdefault(bpID, [])
 
     def DelSelectNode(self, bpID, nodeID):
-        bpID = interface.GetBPIDByNodeID(nodeID)
         lst = self.GetSelectNode(bpID)
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         oNodeUI.SetUnpressStyle()

@@ -42,7 +42,9 @@ class CIDMgr:
         return self.m_Node2BP[nodeID]
 
     def DelNode2BP(self, nodeID):
-        return self.m_Node2BP.pop(nodeID, None)
+        bpID = self.m_Node2BP.pop(nodeID, None)
+        assert bpID is not None
+        return bpID
 
     # ----------------------引脚ID:节点ID--------------------------
     def SetPin2Node(self, nodeID, pinID):
@@ -52,17 +54,21 @@ class CIDMgr:
         return self.m_Pin2Node.get(pinID, None)
 
     def DelPin2Node(self, pinID):
-        return self.m_Pin2Node.pop(pinID, None)
+        nodeID = self.m_Pin2Node.pop(pinID, None)
+        assert nodeID is not None
+        return nodeID
 
     # ------------------------连线ID:蓝图ID------------------------
-    def SetLine2BP(self, lineID, bpID):
+    def SetLine2BP(self, bpID, lineID):
         self.m_Line2BP[lineID] = bpID
 
     def GetBPByLine(self, lineID):
         return self.m_Line2BP.get(lineID, None)
 
     def DelLine2BP(self, lineID):
-        return self.m_Line2BP.pop(lineID, None)
+        bpID = self.m_Line2BP.pop(lineID, None)
+        assert bpID is not None
+        return bpID
 
     # ------------------------引脚和连线------------------------
     def AddLine2Pin(self, oPinID, iPinID, lineID):

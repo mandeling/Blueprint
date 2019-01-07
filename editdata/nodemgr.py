@@ -72,4 +72,5 @@ class CNodeMgr(basemgr.CBaseMgr):
             interface.DelPin(pinID)
         del self.m_ItemInfo[nodeID]
         GetBPMgr().DelNode4BP(nodeID)
-        GetIDMgr().DelNode2BP(nodeID)
+        bpID = GetIDMgr().DelNode2BP(nodeID)
+        GetSignal().DEL_NODE.emit(bpID, nodeID)

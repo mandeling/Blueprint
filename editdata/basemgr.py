@@ -26,24 +26,24 @@ class CBaseMgr:
             del self.m_ItemInfo[key]
 
     def SetItemAttr(self, ID, key, value):
-        oLine = self.GetItem(ID)
-        assert oLine is not None
-        oLine.SetAttr(key, value)
+        oItem = self.GetItem(ID)
+        assert oItem is not None
+        oItem.SetAttr(key, value)
 
     def GetItemAttr(self, ID, key):
-        oLine = self.GetItem(ID)
-        assert oLine is not None
-        return oLine.GetAttr(key)
+        oItem = self.GetItem(ID)
+        assert oItem is not None
+        return oItem.GetAttr(key)
 
     def AddToAttrList(self, ID, sAttrName, value):
         oItem = self.GetItem(ID)
-        if oItem:
-            oItem.AppendToAttr(sAttrName, value)
+        assert oItem is not None
+        oItem.AppendToAttr(sAttrName, value)
 
     def DelFromAttrList(self, ID, sAttrName, value):
         oItem = self.GetItem(ID)
-        if oItem:
-            oItem.RemoveFromAttr(sAttrName, value)
+        assert oItem is not None
+        oItem.RemoveFromAttr(sAttrName, value)
 
 
 class CBase:
