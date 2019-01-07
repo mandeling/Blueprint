@@ -75,3 +75,8 @@ class CNodeMgr(basemgr.CBaseMgr):
         GetBPMgr().DelNode4BP(nodeID)
         bpID = GetIDMgr().DelNode2BP(nodeID)
         GetSignal().DEL_NODE.emit(bpID, nodeID)
+
+    def NewObj(self, ID):
+        from bpdata import node
+        oItem = node.CBaseNode(ID)
+        return oItem

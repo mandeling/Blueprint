@@ -73,9 +73,13 @@ class CBPMgr(basemgr.CBaseMgr):
         dInfo.update(dTmp)
         return dInfo
 
+    def NewObj(self, ID):
+        oItem = CBP(ID)
+        return oItem
+
 
 class CBP(basemgr.CBase):
-    def __init__(self, ID, sName):
+    def __init__(self, ID, sName=None):
         super(CBP, self).__init__(ID)
         self.m_Info = {
             eddefine.BlueprintAttrName.ID: ID,
@@ -103,3 +107,21 @@ class CBP(basemgr.CBase):
             dTmp = GetVariableMgr().GetItemSaveInfo(varID)
             dSaveInfo.update(dTmp)
         return dSaveInfo
+
+    def SetLoadInfo(self, dInfo):
+        from .linemgr import GetLineMgr
+        from .nodemgr import GetNodeMgr
+        from .variablemgr import GetVariableMgr
+        super(CBP, self).SetLoadInfo(dInfo)
+        lstVariable = self.GetAttr(eddefine.BlueprintAttrName.VARIABLE_LIST)
+        for varID in lstVariable:
+            GetVariableMgr().LoadItemInfo(varID, dInfo)
+            GetIDMgr().SetVar2BP(self.m_ID, varID)
+        lstNode = self.GetAttr(eddefine.BlueprintAttrName.NODE_LIST)
+        for nodeID in lstNode:
+            GetNodeMgr().LoadItemInfo(nodeID, dInfo)
+            GetIDMgr().SetNode2BP(self.m_ID, nodeID)
+        lstLine = self.GetAttr(eddefine.BlueprintAttrName.LINE_LIST)
+        for lineID in lstLine:
+            GetLineMgr().LoadItemInfo(lineID, dInfo)
+            GetIDMgr().SetLine2BP(self.m_ID, lineID)

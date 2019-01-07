@@ -29,3 +29,8 @@ class CPinMgr(basemgr.CBaseMgr):
         oPin.SetID(pinID)
         self.m_ItemInfo[pinID] = oPin
         return pinID
+
+    def NewObj(self, ID):
+        from bpdata import pin
+        oPin = pin.CPin(ID)
+        return oPin

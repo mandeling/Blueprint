@@ -12,15 +12,14 @@ from editdata import basemgr
 
 def Register(sNodeName):
     def Cls(cls):
-        obj = cls(sNodeName)    # 定义节点的ID置为-1
+        obj = cls(-1, sNodeName)    # 定义节点的ID置为-1
         nodemgr.GetNodeMgr().Register(sNodeName, obj)
     return Cls
 
 
-class CBase(basemgr.CBase):
-    def __init__(self, sNodeName):
-        ID = -1
-        super(CBase, self).__init__(ID)
+class CBaseNode(basemgr.CBase):
+    def __init__(self, ID, sNodeName=None):
+        super(CBaseNode, self).__init__(ID)
         self.m_Info = {
             define.NodeAttrName.ID: ID,
             define.NodeAttrName.NAME: sNodeName,
@@ -38,12 +37,21 @@ class CBase(basemgr.CBase):
 
     def GetSaveInfo(self):
         from editdata.pinmgr import GetPinMgr
-        dSaveInfo = super(CBase, self).GetSaveInfo()
+        dSaveInfo = super(CBaseNode, self).GetSaveInfo()
         lstPin = self.GetAttr(define.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
             dTmp = GetPinMgr().GetItemSaveInfo(pinID)
             dSaveInfo.update(dTmp)
         return dSaveInfo
+
+    def SetLoadInfo(self, dInfo):
+        from editdata.pinmgr import GetPinMgr
+        from editdata.idmgr import GetIDMgr
+        super(CBaseNode, self).SetLoadInfo(dInfo)
+        lstPin = self.GetAttr(define.NodeAttrName.PINIDLIST)
+        for pinID in lstPin:
+            GetPinMgr().LoadItemInfo(pinID, dInfo)
+            GetIDMgr().SetPin2Node(self.m_ID, pinID)
 
     def _Run(self):
         lstInputFlow = self.InputFlow()
@@ -51,18 +59,18 @@ class CBase(basemgr.CBase):
         lstInputData = self.InputData()
         lstOutputData = self.OutputData()
         for sPinName in lstInputFlow:
-            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_INPUT_FLOW_TYPE, 0, sPinName)
+            self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_FLOW_TYPE, 0, sPinName)
 
         for sPinName in lstOutputFlow:
-            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_OUTPUT_FLOW_TYPE, 0, sPinName)
+            self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_OUTPUT_FLOW_TYPE, 0, sPinName)
 
         for lst in lstInputData:
             sPinName, iDataType = lst[0], lst[1]
-            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_INPUT_DATA_TYPE, iDataType, sPinName)
+            self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_DATA_TYPE, iDataType, sPinName)
 
         for lst in lstOutputData:
             sPinName, iDataType, func = lst[0], lst[1], lst[2]
-            self.m_PinInfo[sPinName] = pin.CPin(define.PIN_OUTPUT_DATA_TYPE, iDataType, sPinName)
+            self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_OUTPUT_DATA_TYPE, iDataType, sPinName)
             self.m_OutputFunc[sPinName] = func
 
     def GetValue(self, sPinName):
@@ -87,7 +95,7 @@ class CBase(basemgr.CBase):
 
 
 @Register(define.NodeName.ADD)
-class CAdd(CBase):
+class CAdd(CBaseNode):
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -104,7 +112,7 @@ class CAdd(CBase):
 
 
 @Register(define.NodeName.MIUNS)
-class CMiuns(CBase):
+class CMiuns(CBaseNode):
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -121,7 +129,7 @@ class CMiuns(CBase):
 
 
 @Register(define.NodeName.MULTIPLY)
-class CMultipyl(CBase):
+class CMultipyl(CBaseNode):
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -138,7 +146,7 @@ class CMultipyl(CBase):
 
 
 @Register(define.NodeName.DIVIDE)
-class CDivide(CBase):
+class CDivide(CBaseNode):
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -155,7 +163,7 @@ class CDivide(CBase):
 
 
 @Register(define.NodeName.PRINT)
-class CPrint(CBase):
+class CPrint(CBaseNode):
 
     def InputData(self):
         return [

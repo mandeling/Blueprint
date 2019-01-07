@@ -47,12 +47,22 @@ class CLineMgr(basemgr.CBaseMgr):
         bpID = GetIDMgr().DelLine2BP(lineID)
         GetSignal().DEL_LINE.emit(bpID, lineID)
 
+    def NewObj(self, ID):
+        oItem = CLine(ID)
+        return oItem
+
 
 class CLine(basemgr.CBase):
-    def __init__(self, uid, oPinID, iPinID):
+    def __init__(self, uid, oPinID=None, iPinID=None):
         super(CLine, self).__init__(uid)
         self.m_Info = {
             define.LineAttrName.ID: uid,
             define.LineAttrName.OUTPUT_PINID: oPinID,
             define.LineAttrName.INPUT_PINID: iPinID,
         }
+
+    def SetLoadInfo(self, dInfo):
+        super(CLine, self).SetLoadInfo(dInfo)
+        oPin = self.GetAttr(define.LineAttrName.OUTPUT_PINID)
+        iPinID = self.GetAttr(define.LineAttrName.INPUT_PINID)
+        GetIDMgr().AddLine2Pin(oPin, iPinID, self.m_ID)

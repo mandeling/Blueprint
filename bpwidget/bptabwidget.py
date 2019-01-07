@@ -23,7 +23,8 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         super(CBPTabWidget, self).__init__(parent)
         self.setMovable(True)
         self.m_ShowID = 0
-        self.m_PathInfo = {}
+        self.m_BPID2Path = {}
+        self.m_Path2BPID = {}
         self._InitSignal()
 
     def _InitSignal(self):
@@ -44,7 +45,9 @@ class CBPTabWidget(QtWidgets.QTabWidget):
             tabIndex = self.addTab(bpView, sTabTitle)
 
         self.setCurrentIndex(tabIndex)
-        self.m_PathInfo[bpID] = sPath
+        self.m_BPID2Path[bpID] = sPath
+        if sPath:
+            self.m_Path2BPID[sPath] = bpID
 
         btn = QtWidgets.QPushButton("x")
         btn.setFlat(True)
@@ -55,13 +58,23 @@ class CBPTabWidget(QtWidgets.QTabWidget):
 
     def OpenBlueprint(self):
         sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", filter=self.m_Filter)[0]
-        if sPath:
-            self.NewBlueprint(sPath)
+        if not sPath:
+            return
+        if sPath in self.m_Path2BPID:
+            bpID = self.m_Path2BPID[sPath]
+            self.ChangeCurIndex(bpID)
+            return
+        self.NewBlueprint(sPath)
+
+    def ChangeCurIndex(self, bpID):
+        oView = GetUIMgr().GetBPView(bpID)
+        iIndex = self.indexOf(oView)
+        self.setCurrentIndex(iIndex)
 
     def SaveBlueprint(self):
         oView = self.currentWidget()
         bpID = oView.GetBPID()
-        sPath = self.m_PathInfo.get(bpID, None)
+        sPath = self.m_BPID2Path.get(bpID, None)
         if not sPath:
             sPath = QtWidgets.QFileDialog.getSaveFileName(self, "保存蓝图", filter=self.m_Filter)[0]
             if not sPath:
@@ -72,6 +85,13 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self.setTabText(iIndex, sTabTitle)
         self.setTabToolTip(iIndex, sPath)
 
+    def Delete(self, bpID):
+        if bpID not in self.m_BPID2Path:
+            return
+        sPath = self.m_BPID2Path.pop(bpID)
+        if sPath in self.m_Path2BPID:
+            del self.m_Path2BPID[sPath]
+
     def S_CloseTab(self, bpID, _):
         oView = GetUIMgr().GetBPView(bpID)
         if not oView:
@@ -79,8 +99,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         iIndex = self.indexOf(oView)
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
-        if bpID in self.m_PathInfo:
-            del self.m_PathInfo[bpID]
+        self.Delete(bpID)
         GetUIMgr().DelBPView(bpID)
 
     def S_OnBPTabChange(self):

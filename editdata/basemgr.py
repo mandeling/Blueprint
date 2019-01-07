@@ -52,6 +52,14 @@ class CBaseMgr:
         assert oItem is not None
         return oItem.GetSaveInfo()
 
+    def NewObj(self, ID):
+        raise Exception("子类未重载")
+
+    def LoadItemInfo(self, ID, dInfo):
+        obj = self.NewObj(ID)
+        obj.SetLoadInfo(dInfo)
+        self.m_ItemInfo[ID] = obj
+
 
 class CBase:
     def __init__(self, ID, *args):
@@ -76,6 +84,10 @@ class CBase:
 
     def GetInfo(self):
         return copy.deepcopy(self.m_Info)
+
+    def SetLoadInfo(self, dInfo):
+        dMyInfo = dInfo.pop(self.m_ID)
+        self.m_Info = copy.deepcopy(dMyInfo)
 
     def GetSaveInfo(self):
         dSaveInfo = {self.m_ID: self.GetInfo()}

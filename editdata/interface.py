@@ -25,8 +25,11 @@ def NewBlueprint():
 
 
 def OpenBlueprint(sPath):
-    bpID = misc.uuid()
-    return bpID
+    with open(sPath, "r", encoding="utf-8") as f:
+        dInfo = json.load(f)
+        bpID = dInfo.pop(eddefine.BP_ATTR_NAME_PREFIX)
+        GetBPMgr().LoadItemInfo(bpID, dInfo)
+        return bpID
 
 
 def SaveBlueprint(bpID, sPath):

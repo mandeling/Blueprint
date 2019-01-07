@@ -33,13 +33,30 @@ class CIDMgr:
         self.m_Pin2Node = {}    # {pinID:nodeID}
         self.m_PinLineInfo = {}  # {pinid:[lineid,]}
         self.m_Line2BP = {}     # {lineID:bpID}
+        self.m_Var2BP = {}      # {varID:bpID}
+
+    # ---------------------变量ID:蓝图ID---------------------------
+    def SetVar2BP(self, bpID, varID):
+        self.m_Var2BP[varID] = bpID
+
+    def GetBPByVar(self, varID):
+        bpID = self.m_Var2BP.get(varID, None)
+        assert bpID is not None
+        return bpID
+
+    def DelVar2BP(self, varID):
+        bpID = self.m_Var2BP.pop(varID, None)
+        assert bpID is not None
+        return bpID
 
     # ---------------------节点ID:蓝图ID---------------------------
     def SetNode2BP(self, bpID, nodeID):
         self.m_Node2BP[nodeID] = bpID
 
     def GetBPByNode(self, nodeID):
-        return self.m_Node2BP[nodeID]
+        bpID = self.m_Node2BP[nodeID]
+        assert bpID is not None
+        return bpID
 
     def DelNode2BP(self, nodeID):
         bpID = self.m_Node2BP.pop(nodeID, None)
@@ -51,7 +68,9 @@ class CIDMgr:
         self.m_Pin2Node[pinID] = nodeID
 
     def GetNodeByPin(self, pinID):
-        return self.m_Pin2Node.get(pinID, None)
+        nodeID = self.m_Pin2Node.get(pinID, None)
+        assert nodeID is not None
+        return nodeID
 
     def DelPin2Node(self, pinID):
         nodeID = self.m_Pin2Node.pop(pinID, None)
@@ -63,7 +82,9 @@ class CIDMgr:
         self.m_Line2BP[lineID] = bpID
 
     def GetBPByLine(self, lineID):
-        return self.m_Line2BP.get(lineID, None)
+        bpID = self.m_Line2BP.get(lineID, None)
+        assert bpID is not None
+        return bpID
 
     def DelLine2BP(self, lineID):
         bpID = self.m_Line2BP.pop(lineID, None)

@@ -55,9 +55,14 @@ class CVariableMgr(basemgr.CBaseMgr):
     #     oData = self.m_ItemInfo[varID]
     #     return oData.GetAttr(sAttrName)
 
+    def LoadItemInfo(self, varID, dInfo):
+        oVar = CVariable(varID)
+        oVar.SetLoadInfo(dInfo)
+        self.m_ItemInfo[varID] = oVar
+
 
 class CVariable(basemgr.CBase):
-    def __init__(self, varID, sName, iType, value):
+    def __init__(self, varID, sName=None, iType=None, value=None):
         super(CVariable, self).__init__(varID)
         self.m_Info = {
             define.VariableAttrName.ID: varID,
