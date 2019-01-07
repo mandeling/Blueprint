@@ -8,8 +8,9 @@
 import misc
 
 from . import basemgr, interface
-from .idmgr import GetIDMgr
 from . import define as eddefine
+from .idmgr import GetIDMgr
+
 
 g_BPMgr = None
 
@@ -64,10 +65,18 @@ class CBPMgr(basemgr.CBaseMgr):
             interface.DelNode(nodeID)
         self.DelItem(bpID)
 
+    def GetItemSaveInfo(self, bpID):
+        dTmp = super(CBPMgr, self).GetItemSaveInfo(bpID)
+        dInfo = {
+            eddefine.BlueprintAttrName: bpID
+        }
+        dInfo.update(dTmp)
+        return dInfo
+
 
 class CBP(basemgr.CBase):
     def __init__(self, ID, sName):
-        super(CBP, self).__init__()
+        super(CBP, self).__init__(ID)
         self.m_Info = {
             eddefine.BlueprintAttrName.ID: ID,
             eddefine.BlueprintAttrName.NAME: sName,
@@ -76,5 +85,21 @@ class CBP(basemgr.CBase):
             eddefine.BlueprintAttrName.VARIABLE_LIST: [],
         }
 
-    def Delete(self):
-        pass  # TODO
+    def GetSaveInfo(self):
+        from .linemgr import GetLineMgr
+        from .nodemgr import GetNodeMgr
+        from .variablemgr import GetVariableMgr
+        dSaveInfo = super(CBP, self).GetSaveInfo()
+        lstLine = self.GetAttr(eddefine.BlueprintAttrName.LINE_LIST)
+        for lineID in lstLine:
+            dTmp = GetLineMgr().GetItemSaveInfo(lineID)
+            dSaveInfo.update(dTmp)
+        lstNode = self.GetAttr(eddefine.BlueprintAttrName.NODE_LIST)
+        for nodeID in lstNode:
+            dTmp = GetNodeMgr().GetItemSaveInfo(nodeID)
+            dSaveInfo.update(dTmp)
+        lstVariable = self.GetAttr(eddefine.BlueprintAttrName.VARIABLE_LIST)
+        for varID in lstVariable:
+            dTmp = GetVariableMgr().GetItemSaveInfo(varID)
+            dSaveInfo.update(dTmp)
+        return dSaveInfo

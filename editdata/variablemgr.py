@@ -7,8 +7,9 @@
 
 import random
 import copy
+import misc
 
-from . import define
+from . import define, basemgr
 from bpdata import define as bddefine
 
 g_VariableMgr = None
@@ -21,15 +22,16 @@ def GetVariableMgr():
     return g_VariableMgr
 
 
-class CVariableMgr:
+class CVariableMgr(basemgr.CBaseMgr):
     def __init__(self):
-        self.m_Data = {}
+        super(CVariableMgr, self).__init__()
         self.InitTestData()
 
     def NewVariable(self, sName, iType, value):
         if value is None:
             value = bddefine.GetDefauleValue(iType)
-        self.m_Data[sName] = CVariable(sName, iType, value)
+        varID = misc.uuid()
+        self.m_ItemInfo[varID] = CVariable(varID, sName, iType, value)
 
     def InitTestData(self):
         for i in range(10):
@@ -39,30 +41,27 @@ class CVariableMgr:
             self.NewVariable(sName, iType, value)
 
     def GetAllVarInfo(self):
-        return copy.deepcopy(self.m_Data)
+        return copy.deepcopy(self.m_ItemInfo)
 
-    def SetAttr(self, sName, sAttrName, value):
-        oData = self.m_Data[sName]
-        oData.SetAttr(sAttrName, value)
-        if sAttrName == define.VariableAttrName.NAME:
-            self.m_Data[value] = oData
-            del self.m_Data[sName]
+    # TODO
+    # def SetAttr(self, varID, sAttrName, value):
+    #     oData = self.m_ItemInfo[varID]
+    #     oData.SetAttr(sAttrName, value)
+    #     if sAttrName == define.VariableAttrName.NAME:
+    #         self.m_ItemInfo[value] = oData
+    #         del self.m_ItemInfo[varID]
 
-    def GetAttr(self, sName, sAttrName):
-        oData = self.m_Data[sName]
-        return oData.GetAttr(sAttrName)
+    # def GetAttr(self, varID, sAttrName):
+    #     oData = self.m_ItemInfo[varID]
+    #     return oData.GetAttr(sAttrName)
 
 
-class CVariable:
-    def __init__(self, sName, iType, value):
+class CVariable(basemgr.CBase):
+    def __init__(self, varID, sName, iType, value):
+        super(CVariable, self).__init__(varID)
         self.m_Info = {
+            define.VariableAttrName.ID: varID,
             define.VariableAttrName.NAME: sName,
             define.VariableAttrName.TYPE: iType,
             define.VariableAttrName.VALUE: value
         }
-
-    def SetAttr(self, sAttrName, value):
-        self.m_Info[sAttrName] = value
-
-    def GetAttr(self, sAttrName):
-        return self.m_Info[sAttrName]

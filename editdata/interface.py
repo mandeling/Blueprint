@@ -6,6 +6,7 @@
 """
 
 import misc
+import json
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
@@ -29,7 +30,9 @@ def OpenBlueprint(sPath):
 
 
 def SaveBlueprint(bpID, sPath):
-    pass
+    dInfo = GetBPMgr().GetItemSaveInfo(bpID)
+    with open(sPath, "r", encoding="utf-8") as f:
+        json.dump(dInfo, f, indent=4)
 
 
 def GetBPIDByNodeID(nodeID):
@@ -53,12 +56,12 @@ def DelVariable(varID):
 
 def SetVariableAttr(sName, sAttrName, value):
     oVariableMgr = GetVariableMgr()
-    oVariableMgr.SetAttr(sName, sAttrName, value)
+    oVariableMgr.SetItemAttr(sName, sAttrName, value)
 
 
 def GetVariableAttr(sName, sAttrName):
     oVariableMgr = GetVariableMgr()
-    return oVariableMgr.GetAttr(sName, sAttrName)
+    return oVariableMgr.GetItemAttr(sName, sAttrName)
 
 
 # --------------------------节点--------------------------

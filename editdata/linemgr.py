@@ -50,7 +50,7 @@ class CLineMgr(basemgr.CBaseMgr):
 
 class CLine(basemgr.CBase):
     def __init__(self, uid, oPinID, iPinID):
-        super(CLine, self).__init__()
+        super(CLine, self).__init__(uid)
         self.m_Info = {
             define.LineAttrName.ID: uid,
             define.LineAttrName.OUTPUT_PINID: oPinID,

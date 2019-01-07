@@ -12,16 +12,17 @@ from editdata import basemgr
 
 def Register(sNodeName):
     def Cls(cls):
-        obj = cls(sNodeName)
+        obj = cls(sNodeName)    # 定义节点的ID置为-1
         nodemgr.GetNodeMgr().Register(sNodeName, obj)
     return Cls
 
 
 class CBase(basemgr.CBase):
     def __init__(self, sNodeName):
-        super(CBase, self).__init__()
+        ID = -1
+        super(CBase, self).__init__(ID)
         self.m_Info = {
-            define.NodeAttrName.ID: 0,
+            define.NodeAttrName.ID: ID,
             define.NodeAttrName.NAME: sNodeName,
             define.NodeAttrName.DISPLAYNAME: sNodeName,
             define.NodeAttrName.POSITION: (0, 0),

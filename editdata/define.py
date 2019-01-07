@@ -26,6 +26,7 @@ VARIABLE_TYPE_LOCAL = 1
 
 class VariableAttrName:
     """变量属性名字的定义"""
+    ID = VARIABLE_ATTR_NAME_PREFIX + "id"
     NAME = VARIABLE_ATTR_NAME_PREFIX + "name"
     TYPE = VARIABLE_ATTR_NAME_PREFIX + "type"
     VALUE = VARIABLE_ATTR_NAME_PREFIX + "value"

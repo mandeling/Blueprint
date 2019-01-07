@@ -5,6 +5,8 @@
 @Desc: 各管理类的基类
 """
 
+import copy
+
 
 class CBaseMgr:
     def __init__(self):
@@ -45,9 +47,15 @@ class CBaseMgr:
         assert oItem is not None
         oItem.RemoveFromAttr(sAttrName, value)
 
+    def GetItemSaveInfo(self, ID):
+        oItem = self.GetItem(ID)
+        assert oItem is not None
+        return oItem.GetSaveInfo()
+
 
 class CBase:
-    def __init__(self, *args):
+    def __init__(self, ID, *args):
+        self.m_ID = ID
         self.m_Info = {}
 
     def SetAttr(self, sAttrName, value):
@@ -65,3 +73,10 @@ class CBase:
         lst = self.m_Info[sAttrName]
         if value in lst:
             lst.remove(value)
+
+    def GetInfo(self):
+        return copy.deepcopy(self.m_Info)
+
+    def GetSaveInfo(self):
+        dSaveInfo = {self.m_ID: self.GetInfo}
+        return dSaveInfo

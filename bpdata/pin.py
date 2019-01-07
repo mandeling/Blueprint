@@ -12,9 +12,10 @@ from editdata import basemgr
 
 class CPin(basemgr.CBase):
     def __init__(self, iPinType, iDataType, sName):
-        super(CPin, self).__init__()
+        ID = -1
+        super(CPin, self).__init__(ID)
         self.m_Info = {
-            define.PinAttrName.ID: -1,
+            define.PinAttrName.ID: ID,
             define.PinAttrName.NAME: sName,
             define.PinAttrName.DISPLAYNAME: sName,
             define.PinAttrName.PIN_TYPE: iPinType,
