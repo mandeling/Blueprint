@@ -8,47 +8,28 @@
 from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
 from PyQt5.QtCore import Qt
 
-from pubcode.pubqt.pubmenu import menumgr, menudefine
 from bpwidget import bptabwidget
 from bpwidget import detailui, menuui, bpattrwidget
 
 
-class CMainView(QMainWindow):
+class CBlueprintView(QMainWindow):
     def __init__(self, parent=None):
-        super(CMainView, self).__init__(parent)
+        super(CBlueprintView, self).__init__(parent)
         self.m_BPTabWidget = bptabwidget.CBPTabWidget(self)
         self.m_BPAttrWidget = bpattrwidget.CBPAttrWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
         self.m_MenuWidget = menuui.CMenuUI(self)
         self.m_LogWidget = None
-        self.InitUI()
-        self.InitView()
+        self._InitCorner()
+        self._InitDock()
 
-    def InitUI(self):
-        self.showMaximized()
-        self.setGeometry(300, 150, 1200, 800)
-        self.setWindowTitle("蓝图")
-
-    def InitView(self):
-        self.InitMenu()
-        self.InitCorner()
-        self.InitDock()
-
-    def InitMenu(self):
-        menumgr.InitMgr(self)
-        oMenuMgr = menumgr.GetMenuMgr()
-        for dMenuConfig in self.GetMenunInfo():
-            oMenuMgr.AddMenu(dMenuConfig)
-        pMenuBar = oMenuMgr.BuildChildMenu()
-        self.setMenuBar(pMenuBar)
-
-    def InitCorner(self):
+    def _InitCorner(self):
         self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
         self.setCorner(Qt.BottomLeftCorner, Qt.LeftDockWidgetArea)
         self.setCorner(Qt.TopRightCorner, Qt.RightDockWidgetArea)
         self.setCorner(Qt.BottomRightCorner, Qt.RightDockWidgetArea)
 
-    def InitDock(self):
+    def _InitDock(self):
         # self.setDockNestingEnabled(True)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
 
@@ -77,22 +58,3 @@ class CMainView(QMainWindow):
         self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock)
         self.addDockWidget(Qt.LeftDockWidgetArea, leftDock)
         self.setCentralWidget(self.m_BPTabWidget)
-
-    def GetMenunInfo(self):
-        return [
-            {
-                menudefine.MENU_NAME: "文件/新建蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BPTabWidget.NewBlueprint,
-                menudefine.MENU_SHORTCUT_NAME: "Ctrl+N"
-            },
-            {
-                menudefine.MENU_NAME: "文件/保存蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BPTabWidget.SaveBlueprint,
-                menudefine.MENU_SHORTCUT_NAME: "Ctrl+S"
-            },
-            {
-                menudefine.MENU_NAME: "文件/打开蓝图",
-                menudefine.MENU_FUNCTION_NAME: self.m_BPTabWidget.OpenBlueprint,
-                menudefine.MENU_SHORTCUT_NAME: "Ctrl+O"
-            },
-        ]
