@@ -13,8 +13,9 @@ from bpwidget import detailui, menuui, bpattrwidget
 
 
 class CBlueprintView(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, BPID, parent=None):
         super(CBlueprintView, self).__init__(parent)
+        self.m_BPID = BPID
         self.m_BPTabWidget = graphictab.CBPTabWidget(self)
         self.m_BPAttrWidget = bpattrwidget.CBPAttrWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)

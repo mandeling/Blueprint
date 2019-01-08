@@ -9,6 +9,8 @@ from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy, QWidget
 from PyQt5.QtCore import Qt
 
 from pubcode.pubqt.pubmenu import menumgr, menudefine
+from editdata import interface
+from signalmgr import GetSignal
 
 
 class CMainView(QMainWindow):
@@ -81,7 +83,8 @@ class CMainView(QMainWindow):
         ]
 
     def S_NewBlueprint(self):
-        pass
+        bpID = interface.NewBlueprint()
+        GetSignal().NEW_BLUEPRINT.emit(bpID)
 
     def S_SaveAllBlueprint(self):
         pass

@@ -21,3 +21,6 @@ class CSignal:
     # 数据层信号
     DEL_LINE = CMySignal()  # bpID, lineID
     DEL_NODE = CMySignal()  # bpID, nodeID
+
+    # ui层信号
+    NEW_BLUEPRINT = CMySignal()  # bpID
