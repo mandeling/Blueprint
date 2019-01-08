@@ -29,11 +29,26 @@ def MyListRemove(dInfo, key, value):
 
 class CIDMgr:
     def __init__(self):
+        self.m_Graphic2BP = {}  # {graphicID:bpID}
         self.m_Node2Graphic = {}     # {nodeID:graphicID}
         self.m_Pin2Node = {}    # {pinID:nodeID}
         self.m_PinLineInfo = {}  # {pinid:[lineid,]}
         self.m_Line2Graphic = {}     # {lineID:graphicID}
         self.m_Var2Graphic = {}      # {varID:graphicID}
+
+    # ---------------------图表ID:蓝图ID---------------------------
+    def SetGraphic2BP(self, bpID, graphicID):
+        self.m_Graphic2BP[graphicID] = bpID
+
+    def GetBPByGraphic(self, graphicID):
+        bpID = self.m_Graphic2BP.get(graphicID, None)
+        assert bpID is not None
+        return bpID
+
+    def DelGraphic2BP(self, graphicID):
+        bpID = self.m_Graphic2BP.pop(graphicID, None)
+        assert bpID is not None
+        return bpID
 
     # ---------------------变量ID:图表ID---------------------------
     def SetVar2Graphic(self, graphicID, varID):

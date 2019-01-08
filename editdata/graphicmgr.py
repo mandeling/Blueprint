@@ -2,7 +2,7 @@
 """
 @Author: lamborghini
 @Date: 2018-12-29 10:02:06
-@Desc: 蓝图管理类
+@Desc: 蓝图图表管理类
 """
 
 import misc
@@ -10,7 +10,7 @@ import misc
 from . import basemgr
 from . import define as eddefine
 from .idmgr import GetIDMgr
-
+from .bpmgr import GetBPMgr
 
 g_GraphicMgr = None
 
@@ -23,16 +23,14 @@ def GetGraphicMgr():
 
 
 class CGraphicMgr(basemgr.CBaseMgr):
-    def __init__(self):
-        super(CGraphicMgr, self).__init__()
-        self.m_Node2Graphic = {}
-
-    def NewItem(self):
-        uid = misc.uuid()
+    def NewGraphic(self, bpID):
+        graphicID = misc.uuid()
         sName = "Graphic-%s" % self.NewID()
-        oGraphic = CGraphic(uid, sName)
-        self.m_ItemInfo[uid] = oGraphic
-        return uid
+        oGraphic = CGraphic(graphicID, sName)
+        GetIDMgr().SetGraphic2BP(bpID, graphicID)
+        GetBPMgr().AddGraphic2BP(graphicID)
+        self.m_ItemInfo[graphicID] = oGraphic
+        return graphicID
 
     def AddNode2Graphic(self, nodeID):
         graphicID = GetIDMgr().GetGraphicByNode(nodeID)
@@ -65,6 +63,8 @@ class CGraphicMgr(basemgr.CBaseMgr):
         for nodeID in lstNode:
             interface.DelNode(nodeID)
         self.DelItem(graphicID)
+        GetBPMgr().DelGraphic4BP(graphicID)
+        bpID = GetIDMgr().DelGraphic2BP(graphicID)
 
     def NewObj(self, ID):
         oItem = CGraphic(ID)

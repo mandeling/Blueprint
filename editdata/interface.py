@@ -15,12 +15,42 @@ from .variablemgr import GetVariableMgr
 from .linemgr import GetLineMgr
 from .pinmgr import GetPinMgr
 from .graphicmgr import GetGraphicMgr
+from .bpmgr import GetBPMgr
+
+
+# -----------------------蓝图-----------------------------
+def NewBlueprint():
+    bpID = GetBPMgr().NewBP()
+    return bpID
+
+
+def DelBlueprint(bpID):
+    GetBPMgr().DelBP(bpID)
+
+
+def OpenBlueprint(sPath):
+    with open(sPath, "r", encoding="utf-8") as f:
+        dInfo = json.load(f)
+        bpID = dInfo.pop(eddefine.BP_ATTR_NAME_PREFIX)
+        GetBPMgr().LoadItemInfo(bpID, dInfo)
+        return bpID
+
+
+def SaveBlueprint(bpID, sPath):
+    dInfo = GetBPMgr().GetItemSaveInfo(bpID)
+    dInfo[eddefine.BP_ATTR_NAME_PREFIX] = bpID
+    with open(sPath, "w", encoding="utf-8") as f:
+        json.dump(dInfo, f, indent=4, ensure_ascii=False)
 
 
 # -----------------------图表-----------------------------
-def NewGraphic():
-    graphicID = GetGraphicMgr().NewItem()
+def NewGraphic(bpID):
+    graphicID = GetGraphicMgr().NewGraphic(bpID)
     return graphicID
+
+
+def DelGraphic(graphicID):
+    GetGraphicMgr().DelGraphic(graphicID)
 
 
 def OpenGraphic(sPath):

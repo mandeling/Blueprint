@@ -4,6 +4,14 @@
 @Date: 2018-12-07 15:42:54
 @Desc: 数据定义
 """
+# ----------------------blueprint-------------------------------
+BP_ATTR_NAME_PREFIX = "bp_attr_name:"
+
+
+class BlueprintAttrName:
+    ID = BP_ATTR_NAME_PREFIX + "id"
+    GRAPHIC_LIST = BP_ATTR_NAME_PREFIX + "graphic_list"
+
 
 
 # ----------------------graphic-------------------------------
