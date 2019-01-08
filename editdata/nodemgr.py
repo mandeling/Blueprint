@@ -8,9 +8,7 @@
 import copy
 import misc
 
-from . import interface
 from .idmgr import GetIDMgr
-from .pinmgr import GetPinMgr
 from bpdata import define as bddefine
 from signalmgr import GetSignal
 from . import basemgr
@@ -45,6 +43,7 @@ class CNodeMgr(basemgr.CBaseMgr):
         因为预定义节点和上面的pin是预先定义的，可以生成很多实例
         所以每创建一个节点，复制节点以及pin
         """
+        from . import interface
         oDefineNode = self.m_DefineInfo[sNodeName]
         oNode = copy.deepcopy(oDefineNode)
         nodeID = misc.uuid()
@@ -62,6 +61,7 @@ class CNodeMgr(basemgr.CBaseMgr):
         return nodeID
 
     def DelNode(self, nodeID):
+        from . import interface
         oNode = self.m_ItemInfo.get(nodeID, None)
         if not oNode:
             return

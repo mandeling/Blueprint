@@ -46,9 +46,9 @@ class CVariableUI(QtWidgets.QWidget, Ui_Form):
     def InitUI(self):
         self.setWindowTitle(self.m_Name)
         self.treeWidget.headerItem().setText(0, self.m_Name)
-        for sName, _ in self.m_Info.items():
-            iType = interface.GetVariableAttr(sName, eddefine.VariableAttrName.TYPE)
-            self.m_ItemInfo[sName] = CTreeWidgetItem(sName, iType, self.treeWidget)
+        # for sName, _ in self.m_Info.items():
+        #     iType = interface.GetVariableAttr(sName, eddefine.VariableAttrName.TYPE)
+        #     self.m_ItemInfo[sName] = CTreeWidgetItem(sName, iType, self.treeWidget)
 
     def S_NewVariable(self):
         self.m_ID += 1

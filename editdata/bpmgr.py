@@ -7,7 +7,7 @@
 
 import misc
 
-from . import basemgr, interface
+from . import basemgr
 from . import define as eddefine
 from .idmgr import GetIDMgr
 
@@ -51,6 +51,7 @@ class CBPMgr(basemgr.CBaseMgr):
         self.DelFromAttrList(bpID, eddefine.BlueprintAttrName.LINE_LIST, lineID)
 
     def DelBP(self, bpID):
+        from . import interface
         oBP = self.m_ItemInfo.get(bpID, None)
         if not oBP:
             return
