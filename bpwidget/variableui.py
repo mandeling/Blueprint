@@ -12,28 +12,28 @@ from ui.VariableWidget import Ui_Form
 from editdata import interface
 from bpdata import define as bddefine
 from editdata import define as eddefine
+from . import define
+
+# class CVariableWidget(QtWidgets.QWidget):
+#     def __init__(self, parent=None):
+#         super(CVariableWidget, self).__init__(parent)
+#         self.m_GloablVarUI = None
+#         self.InitUI()
+
+#     def InitUI(self):
+#         VBox = QtWidgets.QVBoxLayout(self)
+#         self.m_GloablVarUI = CVariableUI("变量", interface.GetVariableData())
+#         VBox.addWidget(self.m_GloablVarUI)
+#         self.setLayout(VBox)
 
 
-class CVariableWidget(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super(CVariableWidget, self).__init__(parent)
-        self.m_GloablVarUI = None
-        self.InitUI()
+class CVariableUI(QtWidgets.QWidget, Ui_Form):
+    m_Name = define.BP_ATTR_VARIABLE
 
-    def InitUI(self):
-        VBox = QtWidgets.QVBoxLayout(self)
-        self.m_GloablVarUI = CGloablVariableUI("全局变量", interface.GetVariableData())
-        VBox.addWidget(self.m_GloablVarUI)
-        self.setLayout(VBox)
-
-
-class CGloablVariableUI(QtWidgets.QWidget, Ui_Form):
-    def __init__(self, sName, dInfo, parent=None):
-        super(CGloablVariableUI, self).__init__(parent)
+    def __init__(self, sName, parent=None):
+        super(CVariableUI, self).__init__(parent)
         self.setupUi(self)
-        self.m_Info = dInfo
         self.m_ID = 0
-        self.m_Name = sName
         self.m_ItemInfo = {}
         self.InitUI()
         self.InitConnect()

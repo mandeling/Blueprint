@@ -10,14 +10,14 @@ from PyQt5.QtCore import Qt
 
 from menu import menumgr, menudefine
 from bpwidget import bptabwidget
-from bpwidget import detailui, variableui, menuui
+from bpwidget import detailui, menuui, bpattrwidget
 
 
 class CMainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
         self.m_BPTabWidget = bptabwidget.CBPTabWidget(self)
-        self.m_VariableWidget = variableui.CVariableWidget(self)
+        self.m_BPAttrWidget = bpattrwidget.CBPAttrWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
         self.m_MenuWidget = menuui.CMenuUI(self)
         self.m_LogWidget = None
@@ -62,10 +62,10 @@ class CMainWindow(QMainWindow):
         bottomDock.setObjectName("bottomDock")
         bottomDock.setWidget(self.m_LogWidget)
 
-        leftDock = QDockWidget("变量", self)
+        leftDock = QDockWidget("属性", self)
         leftDock.setSizePolicy(sizePolicy)
         leftDock.setObjectName("leftDock")
-        leftDock.setWidget(self.m_VariableWidget)
+        leftDock.setWidget(self.m_BPAttrWidget)
 
         rightDock = QDockWidget("细节", self)
         rightDock.setSizePolicy(sizePolicy)
