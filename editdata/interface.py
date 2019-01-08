@@ -5,7 +5,6 @@
 @Desc: 对ui层提供的接口
 """
 
-import misc
 import json
 import editdata.define as eddefine
 import bpdata.define as bddefine
@@ -15,35 +14,31 @@ from .nodemgr import GetNodeMgr
 from .variablemgr import GetVariableMgr
 from .linemgr import GetLineMgr
 from .pinmgr import GetPinMgr
-from .bpmgr import GetBPMgr
+from .graphicmgr import GetGraphicMgr
 
 
-# -----------------------蓝图-----------------------------
-def NewBlueprint():
-    bpID = GetBPMgr().NewItem()
-    return bpID
+# -----------------------图表-----------------------------
+def NewGraphic():
+    graphicID = GetGraphicMgr().NewItem()
+    return graphicID
 
 
-def OpenBlueprint(sPath):
+def OpenGraphic(sPath):
     with open(sPath, "r", encoding="utf-8") as f:
         dInfo = json.load(f)
-        bpID = dInfo.pop(eddefine.BP_ATTR_NAME_PREFIX)
-        GetBPMgr().LoadItemInfo(bpID, dInfo)
-        return bpID
+        graphicID = dInfo.pop(eddefine.GRAPHIC_ATTR_NAME_PREFIX)
+        GetGraphicMgr().LoadItemInfo(graphicID, dInfo)
+        return graphicID
 
 
-def SaveBlueprint(bpID, sPath):
-    dInfo = GetBPMgr().GetItemSaveInfo(bpID)
+def SaveGraphic(graphicID, sPath):
+    dInfo = GetGraphicMgr().GetItemSaveInfo(graphicID)
     with open(sPath, "w", encoding="utf-8") as f:
         json.dump(dInfo, f, indent=4, ensure_ascii=False)
 
 
-def GetBPIDByNodeID(nodeID):
-    return GetIDMgr().GetBPByNode(nodeID)
-
-
-def GetBPAttr(bpID, sAttrName):
-    return GetBPMgr().GetItemAttr(bpID, sAttrName)
+def GetGraphicAttr(graphicID, sAttrName):
+    return GetGraphicMgr().GetItemAttr(graphicID, sAttrName)
 
 
 # --------------------变量--------------------------------
@@ -72,9 +67,9 @@ def GetVariableAttr(sName, sAttrName):
 
 
 # --------------------------节点--------------------------
-def AddNode(bpID, sName, pos=(0, 0)):
+def AddNode(graphicID, sName, pos=(0, 0)):
     """添加节点"""
-    nodeID = GetNodeMgr().NewNode(bpID, sName, pos)
+    nodeID = GetNodeMgr().NewNode(graphicID, sName, pos)
     return nodeID
 
 
@@ -162,12 +157,12 @@ def GetLineOtherPin(lineID, pinID):
 
 
 # ----------------------连线------------------------------
-def AddLine(bpID, oPinID, iPinID):
+def AddLine(graphicID, oPinID, iPinID):
     """
     oNodeID：输出节点ID
     iNodeID：输入节点ID
     """
-    lineID = GetLineMgr().NewLine(bpID, oPinID, iPinID)
+    lineID = GetLineMgr().NewLine(graphicID, oPinID, iPinID)
     return lineID
 
 

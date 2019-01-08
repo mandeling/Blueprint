@@ -8,14 +8,14 @@
 from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
 from PyQt5.QtCore import Qt
 
-from bpwidget import bptabwidget
+from bpwidget import graphictab
 from bpwidget import detailui, menuui, bpattrwidget
 
 
 class CBlueprintView(QMainWindow):
     def __init__(self, parent=None):
         super(CBlueprintView, self).__init__(parent)
-        self.m_BPTabWidget = bptabwidget.CBPTabWidget(self)
+        self.m_BPTabWidget = graphictab.CBPTabWidget(self)
         self.m_BPAttrWidget = bpattrwidget.CBPAttrWidget(self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
         self.m_MenuWidget = menuui.CMenuUI(self)

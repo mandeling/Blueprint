@@ -6,7 +6,6 @@
 """
 
 from viewmgr.uimgr import GetUIMgr
-from editdata import interface
 
 g_StatusMgr = None
 
@@ -21,27 +20,27 @@ def GetStatusMgr():
 class CStatusMgr:
     def __init__(self):
         self.m_SelectNode = {}  # 当前选择的节点
-        self.m_CurBPID = None   # 当前选择的蓝图id
+        self.m_CurGraphicID = None   # 当前选择的图标id
 
-    def SetCurBPID(self, bpID):
-        self.m_CurBPID = bpID
+    def SetCurGraphicID(self, graphicID):
+        self.m_CurGraphicID = graphicID
 
-    def GetCurBPID(self):
-        return self.m_CurBPID
+    def GetCurGraphicID(self):
+        return self.m_CurGraphicID
 
-    def GetSelectNode(self, bpID):
-        return self.m_SelectNode.setdefault(bpID, [])
+    def GetSelectNode(self, graphicID):
+        return self.m_SelectNode.setdefault(graphicID, [])
 
-    def DelSelectNode(self, bpID, nodeID):
-        lst = self.GetSelectNode(bpID)
+    def DelSelectNode(self, graphicID, nodeID):
+        lst = self.GetSelectNode(graphicID)
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         oNodeUI.SetUnpressStyle()
         if nodeID in lst:
             lst.remove(nodeID)
 
-    def ChangeSelectNode(self, bpID, nodeID):
+    def ChangeSelectNode(self, graphicID, nodeID):
         """添加一个选中的节点"""
-        lst = self.GetSelectNode(bpID)
+        lst = self.GetSelectNode(graphicID)
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         if nodeID in lst:
             oNodeUI.SetUnpressStyle()
@@ -50,20 +49,20 @@ class CStatusMgr:
             oNodeUI.SetPressStyle()
             lst.append(nodeID)
 
-    def SelectOneNode(self, bpID, nodeID):
+    def SelectOneNode(self, graphicID, nodeID):
         """选中一个节点"""
-        for nid in self.GetSelectNode(bpID):
+        for nid in self.GetSelectNode(graphicID):
             if nid == nodeID:
                 continue
             oNodeUI = GetUIMgr().GetNodeUI(nid)
             oNodeUI.SetUnpressStyle()
-        self.m_SelectNode[bpID] = [nodeID]
+        self.m_SelectNode[graphicID] = [nodeID]
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         oNodeUI.SetPressStyle()
 
-    def ClearNode(self, bpID):
+    def ClearNode(self, graphicID):
         """清除节点选中状态"""
-        for nid in self.GetSelectNode(bpID):
+        for nid in self.GetSelectNode(graphicID):
             oNodeUI = GetUIMgr().GetNodeUI(nid)
             oNodeUI.SetUnpressStyle()
-        self.m_SelectNode[bpID] = []
+        self.m_SelectNode[graphicID] = []

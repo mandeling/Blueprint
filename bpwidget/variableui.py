@@ -14,18 +14,6 @@ from bpdata import define as bddefine
 from editdata import define as eddefine
 from . import define
 
-# class CVariableWidget(QtWidgets.QWidget):
-#     def __init__(self, parent=None):
-#         super(CVariableWidget, self).__init__(parent)
-#         self.m_GloablVarUI = None
-#         self.InitUI()
-
-#     def InitUI(self):
-#         VBox = QtWidgets.QVBoxLayout(self)
-#         self.m_GloablVarUI = CVariableUI("变量", interface.GetVariableData())
-#         VBox.addWidget(self.m_GloablVarUI)
-#         self.setLayout(VBox)
-
 
 class CVariableUI(QtWidgets.QWidget, Ui_Form):
     m_Name = define.BP_ATTR_VARIABLE

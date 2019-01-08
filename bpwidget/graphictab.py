@@ -31,15 +31,15 @@ class CBPTabWidget(QtWidgets.QTabWidget):
     def _InitSignal(self):
         self.currentChanged.connect(self.S_OnBPTabChange)
 
-    def NewBlueprint(self, sPath=None):
+    def NewGraphic(self, sPath=None):
         if sPath:
-            bpID = interface.OpenBlueprint(sPath)
+            bpID = interface.OpenGraphic(sPath)
             bpView = view.CBlueprintView(bpID)
             sTabTitle = os.path.split(sPath)[1]
             tabIndex = self.addTab(bpView, sTabTitle)
             self.setTabToolTip(tabIndex, sPath)
         else:
-            bpID = interface.NewBlueprint()
+            bpID = interface.NewGraphic()
             bpView = view.CBlueprintView(bpID)
             self.m_ShowID += 1
             sTabTitle = "蓝图%s" % self.m_ShowID
@@ -57,7 +57,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         btn.clicked.connect(func)
         self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
 
-    def OpenBlueprint(self):
+    def OpenGraphic(self):
         sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", self.m_BPDir, filter=self.m_Filter)[0]
         if not sPath:
             return
@@ -65,22 +65,22 @@ class CBPTabWidget(QtWidgets.QTabWidget):
             bpID = self.m_Path2BPID[sPath]
             self.ChangeCurIndex(bpID)
             return
-        self.NewBlueprint(sPath)
+        self.NewGraphic(sPath)
 
     def ChangeCurIndex(self, bpID):
-        oView = GetUIMgr().GetBPView(bpID)
+        oView = GetUIMgr().GetGraphicView(bpID)
         iIndex = self.indexOf(oView)
         self.setCurrentIndex(iIndex)
 
-    def SaveBlueprint(self):
+    def SaveGraphic(self):
         oView = self.currentWidget()
-        bpID = oView.GetBPID()
+        bpID = oView.GetGraphicID()
         sPath = self.m_BPID2Path.get(bpID, None)
         if not sPath:
             sPath = QtWidgets.QFileDialog.getSaveFileName(self, "保存蓝图", self.m_BPDir, filter=self.m_Filter)[0]
             if not sPath:
                 return
-        interface.SaveBlueprint(bpID, sPath)
+        interface.SaveGraphic(bpID, sPath)
         sTabTitle = os.path.split(sPath)[1]
         iIndex = self.indexOf(oView)
         self.setTabText(iIndex, sTabTitle)
@@ -94,16 +94,16 @@ class CBPTabWidget(QtWidgets.QTabWidget):
             del self.m_Path2BPID[sPath]
 
     def S_CloseTab(self, bpID, _):
-        oView = GetUIMgr().GetBPView(bpID)
+        oView = GetUIMgr().GetGraphicView(bpID)
         if not oView:
             return
         iIndex = self.indexOf(oView)
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
         self.Delete(bpID)
-        GetUIMgr().DelBPView(bpID)
+        GetUIMgr().DelGraphicView(bpID)
 
     def S_OnBPTabChange(self):
         oView = self.currentWidget()
-        bpID = oView.GetBPID()
-        GetStatusMgr().SetCurBPID(bpID)
+        bpID = oView.GetGraphicID()
+        GetStatusMgr().SetCurGraphicID(bpID)

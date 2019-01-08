@@ -19,21 +19,21 @@ import bpdata.define as bddefine
 
 
 class CBlueprintView(QGraphicsView):
-    def __init__(self, bpID, parent=None):
+    def __init__(self, graphicID, parent=None):
         super(CBlueprintView, self).__init__(parent)
-        self.m_BPID = bpID
+        self.m_GraphicID = graphicID
         self.m_Scale = 1
         self.m_StartPos = None
         self.m_IsHasMove = False    # view视图是否有移动
         self.m_SelectPos = None     # 框选初始坐标
         self.m_RubberBand = None    # 框选框对象
-        self.m_Scene = scene.CBlueprintScene(bpID, self)
+        self.m_Scene = scene.CBlueprintScene(graphicID, self)
         self._InitUI()
-        GetUIMgr().AddBPView(bpID, self)
+        GetUIMgr().AddGraphicView(graphicID, self)
         self._LoadData()
 
     def __del__(self):
-        GetUIMgr().DelBPView(self.m_BPID)
+        GetUIMgr().DelGraphicView(self.m_GraphicID)
 
     def _InitUI(self):
         self.setWindowTitle("蓝图")
@@ -47,17 +47,17 @@ class CBlueprintView(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def _LoadData(self):
-        lstNode = interface.GetBPAttr(self.m_BPID, eddefine.BlueprintAttrName.NODE_LIST)
+        lstNode = interface.GetGraphicAttr(self.m_GraphicID, eddefine.GraphicAttrName.NODE_LIST)
         for nodeID in lstNode:
             tPos = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.POSITION)
             self.m_Scene.AddNodeUI(nodeID, tPos)
-        lstLine = interface.GetBPAttr(self.m_BPID, eddefine.BlueprintAttrName.LINE_LIST)
+        lstLine = interface.GetGraphicAttr(self.m_GraphicID, eddefine.GraphicAttrName.LINE_LIST)
         for lineID in lstLine:
             iPinID, oPinID = interface.GetLinePinInfo(lineID)
             self.m_Scene.AddLineUI(lineID, iPinID, oPinID)
 
-    def GetBPID(self):
-        return self.m_BPID
+    def GetGraphicID(self):
+        return self.m_GraphicID
 
     def mousePressEvent(self, event):
         super(CBlueprintView, self).mousePressEvent(event)
@@ -181,5 +181,5 @@ class CBlueprintView(QGraphicsView):
         return True
 
     def S_OnCreateNodeUI(self, sNodeName, tPos):
-        nodeID = interface.AddNode(self.m_BPID, sNodeName, tPos)
+        nodeID = interface.AddNode(self.m_GraphicID, sNodeName, tPos)
         self.m_Scene.AddNodeUI(nodeID, tPos)

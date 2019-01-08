@@ -29,39 +29,39 @@ def MyListRemove(dInfo, key, value):
 
 class CIDMgr:
     def __init__(self):
-        self.m_Node2BP = {}     # {nodeID:bpID}
+        self.m_Node2Graphic = {}     # {nodeID:graphicID}
         self.m_Pin2Node = {}    # {pinID:nodeID}
         self.m_PinLineInfo = {}  # {pinid:[lineid,]}
-        self.m_Line2BP = {}     # {lineID:bpID}
-        self.m_Var2BP = {}      # {varID:bpID}
+        self.m_Line2Graphic = {}     # {lineID:graphicID}
+        self.m_Var2Graphic = {}      # {varID:graphicID}
 
-    # ---------------------变量ID:蓝图ID---------------------------
-    def SetVar2BP(self, bpID, varID):
-        self.m_Var2BP[varID] = bpID
+    # ---------------------变量ID:图表ID---------------------------
+    def SetVar2Graphic(self, graphicID, varID):
+        self.m_Var2Graphic[varID] = graphicID
 
-    def GetBPByVar(self, varID):
-        bpID = self.m_Var2BP.get(varID, None)
-        assert bpID is not None
-        return bpID
+    def GetGraphicByVar(self, varID):
+        graphicID = self.m_Var2Graphic.get(varID, None)
+        assert graphicID is not None
+        return graphicID
 
-    def DelVar2BP(self, varID):
-        bpID = self.m_Var2BP.pop(varID, None)
-        assert bpID is not None
-        return bpID
+    def DelVar2Graphic(self, varID):
+        graphicID = self.m_Var2Graphic.pop(varID, None)
+        assert graphicID is not None
+        return graphicID
 
-    # ---------------------节点ID:蓝图ID---------------------------
-    def SetNode2BP(self, bpID, nodeID):
-        self.m_Node2BP[nodeID] = bpID
+    # ---------------------节点ID:图表ID---------------------------
+    def SetNode2Graphic(self, graphicID, nodeID):
+        self.m_Node2Graphic[nodeID] = graphicID
 
-    def GetBPByNode(self, nodeID):
-        bpID = self.m_Node2BP[nodeID]
-        assert bpID is not None
-        return bpID
+    def GetGraphicByNode(self, nodeID):
+        graphicID = self.m_Node2Graphic[nodeID]
+        assert graphicID is not None
+        return graphicID
 
-    def DelNode2BP(self, nodeID):
-        bpID = self.m_Node2BP.pop(nodeID, None)
-        assert bpID is not None
-        return bpID
+    def DelNode2Graphic(self, nodeID):
+        graphicID = self.m_Node2Graphic.pop(nodeID, None)
+        assert graphicID is not None
+        return graphicID
 
     # ----------------------引脚ID:节点ID--------------------------
     def SetPin2Node(self, nodeID, pinID):
@@ -77,19 +77,19 @@ class CIDMgr:
         assert nodeID is not None
         return nodeID
 
-    # ------------------------连线ID:蓝图ID------------------------
-    def SetLine2BP(self, bpID, lineID):
-        self.m_Line2BP[lineID] = bpID
+    # ------------------------连线ID:图表ID------------------------
+    def SetLine2Graphic(self, graphicID, lineID):
+        self.m_Line2Graphic[lineID] = graphicID
 
-    def GetBPByLine(self, lineID):
-        bpID = self.m_Line2BP.get(lineID, None)
-        assert bpID is not None
-        return bpID
+    def GetGraphicByLine(self, lineID):
+        graphicID = self.m_Line2Graphic.get(lineID, None)
+        assert graphicID is not None
+        return graphicID
 
-    def DelLine2BP(self, lineID):
-        bpID = self.m_Line2BP.pop(lineID, None)
-        assert bpID is not None
-        return bpID
+    def DelLine2Graphic(self, lineID):
+        graphicID = self.m_Line2Graphic.pop(lineID, None)
+        assert graphicID is not None
+        return graphicID
 
     # ------------------------引脚和连线------------------------
     def AddLine2Pin(self, oPinID, iPinID, lineID):

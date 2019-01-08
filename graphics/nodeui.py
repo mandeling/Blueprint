@@ -13,7 +13,6 @@ from PyQt5.QtCore import Qt
 from . import pinui
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
-from viewmgr.statusmgr import GetStatusMgr
 
 import bpdata.define as bddefine
 

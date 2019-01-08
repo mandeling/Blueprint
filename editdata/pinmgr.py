@@ -8,7 +8,6 @@
 import copy
 import misc
 from . import basemgr
-from bpdata import define as bddefine
 
 g_PinMgr = None
 
@@ -25,7 +24,6 @@ class CPinMgr(basemgr.CBaseMgr):
     def NewPin(self, oDefinePin):
         oPin = copy.deepcopy(oDefinePin)
         pinID = misc.uuid()
-        # oPin.SetAttr(bddefine.PinAttrName.ID, pinID)
         oPin.SetID(pinID)
         self.m_ItemInfo[pinID] = oPin
         return pinID

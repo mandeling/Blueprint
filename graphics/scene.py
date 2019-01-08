@@ -20,9 +20,9 @@ from editdata.idmgr import GetIDMgr
 
 
 class CBlueprintScene(QGraphicsScene):
-    def __init__(self, bpID, parent=None):
+    def __init__(self, graphicID, parent=None):
         super(CBlueprintScene, self).__init__(parent)
-        self.m_BPID = bpID
+        self.m_GraphicID = graphicID
         self.m_PinInfo = {}
         self.m_TempPinLine = None   # 临时引脚连线
         self.m_IsNodeMove = False   # 节点是否有移动
@@ -48,8 +48,8 @@ class CBlueprintScene(QGraphicsScene):
         GetSignal().DEL_LINE.connect(self.S_OnDelLineUI)
         GetSignal().DEL_NODE.connect(self.S_OnDelNodeUI)
 
-    def GetBPID(self):
-        return self.m_BPID
+    def GetGraphicID(self):
+        return self.m_GraphicID
 
     def mousePressEvent(self, event):
         super(CBlueprintScene, self).mousePressEvent(event)
@@ -63,7 +63,7 @@ class CBlueprintScene(QGraphicsScene):
             if item and isinstance(item, nodeui.CNodeUI):
                 self.m_StartPos = event.scenePos()
             else:
-                GetStatusMgr().ClearNode(self.m_BPID)
+                GetStatusMgr().ClearNode(self.m_GraphicID)
 
     def mouseMoveEvent(self, event):
         super(CBlueprintScene, self).mouseMoveEvent(event)
@@ -78,9 +78,9 @@ class CBlueprintScene(QGraphicsScene):
             return
         if self.m_StartPos:
             nodeID = item.GetID()
-            selectNode = GetStatusMgr().GetSelectNode(self.m_BPID)
+            selectNode = GetStatusMgr().GetSelectNode(self.m_GraphicID)
             if nodeID not in selectNode:
-                GetStatusMgr().SelectOneNode(self.m_BPID, nodeID)
+                GetStatusMgr().SelectOneNode(self.m_GraphicID, nodeID)
             self.SetNodeMove(event.scenePos() - self.m_StartPos)
             self.m_StartPos = event.scenePos()
             self.m_IsNodeMove = True
@@ -100,14 +100,14 @@ class CBlueprintScene(QGraphicsScene):
         if event.button() == Qt.LeftButton:
             nodeID = item.GetID()
             if event.modifiers() == Qt.ControlModifier:
-                GetStatusMgr().ChangeSelectNode(self.m_BPID, nodeID)
+                GetStatusMgr().ChangeSelectNode(self.m_GraphicID, nodeID)
             else:
-                GetStatusMgr().SelectOneNode(self.m_BPID, nodeID)
+                GetStatusMgr().SelectOneNode(self.m_GraphicID, nodeID)
 
     def keyPressEvent(self, event):
         super(CBlueprintScene, self).keyPressEvent(event)
         if event.key() == Qt.Key_Delete:
-            lstNode = GetStatusMgr().GetSelectNode(self.m_BPID)
+            lstNode = GetStatusMgr().GetSelectNode(self.m_GraphicID)
             for nodeID in lstNode:
                 self.OnDelNodeUI(nodeID)
 
@@ -119,20 +119,20 @@ class CBlueprintScene(QGraphicsScene):
     def RubberBandSelecNodeUI(self, path, mode, trans):
         selectItems = self.items(path, mode, Qt.DescendingOrder, trans)
         allItems = self.items()
-        selectNode = GetStatusMgr().GetSelectNode(self.m_BPID)
+        selectNode = GetStatusMgr().GetSelectNode(self.m_GraphicID)
         for item in allItems:
             if not isinstance(item, nodeui.CNodeUI):
                 continue
             nodeID = item.m_NodeID
             if item in selectItems:
                 if nodeID not in selectNode:
-                    GetStatusMgr().ChangeSelectNode(self.m_BPID, nodeID)
+                    GetStatusMgr().ChangeSelectNode(self.m_GraphicID, nodeID)
             elif nodeID in selectNode:
-                GetStatusMgr().DelSelectNode(self.m_BPID, nodeID)
+                GetStatusMgr().DelSelectNode(self.m_GraphicID, nodeID)
 
     # ----------------------node-------------------------------------
     def SetNodeMove(self, offpos):
-        for nodeID in GetStatusMgr().GetSelectNode(self.m_BPID):
+        for nodeID in GetStatusMgr().GetSelectNode(self.m_GraphicID):
             oNodeUI = GetUIMgr().GetNodeUI(nodeID)
             oNodeUI.SetMouseMovePos(offpos)
 
@@ -145,12 +145,12 @@ class CBlueprintScene(QGraphicsScene):
     def OnDelNodeUI(self, nodeID):
         interface.DelNode(nodeID)
 
-    def S_OnDelNodeUI(self, bpID, nodeID):
-        if bpID == self.m_BPID:
+    def S_OnDelNodeUI(self, graphicID, nodeID):
+        if graphicID == self.m_GraphicID:
             self._DelNodeUI(nodeID)
 
     def _DelNodeUI(self, nodeID):
-        GetStatusMgr().DelSelectNode(self.m_BPID, nodeID)
+        GetStatusMgr().DelSelectNode(self.m_GraphicID, nodeID)
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)
         if oNodeUI:
             self.removeItem(oNodeUI)
@@ -172,7 +172,7 @@ class CBlueprintScene(QGraphicsScene):
                     inputPinID, outputPinID = sPinID, ePinID
                 else:
                     inputPinID, outputPinID = ePinID, sPinID
-                lineID = interface.AddLine(self.m_BPID, outputPinID, inputPinID)
+                lineID = interface.AddLine(self.m_GraphicID, outputPinID, inputPinID)
                 self.AddLineUI(lineID, inputPinID, outputPinID)
 
         self.removeItem(self.m_TempPinLine)
@@ -188,8 +188,8 @@ class CBlueprintScene(QGraphicsScene):
     def OnDelLineUI(self, lineID):
         interface.DelLine(lineID)
 
-    def S_OnDelLineUI(self, bpID, lineID):
-        if bpID == self.m_BPID:
+    def S_OnDelLineUI(self, graphicID, lineID):
+        if graphicID == self.m_GraphicID:
             self._DelLineUI(lineID)
 
     def _DelLineUI(self, lineID):
