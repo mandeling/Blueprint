@@ -15,6 +15,12 @@ from PyQt5.QtCore import QSize, Qt, QMimeData, QRectF
 from editdata import interface
 from .. import define
 
+FLOD_BTN_QSS = """
+QPushButton {
+    background:transparent;
+}
+"""
+
 
 class CBPAttrMimeData(QMimeData):
     def __init__(self):
@@ -40,6 +46,7 @@ class CExpandWidget(QWidget):
     def _InitUI(self):
         HBox = QHBoxLayout(self)
         self.m_FoldBtn = QPushButton(self)
+        self.m_FoldBtn.setStyleSheet(FLOD_BTN_QSS)
         lable = QLabel(self.m_AttrType, self)
         item = QSpacerItem(67, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         addBtn = QPushButton("+", self)
