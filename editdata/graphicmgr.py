@@ -10,7 +10,8 @@ import misc
 from . import basemgr
 from . import define as eddefine
 from .idmgr import GetIDMgr
-from .bpmgr import GetBPMgr
+from .linemgr import GetLineMgr
+from .nodemgr import GetNodeMgr
 
 g_GraphicMgr = None
 
@@ -24,6 +25,7 @@ def GetGraphicMgr():
 
 class CGraphicMgr(basemgr.CBaseMgr):
     def NewGraphic(self, bpID):
+        from .bpmgr import GetBPMgr
         graphicID = misc.uuid()
         sName = "Graphic-%s" % self.NewID()
         oGraphic = CGraphic(graphicID, sName)
@@ -48,24 +50,6 @@ class CGraphicMgr(basemgr.CBaseMgr):
         graphicID = GetIDMgr().GetGraphicByLine(lineID)
         self.DelFromAttrList(graphicID, eddefine.GraphicAttrName.LINE_LIST, lineID)
 
-    def DelGraphic(self, graphicID):
-        from . import interface
-        oGraphic = self.m_ItemInfo.get(graphicID, None)
-        if not oGraphic:
-            return
-        lstVar = oGraphic.GetAttr(eddefine.GraphicAttrName.VARIABLE_LIST)
-        for varID in lstVar:
-            interface.DelVariable(varID)
-        lstLine = oGraphic.GetAttr(eddefine.GraphicAttrName.LINE_LIST)
-        for lineID in lstLine:
-            interface.DelLine(lineID)
-        lstNode = oGraphic.GetAttr(eddefine.GraphicAttrName.NODE_LIST)
-        for nodeID in lstNode:
-            interface.DelNode(nodeID)
-        self.DelItem(graphicID)
-        GetBPMgr().DelGraphic4BP(graphicID)
-        bpID = GetIDMgr().DelGraphic2BP(graphicID)
-
     def NewObj(self, ID):
         oItem = CGraphic(ID)
         return oItem
@@ -79,13 +63,21 @@ class CGraphic(basemgr.CBase):
             eddefine.GraphicAttrName.NAME: sName,
             eddefine.GraphicAttrName.LINE_LIST: [],
             eddefine.GraphicAttrName.NODE_LIST: [],
-            eddefine.GraphicAttrName.VARIABLE_LIST: [],
         }
 
+    def Delete(self):
+        from . import interface
+        from .bpmgr import GetBPMgr
+        lstLine = self.GetAttr(eddefine.GraphicAttrName.LINE_LIST)
+        for lineID in lstLine:
+            interface.DelLine(lineID)
+        lstNode = self.GetAttr(eddefine.GraphicAttrName.NODE_LIST)
+        for nodeID in lstNode:
+            interface.DelNode(nodeID)
+        GetBPMgr().DelGraphic4BP(self.m_ID)
+        bpID = GetIDMgr().DelGraphic2BP(self.m_ID)
+
     def GetSaveInfo(self):
-        from .linemgr import GetLineMgr
-        from .nodemgr import GetNodeMgr
-        from .variablemgr import GetVariableMgr
         dSaveInfo = super(CGraphic, self).GetSaveInfo()
         lstLine = self.GetAttr(eddefine.GraphicAttrName.LINE_LIST)
         for lineID in lstLine:
@@ -95,21 +87,10 @@ class CGraphic(basemgr.CBase):
         for nodeID in lstNode:
             dTmp = GetNodeMgr().GetItemSaveInfo(nodeID)
             dSaveInfo.update(dTmp)
-        lstVariable = self.GetAttr(eddefine.GraphicAttrName.VARIABLE_LIST)
-        for varID in lstVariable:
-            dTmp = GetVariableMgr().GetItemSaveInfo(varID)
-            dSaveInfo.update(dTmp)
         return dSaveInfo
 
     def SetLoadInfo(self, dInfo):
-        from .linemgr import GetLineMgr
-        from .nodemgr import GetNodeMgr
-        from .variablemgr import GetVariableMgr
         super(CGraphic, self).SetLoadInfo(dInfo)
-        lstVariable = self.GetAttr(eddefine.GraphicAttrName.VARIABLE_LIST)
-        for varID in lstVariable:
-            GetVariableMgr().LoadItemInfo(varID, dInfo)
-            GetIDMgr().SetVar2Graphic(self.m_ID, varID)
         lstNode = self.GetAttr(eddefine.GraphicAttrName.NODE_LIST)
         for nodeID in lstNode:
             GetNodeMgr().LoadItemInfo(nodeID, dInfo)

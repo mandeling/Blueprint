@@ -12,7 +12,6 @@ from .idmgr import GetIDMgr
 from bpdata import define as bddefine
 from signalmgr import GetSignal
 from . import basemgr
-from .graphicmgr import GetGraphicMgr
 
 g_NodeMgr = None
 
@@ -44,6 +43,7 @@ class CNodeMgr(basemgr.CBaseMgr):
         所以每创建一个节点，复制节点以及pin
         """
         from . import interface
+        from .graphicmgr import GetGraphicMgr
         oDefineNode = self.m_DefineInfo[sNodeName]
         oNode = copy.deepcopy(oDefineNode)
         nodeID = misc.uuid()
@@ -62,6 +62,7 @@ class CNodeMgr(basemgr.CBaseMgr):
 
     def DelNode(self, nodeID):
         from . import interface
+        from .graphicmgr import GetGraphicMgr
         oNode = self.m_ItemInfo.get(nodeID, None)
         if not oNode:
             return

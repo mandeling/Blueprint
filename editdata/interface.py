@@ -25,7 +25,15 @@ def NewBlueprint():
 
 
 def DelBlueprint(bpID):
-    GetBPMgr().DelBP(bpID)
+    GetBPMgr().DelItem(bpID)
+
+
+def GetBlueprintAttr(bpID, sAttrName):
+    return GetBPMgr().GetItemAttr(bpID, sAttrName)
+
+
+def SetBlueprintAttr(bpID, sAttrName, value):
+    GetBPMgr().SetItemAttr(bpID, sAttrName, value)
 
 
 def OpenBlueprint(sPath):
@@ -50,7 +58,7 @@ def NewGraphic(bpID):
 
 
 def DelGraphic(graphicID):
-    GetGraphicMgr().DelGraphic(graphicID)
+    GetGraphicMgr().DelItem(graphicID)
 
 
 def OpenGraphic(sPath):
@@ -77,9 +85,9 @@ def GetVariableData():
     return oVariableMgr.GetAllVarInfo()
 
 
-def NewVariable(sName, iType=bddefine.Type.INT, value=None):
-    oVariableMgr = GetVariableMgr()
-    oVariableMgr.NewVariable(sName, iType, value)
+def NewVariable():
+    varID = GetVariableMgr().NewVariable()
+    return varID
 
 
 def DelVariable(varID):

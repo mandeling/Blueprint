@@ -27,38 +27,23 @@ class CVariableMgr(basemgr.CBaseMgr):
         super(CVariableMgr, self).__init__()
         self.InitTestData()
 
-    def NewVariable(self, sName, iType, value):
-        if value is None:
-            value = bddefine.GetDefauleValue(iType)
+    def NewVariable(self):
+        iType = bddefine.Type.INT
+        sName = "NewVar%s" % self.NewID()
         varID = misc.uuid()
-        self.m_ItemInfo[varID] = CVariable(varID, sName, iType, value)
+        self.m_ItemInfo[varID] = CVariable(varID, sName, iType, 0)
+        return varID
 
     def InitTestData(self):
         for i in range(10):
             sName = "Test%s" % i
             iType = random.randint(1, 3)
             value = random.randint(-999999, 999999)
-            self.NewVariable(sName, iType, value)
+            varID = misc.uuid()
+            self.m_ItemInfo[varID] = CVariable(varID, sName, iType, value)
 
     def GetAllVarInfo(self):
         return copy.deepcopy(self.m_ItemInfo)
-
-    # TODO
-    # def SetAttr(self, varID, sAttrName, value):
-    #     oData = self.m_ItemInfo[varID]
-    #     oData.SetAttr(sAttrName, value)
-    #     if sAttrName == define.VariableAttrName.NAME:
-    #         self.m_ItemInfo[value] = oData
-    #         del self.m_ItemInfo[varID]
-
-    # def GetAttr(self, varID, sAttrName):
-    #     oData = self.m_ItemInfo[varID]
-    #     return oData.GetAttr(sAttrName)
-
-    def LoadItemInfo(self, varID, dInfo):
-        oVar = CVariable(varID)
-        oVar.SetLoadInfo(dInfo)
-        self.m_ItemInfo[varID] = oVar
 
 
 class CVariable(basemgr.CBase):

@@ -11,7 +11,7 @@ BP_ATTR_NAME_PREFIX = "bp_attr_name:"
 class BlueprintAttrName:
     ID = BP_ATTR_NAME_PREFIX + "id"
     GRAPHIC_LIST = BP_ATTR_NAME_PREFIX + "graphic_list"
-
+    VARIABLE_LIST = BP_ATTR_NAME_PREFIX + "variable_list"
 
 
 # ----------------------graphic-------------------------------
@@ -23,7 +23,6 @@ class GraphicAttrName:
     NAME = GRAPHIC_ATTR_NAME_PREFIX + "name"
     LINE_LIST = GRAPHIC_ATTR_NAME_PREFIX + "line_list"
     NODE_LIST = GRAPHIC_ATTR_NAME_PREFIX + "node_list"
-    VARIABLE_LIST = GRAPHIC_ATTR_NAME_PREFIX + "variable_list"
 
 
 # ----------------------Variable-------------------------------

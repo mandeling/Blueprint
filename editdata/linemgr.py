@@ -10,7 +10,6 @@ import misc
 from signalmgr import GetSignal
 from .idmgr import GetIDMgr
 from . import define, basemgr
-from .graphicmgr import GetGraphicMgr
 
 g_LineMgr = None
 
@@ -26,6 +25,7 @@ class CLineMgr(basemgr.CBaseMgr):
 
     def NewLine(self, graphicID, oPinID, iPinID):
         # 删除input槽之前的连接
+        from .graphicmgr import GetGraphicMgr
         lstLine = GetIDMgr().GetAllLineByPin(iPinID)
         for lineID in lstLine:
             self.DelLine(lineID)
@@ -38,6 +38,7 @@ class CLineMgr(basemgr.CBaseMgr):
         return lineID
 
     def DelLine(self, lineID):
+        from .graphicmgr import GetGraphicMgr
         oLine = self.m_ItemInfo[lineID]
         oPinID = oLine.GetAttr(define.LineAttrName.OUTPUT_PINID)
         iPinID = oLine.GetAttr(define.LineAttrName.INPUT_PINID)

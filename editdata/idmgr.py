@@ -34,7 +34,7 @@ class CIDMgr:
         self.m_Pin2Node = {}    # {pinID:nodeID}
         self.m_PinLineInfo = {}  # {pinid:[lineid,]}
         self.m_Line2Graphic = {}     # {lineID:graphicID}
-        self.m_Var2Graphic = {}      # {varID:graphicID}
+        self.m_Var2BP = {}      # {varID:bpID}
 
     # ---------------------图表ID:蓝图ID---------------------------
     def SetGraphic2BP(self, bpID, graphicID):
@@ -51,16 +51,16 @@ class CIDMgr:
         return bpID
 
     # ---------------------变量ID:图表ID---------------------------
-    def SetVar2Graphic(self, graphicID, varID):
-        self.m_Var2Graphic[varID] = graphicID
+    def SetVar2BP(self, graphicID, varID):
+        self.m_Var2BP[varID] = graphicID
 
-    def GetGraphicByVar(self, varID):
-        graphicID = self.m_Var2Graphic.get(varID, None)
+    def GetBPByVar(self, varID):
+        graphicID = self.m_Var2BP.get(varID, None)
         assert graphicID is not None
         return graphicID
 
-    def DelVar2Graphic(self, varID):
-        graphicID = self.m_Var2Graphic.pop(varID, None)
+    def DelVar2BP(self, varID):
+        graphicID = self.m_Var2BP.pop(varID, None)
         assert graphicID is not None
         return graphicID
 

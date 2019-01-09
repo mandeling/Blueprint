@@ -20,8 +20,9 @@ class CBPTabWidget(QtWidgets.QTabWidget):
     m_Filter = "*.xh"
     m_BPDir = "./bpfile"
 
-    def __init__(self, parent=None):
+    def __init__(self, bpID, parent=None):
         super(CBPTabWidget, self).__init__(parent)
+        self.m_BPID = bpID
         self.setMovable(True)
         self.m_ShowID = 0
         self.m_BPID2Path = {}

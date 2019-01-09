@@ -18,13 +18,14 @@ from . import define
 class CVariableUI(QtWidgets.QWidget, Ui_Form):
     m_Name = define.BP_ATTR_VARIABLE
 
-    def __init__(self, sName, parent=None):
+    def __init__(self, bpID, parent=None):
         super(CVariableUI, self).__init__(parent)
         self.setupUi(self)
+        self.m_BPID = bpID
         self.m_ID = 0
         self.m_ItemInfo = {}
         self.InitUI()
-        self.InitConnect()
+        # self.InitConnect()
 
     def InitConnect(self):
         self.pushButton_add.clicked.connect(self.S_NewVariable)
@@ -34,15 +35,15 @@ class CVariableUI(QtWidgets.QWidget, Ui_Form):
     def InitUI(self):
         self.setWindowTitle(self.m_Name)
         self.treeWidget.headerItem().setText(0, self.m_Name)
-        # for sName, _ in self.m_Info.items():
-        #     iType = interface.GetVariableAttr(sName, eddefine.VariableAttrName.TYPE)
-        #     self.m_ItemInfo[sName] = CTreeWidgetItem(sName, iType, self.treeWidget)
+        lstVar = interface.GetBlueprintAttr(self.m_BPID, eddefine.BlueprintAttrName.VARIABLE_LIST)
+        for varID in lstVar:
+            self.m_ItemInfo[varID] = CTreeWidgetItem(varID, self.treeWidget)
 
     def S_NewVariable(self):
         self.m_ID += 1
         sName = "NewVar_%s" % self.m_ID
         iType = bddefine.Type.INT
-        interface.NewVariable(sName, iType)
+        interface.NewVariable()
         self.m_ItemInfo[sName] = CTreeWidgetItem(sName, iType, self.treeWidget)
         uisignal.GetSignal().VARIABLE_OPEN.emit(sName)
 
@@ -63,10 +64,11 @@ class CVariableUI(QtWidgets.QWidget, Ui_Form):
 
 
 class CTreeWidgetItem(QtWidgets.QTreeWidgetItem):
-    def __init__(self, sName, iType=bddefine.Type.INT, parent=None):
+    def __init__(self, varID, parent=None):
         super(CTreeWidgetItem, self).__init__(parent)
-        self.m_Name = sName
-        self.m_Type = iType  # 变量类型
+        self.m_VarID = varID
+        self.m_Name = interface.GetVariableAttr(varID, eddefine.VariableAttrName.NAME)
+        self.m_Type = interface.GetVariableAttr(varID, eddefine.VariableAttrName.TYPE)
         self.setFlags(self.flags() | QtCore.Qt.ItemIsEditable)
         self.SetMyName()
         self.SetMyIcon()
