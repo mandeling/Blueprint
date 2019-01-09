@@ -9,14 +9,10 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout,\
     QTreeWidget, QPushButton, QSpacerItem, QSizePolicy, \
     QTreeWidgetItem, QLabel, QApplication
-
 from PyQt5.QtGui import QIcon, QPixmap, QDrag, QPainter, QTextOption, QImage
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRectF
-from signalmgr import GetSignal
 
 from editdata import interface
-from bpdata import define as bddefine
-from editdata import define as eddefine
 from .. import define
 
 
@@ -108,6 +104,9 @@ class CBaseAttrTree(QTreeWidget):
         super(CBaseAttrTree, self).mousePressEvent(event)
         if event.button() == Qt.LeftButton:
             self.m_DragPosition = event.pos()
+            index = self.indexAt(event.pos())
+            if not index.isValid():
+                self.clearSelection()
 
     def mouseMoveEvent(self, event):
         super(CBaseAttrTree, self).mouseMoveEvent(event)
