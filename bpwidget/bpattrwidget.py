@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout,\
     QTreeWidget, QPushButton, QSpacerItem, QSizePolicy, \
     QTreeWidgetItem, QLabel
 
-from .bpattrui import variabletree
+from .bpattrui import variabletree, graphictree
 from . import define
 from .bpattrui import basetree
 
@@ -20,7 +20,7 @@ class CBPAttrWidget(QWidget):
         self.m_TreeWidget = None
         self.m_BPID = bpID
         self._InitUI()
-        self._InitVariableUI()
+        self._InitAttrUI()
 
     def _InitUI(self):
         self.m_TreeWidget = QTreeWidget(self)
@@ -30,14 +30,18 @@ class CBPAttrWidget(QWidget):
         self.setLayout(vBox)
         self.m_TreeWidget.setIndentation(0)
 
-    def _InitVariableUI(self):
-        item = QTreeWidgetItem()
-        self.m_TreeWidget.addTopLevelItem(item)
-        oHeadWidget = basetree.CExpandWidget(item, define.BP_ATTR_VARIABLE, self.m_BPID)
-        self.m_TreeWidget.setItemWidget(item, 0, oHeadWidget)
+    def _InitAttrUI(self):
+        for (sType, cls) in [
+            (define.BP_ATTR_GRAPHIC, graphictree.CGraphicAttrTree),
+            (define.BP_ATTR_VARIABLE, variabletree.CVariableAttrTree),
+        ]:
+            item = QTreeWidgetItem()
+            self.m_TreeWidget.addTopLevelItem(item)
+            oHeadWidget = basetree.CExpandWidget(item, sType, self.m_BPID)
+            self.m_TreeWidget.setItemWidget(item, 0, oHeadWidget)
 
-        section = QTreeWidgetItem(item)
-        section.setDisabled(True)
-        oWidget = variabletree.CVariableAttrTree(self.m_BPID, self)
-        self.m_TreeWidget.setItemWidget(section, 0, oWidget)
-        item.addChild(section)
+            section = QTreeWidgetItem(item)
+            section.setDisabled(True)
+            oWidget = cls(self.m_BPID, self)
+            self.m_TreeWidget.setItemWidget(section, 0, oWidget)
+            item.addChild(section)

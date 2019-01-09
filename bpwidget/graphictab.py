@@ -14,6 +14,8 @@ from graphics import view
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
 from viewmgr.statusmgr import GetStatusMgr
+from signalmgr import GetSignal
+from editdata import define as eddefine
 
 
 class CBPTabWidget(QtWidgets.QTabWidget):
@@ -24,87 +26,44 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         super(CBPTabWidget, self).__init__(parent)
         self.m_BPID = bpID
         self.setMovable(True)
+        self.m_GraphicUI = {}
         self.m_ShowID = 0
-        self.m_BPID2Path = {}
-        self.m_Path2BPID = {}
         self._InitSignal()
 
     def _InitSignal(self):
         self.currentChanged.connect(self.S_OnBPTabChange)
+        GetSignal().NEW_GRAPHIC.connect(self.S_NewGraphic)
 
-    def NewGraphic(self, sPath=None):
-        if sPath:
-            bpID = interface.OpenGraphic(sPath)
-            bpView = view.CBlueprintView(bpID)
-            sTabTitle = os.path.split(sPath)[1]
-            tabIndex = self.addTab(bpView, sTabTitle)
-            self.setTabToolTip(tabIndex, sPath)
-        else:
-            bpID = interface.NewGraphic()
-            bpView = view.CBlueprintView(bpID)
-            self.m_ShowID += 1
-            sTabTitle = "蓝图%s" % self.m_ShowID
-            tabIndex = self.addTab(bpView, sTabTitle)
-
+    def S_NewGraphic(self, bpID, graphicID):
+        if self.m_BPID != bpID:
+            return
+        if graphicID in self.m_GraphicUI:
+            oView = self.currentWidget()
+            iIndex = self.indexOf(oView)
+            self.setCurrentIndex(iIndex)
+            return
+        bpView = view.CBlueprintView(graphicID)
+        sTabTitle = interface.GetGraphicAttr(graphicID, eddefine.GraphicAttrName.NAME)
+        tabIndex = self.addTab(bpView, sTabTitle)
         self.setCurrentIndex(tabIndex)
-        self.m_BPID2Path[bpID] = sPath
-        if sPath:
-            self.m_Path2BPID[sPath] = bpID
+        self.m_GraphicUI[graphicID] = bpView
 
         btn = QtWidgets.QPushButton("x")
         btn.setFlat(True)
         btn.setMaximumSize(16, 16)
-        func = functor.Functor(self.S_CloseTab, bpID)
+        func = functor.Functor(self.S_CloseTab, graphicID)
         btn.clicked.connect(func)
         self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
 
-    def OpenGraphic(self):
-        sPath = QtWidgets.QFileDialog.getOpenFileName(self, "打开蓝图", self.m_BPDir, filter=self.m_Filter)[0]
-        if not sPath:
-            return
-        if sPath in self.m_Path2BPID:
-            bpID = self.m_Path2BPID[sPath]
-            self.ChangeCurIndex(bpID)
-            return
-        self.NewGraphic(sPath)
-
-    def ChangeCurIndex(self, bpID):
-        oView = GetUIMgr().GetGraphicView(bpID)
-        iIndex = self.indexOf(oView)
-        self.setCurrentIndex(iIndex)
-
-    def SaveGraphic(self):
-        oView = self.currentWidget()
-        bpID = oView.GetGraphicID()
-        sPath = self.m_BPID2Path.get(bpID, None)
-        if not sPath:
-            sPath = QtWidgets.QFileDialog.getSaveFileName(self, "保存蓝图", self.m_BPDir, filter=self.m_Filter)[0]
-            if not sPath:
-                return
-        interface.SaveGraphic(bpID, sPath)
-        sTabTitle = os.path.split(sPath)[1]
-        iIndex = self.indexOf(oView)
-        self.setTabText(iIndex, sTabTitle)
-        self.setTabToolTip(iIndex, sPath)
-
-    def Delete(self, bpID):
-        if bpID not in self.m_BPID2Path:
-            return
-        sPath = self.m_BPID2Path.pop(bpID)
-        if sPath in self.m_Path2BPID:
-            del self.m_Path2BPID[sPath]
-
-    def S_CloseTab(self, bpID, _):
-        oView = GetUIMgr().GetGraphicView(bpID)
+    def S_CloseTab(self, graphicID, _):
+        oView = self.m_GraphicUI.pop(graphicID, None)
         if not oView:
             return
         iIndex = self.indexOf(oView)
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
-        self.Delete(bpID)
-        GetUIMgr().DelGraphicView(bpID)
 
     def S_OnBPTabChange(self):
         oView = self.currentWidget()
-        bpID = oView.GetGraphicID()
-        GetStatusMgr().SetCurGraphicID(bpID)
+        graphicID = oView.GetGraphicID()
+        GetStatusMgr().SetCurGraphicID(graphicID)

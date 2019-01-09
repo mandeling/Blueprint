@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout,\
     QTreeWidget, QPushButton, QSpacerItem, QSizePolicy, \
     QTreeWidgetItem, QLabel, QApplication
 
-from PyQt5.QtGui import QIcon, QPixmap, QDrag, QPainter, QTextOption
+from PyQt5.QtGui import QIcon, QPixmap, QDrag, QPainter, QTextOption, QImage
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRectF
 from signalmgr import GetSignal
 
@@ -21,8 +21,8 @@ from .. import define
 
 
 class CBPAttrMimeData(QMimeData):
-    def __init__(self, parent=None):
-        super(CBPAttrMimeData, self).__init__(parent)
+    def __init__(self):
+        super(CBPAttrMimeData, self).__init__()
         self.m_ItemInfo = None
 
     def SetItemInfo(self, tInfo):
@@ -72,6 +72,8 @@ class CExpandWidget(QWidget):
     def S_OnAdd(self):
         if self.m_AttrType == define.BP_ATTR_VARIABLE:
             interface.NewVariable(self.m_BPID)
+        elif self.m_AttrType == define.BP_ATTR_GRAPHIC:
+            interface.NewGraphic(self.m_BPID)
 
 
 class CBaseAttrTree(QTreeWidget):
@@ -83,6 +85,7 @@ class CBaseAttrTree(QTreeWidget):
         self.m_ItemInfo = {}
         self.m_DragPosition = None
         self.setHeaderHidden(True)
+        self._InitSignal()
         self._LoadItem()
 
     def _LoadItem(self):
@@ -120,9 +123,14 @@ class CBaseAttrTree(QTreeWidget):
 
         pixMap = QPixmap(120, 18)
         painter = QPainter(pixMap)
-        painter.drawText(QRectF(0, 0, 120, 18), "drag", QTextOption(Qt.AlignVCenter))
+        image = QImage(":/icon/btn_1.png")
+        painter.drawImage(QRectF(0, 0, 16, 16), image)
+        # painter.drawText(QRectF(0, 0, 120, 18), "drag", QTextOption(Qt.AlignVCenter))
         drag.setPixmap(pixMap)
         drag.exec(Qt.MoveAction)
+        del painter
+        del pixMap
+        del drag
 
     def mouseReleaseEvent(self, event):
         super(CBaseAttrTree, self).mouseReleaseEvent(event)
@@ -144,7 +152,7 @@ class CBaseAttrItem(QTreeWidgetItem):
     def SetName(self, sName=None):
         if not sName:
             sName = self.GetName()
-        self.setText(0, self.m_Name)
+        self.setText(0, sName)
 
     def GetInfo(self):
         return self.m_AttrType, self.m_ID

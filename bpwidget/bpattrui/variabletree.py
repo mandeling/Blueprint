@@ -17,15 +17,12 @@ from signalmgr import GetSignal
 class CVariableAttrTree(basetree.CBaseAttrTree):
     m_BPAttrListName = eddefine.BlueprintAttrName.VARIABLE_LIST
 
-    def _GetLoadItemList(self):
-        lstVar = interface.GetBlueprintAttr(self.m_BPID, eddefine.BlueprintAttrName.VARIABLE_LIST)
-        return lstVar
-
     def _New(self, ID):
         obj = CVariableAttrItem(ID, self)
         return obj
 
     def _InitSignal(self):
+        super(CVariableAttrTree, self)._InitSignal()
         GetSignal().NEW_VARIABLE.connect(self.S_NewItem)
 
 
@@ -34,7 +31,7 @@ class CVariableAttrItem(basetree.CBaseAttrItem):
 
     def __init__(self, ID, parent=None):
         super(CVariableAttrItem, self).__init__(ID, parent)
-        self.SetMyIcon()
+        self.SetIcon()
 
     def GetName(self):
         return interface.GetVariableAttr(self.m_ID, eddefine.VariableAttrName.NAME)

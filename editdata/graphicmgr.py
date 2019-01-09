@@ -12,6 +12,7 @@ from . import define as eddefine
 from .idmgr import GetIDMgr
 from .linemgr import GetLineMgr
 from .nodemgr import GetNodeMgr
+from signalmgr import GetSignal
 
 g_GraphicMgr = None
 
@@ -32,6 +33,7 @@ class CGraphicMgr(basemgr.CBaseMgr):
         GetIDMgr().SetGraphic2BP(bpID, graphicID)
         GetBPMgr().AddGraphic2BP(graphicID)
         self.m_ItemInfo[graphicID] = oGraphic
+        GetSignal().NEW_GRAPHIC.emit(bpID, graphicID)
         return graphicID
 
     def AddNode2Graphic(self, nodeID):

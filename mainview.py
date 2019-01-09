@@ -84,7 +84,7 @@ class CMainView(QMainWindow):
 
     def S_NewBlueprint(self):
         bpID = interface.NewBlueprint()
-        GetSignal().NEW_BLUEPRINT.emit(bpID)
+        GetSignal().UI_NEW_BLUEPRINT.emit(bpID)
 
     def S_SaveAllBlueprint(self):
         pass

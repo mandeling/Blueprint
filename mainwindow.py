@@ -28,7 +28,7 @@ class CMainWindow(QTabWidget):
         self.addTab(oMainTab, "主窗口")
 
     def _InitSignal(self):
-        GetSignal().NEW_BLUEPRINT.connect(self.S_NewBlueprint)
+        GetSignal().UI_NEW_BLUEPRINT.connect(self.S_NewBlueprint)
 
     def _NewID(self):
         self.m_ID += 1
