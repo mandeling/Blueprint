@@ -6,3 +6,5 @@
 """
 
 BP_ATTR_VARIABLE = "变量"
+BP_ATTR_EVENT = "事件"
+BP_ATTR_GRAPHIC = "图表"

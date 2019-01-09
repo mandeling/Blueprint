@@ -8,33 +8,10 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout,\
     QTreeWidget, QPushButton, QSpacerItem, QSizePolicy, \
     QTreeWidgetItem, QLabel
-from . import variableui
 
-
-class CExpandWidget(QWidget):
-    def __init__(self, item, parent=None):
-        super(CExpandWidget, self).__init__(parent)
-        self._InitUI()
-        self.m_Item = item
-
-    def _InitUI(self):
-        HBox = QHBoxLayout(self)
-        foldBtn = QPushButton("fold", self)
-        lable = QLabel("变量", self)
-        item = QSpacerItem(67, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        addBtn = QPushButton("+", self)
-        HBox.addWidget(foldBtn)
-        HBox.addWidget(lable)
-        HBox.addItem(item)
-        HBox.addWidget(addBtn)
-
-        foldBtn.clicked.connect(self.S_OnFold)
-
-    def S_OnFold(self):
-        if self.m_Item.isExpanded():
-            self.m_Item.setExpanded(False)
-        else:
-            self.m_Item.setExpanded(True)
+from .bpattrui import variabletree
+from . import define
+from .bpattrui import basetree
 
 
 class CBPAttrWidget(QWidget):
@@ -50,19 +27,17 @@ class CBPAttrWidget(QWidget):
         self.m_TreeWidget.setHeaderHidden(True)
         vBox = QVBoxLayout(self)
         vBox.addWidget(self.m_TreeWidget)
-        # vBox.addWidget(variableui.CVariableUI(self))
         self.setLayout(vBox)
         self.m_TreeWidget.setIndentation(0)
 
     def _InitVariableUI(self):
-        self._AddHeadWidget(variableui.CVariableUI(self.m_BPID, self))
-
-    def _AddHeadWidget(self, widget):
         item = QTreeWidgetItem()
         self.m_TreeWidget.addTopLevelItem(item)
-        self.m_TreeWidget.setItemWidget(item, 0, CExpandWidget(item))
+        oHeadWidget = basetree.CExpandWidget(item, define.BP_ATTR_VARIABLE, self.m_BPID)
+        self.m_TreeWidget.setItemWidget(item, 0, oHeadWidget)
 
         section = QTreeWidgetItem(item)
         section.setDisabled(True)
-        self.m_TreeWidget.setItemWidget(section, 0, widget)
+        oWidget = variabletree.CVariableAttrTree(self.m_BPID, self)
+        self.m_TreeWidget.setItemWidget(section, 0, oWidget)
         item.addChild(section)

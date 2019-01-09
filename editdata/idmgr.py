@@ -50,19 +50,19 @@ class CIDMgr:
         assert bpID is not None
         return bpID
 
-    # ---------------------变量ID:图表ID---------------------------
-    def SetVar2BP(self, graphicID, varID):
-        self.m_Var2BP[varID] = graphicID
+    # ---------------------变量ID:蓝图ID---------------------------
+    def SetVar2BP(self, bpID, varID):
+        self.m_Var2BP[varID] = bpID
 
     def GetBPByVar(self, varID):
-        graphicID = self.m_Var2BP.get(varID, None)
-        assert graphicID is not None
-        return graphicID
+        bpID = self.m_Var2BP.get(varID, None)
+        assert bpID is not None
+        return bpID
 
     def DelVar2BP(self, varID):
-        graphicID = self.m_Var2BP.pop(varID, None)
-        assert graphicID is not None
-        return graphicID
+        bpID = self.m_Var2BP.pop(varID, None)
+        assert bpID is not None
+        return bpID
 
     # ---------------------节点ID:图表ID---------------------------
     def SetNode2Graphic(self, graphicID, nodeID):

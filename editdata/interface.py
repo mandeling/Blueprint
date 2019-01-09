@@ -80,13 +80,8 @@ def GetGraphicAttr(graphicID, sAttrName):
 
 
 # --------------------变量--------------------------------
-def GetVariableData():
-    oVariableMgr = GetVariableMgr()
-    return oVariableMgr.GetAllVarInfo()
-
-
-def NewVariable():
-    varID = GetVariableMgr().NewVariable()
+def NewVariable(bpID):
+    varID = GetVariableMgr().NewVariable(bpID)
     return varID
 
 

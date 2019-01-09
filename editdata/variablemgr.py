@@ -9,8 +9,11 @@ import random
 import copy
 import misc
 
+from .idmgr import GetIDMgr
 from . import define, basemgr
+from . import define as eddefine
 from bpdata import define as bddefine
+from signalmgr import GetSignal
 
 g_VariableMgr = None
 
@@ -23,27 +26,17 @@ def GetVariableMgr():
 
 
 class CVariableMgr(basemgr.CBaseMgr):
-    def __init__(self):
-        super(CVariableMgr, self).__init__()
-        self.InitTestData()
 
-    def NewVariable(self):
+    def NewVariable(self, bpID):
+        from .bpmgr import GetBPMgr
         iType = bddefine.Type.INT
         sName = "NewVar%s" % self.NewID()
         varID = misc.uuid()
         self.m_ItemInfo[varID] = CVariable(varID, sName, iType, 0)
+        GetIDMgr().SetVar2BP(bpID, varID)
+        GetBPMgr().AddToAttrList(bpID, eddefine.BlueprintAttrName.VARIABLE_LIST, varID)
+        GetSignal().NEW_VARIABLE.emit(bpID, varID)
         return varID
-
-    def InitTestData(self):
-        for i in range(10):
-            sName = "Test%s" % i
-            iType = random.randint(1, 3)
-            value = random.randint(-999999, 999999)
-            varID = misc.uuid()
-            self.m_ItemInfo[varID] = CVariable(varID, sName, iType, value)
-
-    def GetAllVarInfo(self):
-        return copy.deepcopy(self.m_ItemInfo)
 
 
 class CVariable(basemgr.CBase):
