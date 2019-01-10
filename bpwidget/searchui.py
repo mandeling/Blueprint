@@ -38,6 +38,7 @@ class CSearchWidget(QWidget):
         self.m_Search = QLineEdit(self)
         self.m_Search.setFocusPolicy(Qt.ClickFocus)
         self.m_Search.setClearButtonEnabled(True)
+        self.m_Search.setPlaceholderText("搜索节点或者槽名称")
         hBox.addWidget(self.m_Search)
 
         self.m_BtnMatch = QPushButton("全匹配", self)
