@@ -13,6 +13,7 @@ from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from signalmgr import GetSignal
 from editdata import interface
 from . import define
+
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
@@ -52,7 +53,9 @@ class CSearchWidget(QWidget):
         line.setFrameShadow(QFrame.Sunken)
         vBox.addWidget(line)
 
-        self.m_Tree = CSearchTree(self)
+        self.m_Tree = QTreeView(self)
+        self.m_Tree.setHeaderHidden(True)
+        self.m_Tree.setModel(QStandardItemModel(self))
         self.m_Tree.setEditTriggers(QAbstractItemView.NoEditTriggers)
         vBox.addWidget(self.m_Tree)
         self.setLayout(vBox)
@@ -60,6 +63,7 @@ class CSearchWidget(QWidget):
     def _InitSignal(self):
         self.m_BtnMatch.clicked.connect(self.S_ChangeMatch)
         self.m_Search.returnPressed.connect(self.S_Search)
+        self.m_Tree.doubleClicked.connect(self.S_FocusItem)
         GetSignal().UI_SHOW_BP_SEARCH.connect(self.S_ShowBPSearch)
 
     def S_ChangeMatch(self):
@@ -97,29 +101,23 @@ class CSearchWidget(QWidget):
                     oNItem.appendRow(oPItem)
         self.m_Tree.expandAll()
 
-
-class CSearchTree(QTreeView):
-    def __init__(self, parent=None):
-        super(CSearchTree, self).__init__(parent)
-        self._InitUI()
-        self._InitSignal()
-
-    def _InitUI(self):
-        self.setHeaderHidden(True)
-        self.setModel(QStandardItemModel(self))
-
-    def _InitSignal(self):
-        self.doubleClicked.connect(self.S_ShowNode)
-
-    def S_ShowNode(self, oModelIndex):  # QModelIndex
+    def S_FocusItem(self, oModelIndex):
         """
         oModelIndex QModelIndex
         self.model() QStandardItemModel
         """
-        item = self.model().itemFromIndex(oModelIndex)
+        item = self.m_Tree.model().itemFromIndex(oModelIndex)
         if not item:
             return
-        print(item.GetInfo())
+        iItemType, ID = item.GetInfo()
+        if iItemType == define.SearchTreeItemType.GRAPHIC:
+            GetSignal().UI_FOCUS_GRAPHIC.emit(self.m_BPID, ID)
+        else:
+            if iItemType == define.SearchTreeItemType.PIN:
+                ID = interface.GetNodeIDByPinID(ID)
+            graphicID = interface.GetGraphicIDByNodeID(ID)
+            GetSignal().UI_FOCUS_GRAPHIC.emit(self.m_BPID, graphicID)
+            GetSignal().UI_FOCUS_NODE.emit(graphicID, ID)
 
 
 class CStandardItem(QStandardItem):

@@ -19,24 +19,10 @@ def GetUIMgr():
 
 class CUIManager:
     def __init__(self):
-        self.m_GraphicUI = {}
         self.m_NodeUI = {}
         self.m_PinBtnUI = {}
         self.m_PinUI = {}
         self.m_LineUI = {}
-
-    def AddGraphicView(self, graphicID, oGraphicView):
-        self.m_GraphicUI[graphicID] = weakref.ref(oGraphicView)
-
-    def DelGraphicView(self, graphicID):
-        if graphicID in self.m_GraphicUI:
-            del self.m_GraphicUI[graphicID]
-
-    def GetGraphicView(self, graphicID):
-        wObj = self.m_GraphicUI.get(graphicID, None)
-        if wObj:
-            wObj = wObj()
-        return wObj
 
     def AddNodeUI(self, nodeID, oNodeUI):
         self.m_NodeUI[nodeID] = weakref.ref(oNodeUI)

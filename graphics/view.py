@@ -10,10 +10,12 @@ from editdata import interface
 
 from PyQt5.QtWidgets import QGraphicsView, QMenu, QRubberBand
 from PyQt5.QtGui import QBrush, QColor, QPainterPath
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtCore import Qt, QRect, QPointF
 
 from pubcode import functor
 from viewmgr.uimgr import GetUIMgr
+from viewmgr.statusmgr import GetStatusMgr
+from signalmgr import GetSignal
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
@@ -29,11 +31,8 @@ class CBlueprintView(QGraphicsView):
         self.m_RubberBand = None    # 框选框对象
         self.m_Scene = scene.CBlueprintScene(graphicID, self)
         self._InitUI()
-        GetUIMgr().AddGraphicView(graphicID, self)
+        self._InitSignal()
         self._LoadData()
-
-    def __del__(self):
-        GetUIMgr().DelGraphicView(self.m_GraphicID)
 
     def _InitUI(self):
         self.setWindowTitle("蓝图")
@@ -45,6 +44,9 @@ class CBlueprintView(QGraphicsView):
         # 隐藏滚动条
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def _InitSignal(self):
+        GetSignal().UI_FOCUS_NODE.connect(self.S_FocusNode)
 
     def _LoadData(self):
         lstNode = interface.GetGraphicAttr(self.m_GraphicID, eddefine.GraphicAttrName.NODE_LIST)
@@ -183,3 +185,16 @@ class CBlueprintView(QGraphicsView):
     def S_OnCreateNodeUI(self, sNodeName, tPos):
         nodeID = interface.AddNode(self.m_GraphicID, sNodeName, tPos)
         self.m_Scene.AddNodeUI(nodeID, tPos)
+
+    def S_FocusNode(self, graphicID, nodeID):
+        if self.m_GraphicID != graphicID:
+            return
+        pos = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.POSITION)
+        x, y = pos[0], pos[1]
+        oNodeUI = GetUIMgr().GetNodeUI(nodeID)
+        if oNodeUI:
+            x += oNodeUI.size().width() / 2
+            y += oNodeUI.size().height() / 2
+        point = QPointF(x, y)
+        self.centerOn(point)
+        GetStatusMgr().SelectOneNode(graphicID, nodeID)

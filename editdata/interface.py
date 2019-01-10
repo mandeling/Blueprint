@@ -80,6 +80,10 @@ def GetGraphicAttr(graphicID, sAttrName):
     return GetGraphicMgr().GetItemAttr(graphicID, sAttrName)
 
 
+def GetGraphicIDByNodeID(nodeID):
+    return GetIDMgr().GetGraphicByNode(nodeID)
+
+
 # --------------------变量--------------------------------
 def NewVariable(bpID):
     varID = GetVariableMgr().NewVariable(bpID)

@@ -33,6 +33,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
     def _InitSignal(self):
         self.currentChanged.connect(self.S_OnBPTabChange)
         GetSignal().NEW_GRAPHIC.connect(self.S_NewGraphic)
+        GetSignal().UI_FOCUS_GRAPHIC.connect(self.S_FocusGraphic)
 
     def S_NewGraphic(self, bpID, graphicID):
         if self.m_BPID != bpID:
@@ -67,3 +68,11 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         oView = self.currentWidget()
         graphicID = oView.GetGraphicID()
         GetStatusMgr().SetCurGraphicID(graphicID)
+
+    def S_FocusGraphic(self, bpID, graphicID):
+        if self.m_BPID != bpID:
+            return
+        if graphicID in self.m_GraphicUI:
+            oView = self.currentWidget()
+            iIndex = self.indexOf(oView)
+            self.setCurrentIndex(iIndex)
