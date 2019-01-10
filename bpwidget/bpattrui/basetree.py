@@ -18,6 +18,7 @@ from .. import define
 FLOD_BTN_QSS = """
 QPushButton {
     background:transparent;
+    border-style:solid;
 }
 """
 
