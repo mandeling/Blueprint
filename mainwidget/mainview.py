@@ -8,6 +8,7 @@
 from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy, QWidget
 from PyQt5.QtCore import Qt
 
+from . import filetree
 from pubcode.pubqt.pubmenu import menumgr, menudefine
 from editdata import interface
 from signalmgr import GetSignal
@@ -16,6 +17,7 @@ from signalmgr import GetSignal
 class CMainView(QMainWindow):
     def __init__(self, parent=None):
         super(CMainView, self).__init__(parent)
+        self.m_FileTree = filetree.CFileTree(self)
         self._InitMenu()
         self._InitCorner()
         self._InitDock()
@@ -50,7 +52,7 @@ class CMainView(QMainWindow):
         leftDock = QDockWidget("左侧面板", self)
         leftDock.setSizePolicy(sizePolicy)
         leftDock.setObjectName("leftDock")
-        leftDock.setWidget(CWidget("左侧面板"))
+        leftDock.setWidget(self.m_FileTree)
 
         rightDock = QDockWidget("右侧面板", self)
         rightDock.setSizePolicy(sizePolicy)

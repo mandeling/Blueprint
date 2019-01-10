@@ -40,7 +40,7 @@ class CBlueprintView(QMainWindow):
         topDock.setObjectName("topDock")
         topDock.setWidget(self.m_MenuWidget)
 
-        bottomDock = QDockWidget(self)
+        bottomDock = QDockWidget("搜索", self)
         bottomDock.setSizePolicy(sizePolicy)
         bottomDock.setObjectName("bottomDock")
         bottomDock.setWidget(self.m_SearchWidget)

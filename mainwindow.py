@@ -5,15 +5,13 @@
 @Desc: 主界面
 """
 
-import blueprintview
-import mainview
-
-from PyQt5.QtWidgets import QTabWidget, QPushButton, QTabBar,\
-    QFileDialog
+from PyQt5.QtWidgets import QTabWidget, QPushButton, QTabBar, QFileDialog
 
 from signalmgr import GetSignal
 from pubcode.functor import Functor
 from editdata import interface
+from mainwidget import mainview
+from bpwidget import blueprintview
 
 
 class CMainWindow(QTabWidget):

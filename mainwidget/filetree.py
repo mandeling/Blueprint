@@ -21,6 +21,8 @@ class CFileTree(QTreeView):
 
     def _InitUI(self):
         path = os.path.join(os.getcwd(), "bpfile")
+        # path = os.getcwd()
+        print("path", path)
         index = self.m_FileSystem.setRootPath(path)
         self.header().hide()
         self.setModel(self.m_FileSystem)
@@ -37,8 +39,8 @@ class CFileSystem(QFileSystemModel):
     def __init__(self, parent=None):
         super(CFileSystem, self).__init__(parent)
         self.setFilter(QDir.Files | QDir.AllDirs | QDir.NoDotAndDotDot)
-        self.setNameFilters([".xh"])
+        self.setNameFilters(["*.xh"])
         self.setNameFilterDisables(False)
 
-    def columnCount(self):
+    def columnCount(self, *args):
         return 1
