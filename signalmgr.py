@@ -26,7 +26,12 @@ class CSignal:
     NEW_GRAPHIC = CMySignal()   # bpID, graphicID
 
     # ui层信号
+    # --蓝图--
     UI_NEW_BLUEPRINT = CMySignal()  # bpID
     UI_SHOW_BP_SEARCH = CMySignal()  # bpID
+    UI_SAVE_BLUEPRINT = CMySignal()  # bpID
+    UI_OPEN_BLUEPRINT = CMySignal()
+
+    # --图表--
     UI_FOCUS_GRAPHIC = CMySignal()  # bpID, graphicID
     UI_FOCUS_NODE = CMySignal()  # graphicID, nodeID

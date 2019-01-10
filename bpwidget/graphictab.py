@@ -5,23 +5,18 @@
 @Desc: 蓝图tabwidget
 """
 
-import os
 
 from PyQt5 import QtWidgets
 
 from pubcode import functor
 from graphics import view
 from editdata import interface
-from viewmgr.uimgr import GetUIMgr
 from viewmgr.statusmgr import GetStatusMgr
 from signalmgr import GetSignal
 from editdata import define as eddefine
 
 
 class CBPTabWidget(QtWidgets.QTabWidget):
-    m_Filter = "*.xh"
-    m_BPDir = "./bpfile"
-
     def __init__(self, bpID, parent=None):
         super(CBPTabWidget, self).__init__(parent)
         self.m_BPID = bpID
@@ -29,20 +24,19 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self.m_GraphicUI = {}
         self.m_ShowID = 0
         self._InitSignal()
+        self._LoadGraphic()
 
     def _InitSignal(self):
         self.currentChanged.connect(self.S_OnBPTabChange)
         GetSignal().NEW_GRAPHIC.connect(self.S_NewGraphic)
         GetSignal().UI_FOCUS_GRAPHIC.connect(self.S_FocusGraphic)
 
-    def S_NewGraphic(self, bpID, graphicID):
-        if self.m_BPID != bpID:
-            return
-        if graphicID in self.m_GraphicUI:
-            oView = self.currentWidget()
-            iIndex = self.indexOf(oView)
-            self.setCurrentIndex(iIndex)
-            return
+    def _LoadGraphic(self):
+        lstGraphic = interface.GetBlueprintAttr(self.m_BPID, eddefine.BlueprintAttrName.GRAPHIC_LIST)
+        for graphicID in lstGraphic:
+            self._NewGraphic(graphicID)
+
+    def _NewGraphic(self, graphicID):
         bpView = view.CBlueprintView(graphicID)
         sTabTitle = interface.GetGraphicAttr(graphicID, eddefine.GraphicAttrName.NAME)
         tabIndex = self.addTab(bpView, sTabTitle)
@@ -55,6 +49,16 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         func = functor.Functor(self.S_CloseTab, graphicID)
         btn.clicked.connect(func)
         self.tabBar().setTabButton(tabIndex, QtWidgets.QTabBar.RightSide, btn)
+
+    def S_NewGraphic(self, bpID, graphicID):
+        if self.m_BPID != bpID:
+            return
+        if graphicID in self.m_GraphicUI:
+            oView = self.currentWidget()
+            iIndex = self.indexOf(oView)
+            self.setCurrentIndex(iIndex)
+            return
+        self._NewGraphic(graphicID)
 
     def S_CloseTab(self, graphicID, _):
         oView = self.m_GraphicUI.pop(graphicID, None)

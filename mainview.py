@@ -90,7 +90,7 @@ class CMainView(QMainWindow):
         pass
 
     def S_OpenBlueprint(self):
-        pass
+        GetSignal().UI_OPEN_BLUEPRINT.emit()
 
 
 class CWidget(QWidget):

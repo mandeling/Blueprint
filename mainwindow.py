@@ -8,15 +8,23 @@
 import blueprintview
 import mainview
 
-from PyQt5.QtWidgets import QTabWidget, QPushButton, QTabBar
+from PyQt5.QtWidgets import QTabWidget, QPushButton, QTabBar,\
+    QFileDialog
+
 from signalmgr import GetSignal
 from pubcode.functor import Functor
+from editdata import interface
 
 
 class CMainWindow(QTabWidget):
+    m_Filter = "*.xh"
+    m_BPDir = "./bpfile"
+
     def __init__(self, parent=None):
         super(CMainWindow, self).__init__(parent)
         self.m_BPInfo = {}
+        self.m_BPID2Path = {}
+        self.m_Path2BPID = {}
         self.m_ID = 0
         self._InitUI()
         self._InitSignal()
@@ -29,6 +37,8 @@ class CMainWindow(QTabWidget):
 
     def _InitSignal(self):
         GetSignal().UI_NEW_BLUEPRINT.connect(self.S_NewBlueprint)
+        GetSignal().UI_SAVE_BLUEPRINT.connect(self.S_SaveBlueprint)
+        GetSignal().UI_OPEN_BLUEPRINT.connect(self.S_OpenBlueprint)
 
     def _NewID(self):
         self.m_ID += 1
@@ -55,3 +65,30 @@ class CMainWindow(QTabWidget):
         iIndex = self.indexOf(oBPView)
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
+
+    def S_OpenBlueprint(self):
+        sPath = QFileDialog.getOpenFileName(self, "打开蓝图", self.m_BPDir, filter=self.m_Filter)[0]
+        if not sPath:
+            return
+        if sPath in self.m_Path2BPID:
+            bpID = self.m_Path2BPID[sPath]
+            self._ChangeBPIndex(bpID)
+            return
+        bpID = interface.OpenBlueprint(sPath)
+        self.m_Path2BPID[sPath] = bpID
+        self.m_BPID2Path[bpID] = sPath
+        self.S_NewBlueprint(bpID)
+
+    def _ChangeBPIndex(self, bpID):
+        oView = self.m_BPInfo.get(bpID, None)
+        if oView:
+            iIndex = self.indexOf(oView)
+            self.setCurrentIndex(iIndex)
+
+    def S_SaveBlueprint(self, bpID):
+        sPath = self.m_BPID2Path.get(bpID, None)
+        if not sPath:
+            sPath = QFileDialog.getSaveFileName(self, "保存蓝图", self.m_BPDir, filter=self.m_Filter)[0]
+            if not sPath:
+                return
+        interface.SaveBlueprint(bpID, sPath)

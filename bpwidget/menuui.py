@@ -10,6 +10,8 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QSizePolicy, QSpa
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize
 
+from signalmgr import GetSignal
+
 
 class CMenuUI(QWidget):
     def __init__(self, bpID, parent=None):
@@ -37,10 +39,10 @@ class CMenuUI(QWidget):
         return oBtn
 
     def S_Save(self):
-        pass
+        GetSignal().UI_SAVE_BLUEPRINT.emit(self.m_BPID)
 
     def S_Start(self):
-        pass
+        GetSignal().UI_OPEN_BLUEPRINT.emit(self.m_BPID)
 
     def S_Stop(self):
         pass

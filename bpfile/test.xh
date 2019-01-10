@@ -1,186 +1,149 @@
 {
-    "bp_attr_name:": "{163cc380-643f-4fa0-be72-27dc7fc8e2d6}",
-    "{163cc380-643f-4fa0-be72-27dc7fc8e2d6}": {
-        "bp_attr_name:id": "{163cc380-643f-4fa0-be72-27dc7fc8e2d6}",
-        "bp_attr_name:name": "蓝图1",
-        "bp_attr_name:line_list": [
-            "{a3b1c6ff-0b0e-4454-b996-e0007bcaeb10}",
-            "{fec309f6-4d9f-48c6-a556-41b6366515fb}",
-            "{ad3c1150-b7f0-4a26-8dc0-dfb35b0d4be8}"
-        ],
-        "bp_attr_name:node_list": [
-            "{b015c474-380d-4c46-85ad-b881fd5b2e1e}",
-            "{9891f301-416e-4bf1-b2d0-9fded8bae1b7}",
-            "{fe7e8d0d-fd8a-4376-91b0-bf3394b8913e}",
-            "{0e239d10-7626-4509-88a9-4547c32cbfb4}"
+    "{2a256062-676e-41a7-996d-3bb9f3a1723d}": {
+        "bp_attr_name:id": "{2a256062-676e-41a7-996d-3bb9f3a1723d}",
+        "bp_attr_name:graphic_list": [
+            "{81e40631-b2ca-43ab-97c7-2a76271a0862}",
+            "{22893703-b773-4ac6-87bd-2c278dcff766}"
         ],
         "bp_attr_name:variable_list": []
     },
-    "{a3b1c6ff-0b0e-4454-b996-e0007bcaeb10}": {
-        "line_attr_name:id": "{a3b1c6ff-0b0e-4454-b996-e0007bcaeb10}",
-        "line_attr_name:output_pin_id": "{1c76c18c-d4af-42bd-84eb-56ad37246d35}",
-        "line_attr_name:input_pin_id": "{79267b1e-0d05-4b6c-8f92-001da114f36e}"
-    },
-    "{fec309f6-4d9f-48c6-a556-41b6366515fb}": {
-        "line_attr_name:id": "{fec309f6-4d9f-48c6-a556-41b6366515fb}",
-        "line_attr_name:output_pin_id": "{2f9ab853-05e9-4a70-924c-9679181c3fcf}",
-        "line_attr_name:input_pin_id": "{cef2a502-a048-4e68-9aaf-60fe93f7f3d0}"
-    },
-    "{ad3c1150-b7f0-4a26-8dc0-dfb35b0d4be8}": {
-        "line_attr_name:id": "{ad3c1150-b7f0-4a26-8dc0-dfb35b0d4be8}",
-        "line_attr_name:output_pin_id": "{77f46f65-b23a-43dc-96cb-4faa6b7cc4b7}",
-        "line_attr_name:input_pin_id": "{dc32b29d-832e-42ad-80b5-cd9d691cbb23}"
-    },
-    "{b015c474-380d-4c46-85ad-b881fd5b2e1e}": {
-        "node_attr_name:id": "{b015c474-380d-4c46-85ad-b881fd5b2e1e}",
-        "node_attr_name:name": "加法节点",
-        "node_attr_name:display_name": "加法节点",
-        "node_attr_name:postion": [
-            -473.0,
-            -289.0
+    "{81e40631-b2ca-43ab-97c7-2a76271a0862}": {
+        "graphic_attr_name:id": "{81e40631-b2ca-43ab-97c7-2a76271a0862}",
+        "graphic_attr_name:name": "图表-1",
+        "graphic_attr_name:line_list": [
+            "{c2e5811b-3550-4932-8d24-ccda0b3a2b7f}"
         ],
-        "node_attr_name:pin_list": [
-            "{c516185e-c734-4cca-b366-3dc15f265198}",
-            "{7c222c35-69cb-45ca-a0c2-0741461b1bc8}",
-            "{1c76c18c-d4af-42bd-84eb-56ad37246d35}"
+        "graphic_attr_name:node_list": [
+            "{e8a12b32-ea16-4b1b-aecc-d62b1e6f9b88}",
+            "{1c7fedc0-8b68-4031-84db-323acbdfc38d}"
         ]
     },
-    "{c516185e-c734-4cca-b366-3dc15f265198}": {
-        "pin_attr_name:id": "{c516185e-c734-4cca-b366-3dc15f265198}",
-        "pin_attr_name:name": "输入1",
-        "pin_attr_name:display_name": "输入1",
-        "pin_attr_name:pin_type": 0,
-        "pin_attr_name:data_type": 1,
-        "pin_attr_name:data_value": 0
+    "{c2e5811b-3550-4932-8d24-ccda0b3a2b7f}": {
+        "line_attr_name:id": "{c2e5811b-3550-4932-8d24-ccda0b3a2b7f}",
+        "line_attr_name:output_pin_id": "{952d9626-2643-4cdf-8e67-779895032038}",
+        "line_attr_name:input_pin_id": "{0c7158df-668d-49d9-b53e-75e78a669055}"
     },
-    "{7c222c35-69cb-45ca-a0c2-0741461b1bc8}": {
-        "pin_attr_name:id": "{7c222c35-69cb-45ca-a0c2-0741461b1bc8}",
-        "pin_attr_name:name": "输入2",
-        "pin_attr_name:display_name": "输入2",
-        "pin_attr_name:pin_type": 0,
-        "pin_attr_name:data_type": 1,
-        "pin_attr_name:data_value": 0
-    },
-    "{1c76c18c-d4af-42bd-84eb-56ad37246d35}": {
-        "pin_attr_name:id": "{1c76c18c-d4af-42bd-84eb-56ad37246d35}",
-        "pin_attr_name:name": "输出",
-        "pin_attr_name:display_name": "输出",
-        "pin_attr_name:pin_type": 1,
-        "pin_attr_name:data_type": 1,
-        "pin_attr_name:data_value": 0
-    },
-    "{9891f301-416e-4bf1-b2d0-9fded8bae1b7}": {
-        "node_attr_name:id": "{9891f301-416e-4bf1-b2d0-9fded8bae1b7}",
+    "{e8a12b32-ea16-4b1b-aecc-d62b1e6f9b88}": {
+        "node_attr_name:id": "{e8a12b32-ea16-4b1b-aecc-d62b1e6f9b88}",
         "node_attr_name:name": "减法节点",
         "node_attr_name:display_name": "减法节点",
         "node_attr_name:postion": [
-            -468.0,
-            -86.0
+            -260.0,
+            -159.0
         ],
         "node_attr_name:pin_list": [
-            "{5f92db64-a853-45a5-b9aa-f480bc6375ea}",
-            "{9025e8f3-869e-4349-b11e-a7940625418e}",
-            "{2f9ab853-05e9-4a70-924c-9679181c3fcf}"
+            "{92b450a5-2993-4775-8b1c-537dfb96f596}",
+            "{30679010-b6e1-4041-8025-365327400ef1}",
+            "{952d9626-2643-4cdf-8e67-779895032038}"
         ]
     },
-    "{5f92db64-a853-45a5-b9aa-f480bc6375ea}": {
-        "pin_attr_name:id": "{5f92db64-a853-45a5-b9aa-f480bc6375ea}",
+    "{92b450a5-2993-4775-8b1c-537dfb96f596}": {
+        "pin_attr_name:id": "{92b450a5-2993-4775-8b1c-537dfb96f596}",
         "pin_attr_name:name": "输入1",
         "pin_attr_name:display_name": "输入1",
         "pin_attr_name:pin_type": 0,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 0
     },
-    "{9025e8f3-869e-4349-b11e-a7940625418e}": {
-        "pin_attr_name:id": "{9025e8f3-869e-4349-b11e-a7940625418e}",
+    "{30679010-b6e1-4041-8025-365327400ef1}": {
+        "pin_attr_name:id": "{30679010-b6e1-4041-8025-365327400ef1}",
         "pin_attr_name:name": "输入2",
         "pin_attr_name:display_name": "输入2",
         "pin_attr_name:pin_type": 0,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 0
     },
-    "{2f9ab853-05e9-4a70-924c-9679181c3fcf}": {
-        "pin_attr_name:id": "{2f9ab853-05e9-4a70-924c-9679181c3fcf}",
+    "{952d9626-2643-4cdf-8e67-779895032038}": {
+        "pin_attr_name:id": "{952d9626-2643-4cdf-8e67-779895032038}",
         "pin_attr_name:name": "输出",
         "pin_attr_name:display_name": "输出",
         "pin_attr_name:pin_type": 1,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 0
     },
-    "{fe7e8d0d-fd8a-4376-91b0-bf3394b8913e}": {
-        "node_attr_name:id": "{fe7e8d0d-fd8a-4376-91b0-bf3394b8913e}",
-        "node_attr_name:name": "乘法节点",
-        "node_attr_name:display_name": "乘法节点",
-        "node_attr_name:postion": [
-            -98.0,
-            -196.0
-        ],
-        "node_attr_name:pin_list": [
-            "{79267b1e-0d05-4b6c-8f92-001da114f36e}",
-            "{cef2a502-a048-4e68-9aaf-60fe93f7f3d0}",
-            "{77f46f65-b23a-43dc-96cb-4faa6b7cc4b7}"
-        ]
-    },
-    "{79267b1e-0d05-4b6c-8f92-001da114f36e}": {
-        "pin_attr_name:id": "{79267b1e-0d05-4b6c-8f92-001da114f36e}",
-        "pin_attr_name:name": "输入1",
-        "pin_attr_name:display_name": "输入1",
-        "pin_attr_name:pin_type": 0,
-        "pin_attr_name:data_type": 1,
-        "pin_attr_name:data_value": 0
-    },
-    "{cef2a502-a048-4e68-9aaf-60fe93f7f3d0}": {
-        "pin_attr_name:id": "{cef2a502-a048-4e68-9aaf-60fe93f7f3d0}",
-        "pin_attr_name:name": "输入2",
-        "pin_attr_name:display_name": "输入2",
-        "pin_attr_name:pin_type": 0,
-        "pin_attr_name:data_type": 1,
-        "pin_attr_name:data_value": 0
-    },
-    "{77f46f65-b23a-43dc-96cb-4faa6b7cc4b7}": {
-        "pin_attr_name:id": "{77f46f65-b23a-43dc-96cb-4faa6b7cc4b7}",
-        "pin_attr_name:name": "输出",
-        "pin_attr_name:display_name": "输出",
-        "pin_attr_name:pin_type": 1,
-        "pin_attr_name:data_type": 1,
-        "pin_attr_name:data_value": 0
-    },
-    "{0e239d10-7626-4509-88a9-4547c32cbfb4}": {
-        "node_attr_name:id": "{0e239d10-7626-4509-88a9-4547c32cbfb4}",
+    "{1c7fedc0-8b68-4031-84db-323acbdfc38d}": {
+        "node_attr_name:id": "{1c7fedc0-8b68-4031-84db-323acbdfc38d}",
         "node_attr_name:name": "打印节点",
         "node_attr_name:display_name": "打印节点",
         "node_attr_name:postion": [
-            263.0,
-            -259.0
+            89.0,
+            -178.0
         ],
         "node_attr_name:pin_list": [
-            "{5b1e8227-3322-4ce9-af9a-ce851d534398}",
-            "{28c9ba4d-f9af-45d9-b051-ec699e01a4f8}",
-            "{dc32b29d-832e-42ad-80b5-cd9d691cbb23}"
+            "{42669ce7-081b-4568-84b6-a937ebe426fc}",
+            "{81e1fd45-a657-4957-8f69-96371c565532}",
+            "{0c7158df-668d-49d9-b53e-75e78a669055}"
         ]
     },
-    "{5b1e8227-3322-4ce9-af9a-ce851d534398}": {
-        "pin_attr_name:id": "{5b1e8227-3322-4ce9-af9a-ce851d534398}",
+    "{42669ce7-081b-4568-84b6-a937ebe426fc}": {
+        "pin_attr_name:id": "{42669ce7-081b-4568-84b6-a937ebe426fc}",
         "pin_attr_name:name": "输入",
         "pin_attr_name:display_name": "输入",
         "pin_attr_name:pin_type": 2,
         "pin_attr_name:data_type": -1,
         "pin_attr_name:data_value": -1
     },
-    "{28c9ba4d-f9af-45d9-b051-ec699e01a4f8}": {
-        "pin_attr_name:id": "{28c9ba4d-f9af-45d9-b051-ec699e01a4f8}",
+    "{81e1fd45-a657-4957-8f69-96371c565532}": {
+        "pin_attr_name:id": "{81e1fd45-a657-4957-8f69-96371c565532}",
         "pin_attr_name:name": "输出",
         "pin_attr_name:display_name": "输出",
         "pin_attr_name:pin_type": 3,
         "pin_attr_name:data_type": -1,
         "pin_attr_name:data_value": -1
     },
-    "{dc32b29d-832e-42ad-80b5-cd9d691cbb23}": {
-        "pin_attr_name:id": "{dc32b29d-832e-42ad-80b5-cd9d691cbb23}",
+    "{0c7158df-668d-49d9-b53e-75e78a669055}": {
+        "pin_attr_name:id": "{0c7158df-668d-49d9-b53e-75e78a669055}",
         "pin_attr_name:name": "输入1",
         "pin_attr_name:display_name": "输入1",
         "pin_attr_name:pin_type": 0,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 0
-    }
+    },
+    "{22893703-b773-4ac6-87bd-2c278dcff766}": {
+        "graphic_attr_name:id": "{22893703-b773-4ac6-87bd-2c278dcff766}",
+        "graphic_attr_name:name": "图表-2",
+        "graphic_attr_name:line_list": [],
+        "graphic_attr_name:node_list": [
+            "{93321ca8-2026-48d0-9de8-d83540893337}"
+        ]
+    },
+    "{93321ca8-2026-48d0-9de8-d83540893337}": {
+        "node_attr_name:id": "{93321ca8-2026-48d0-9de8-d83540893337}",
+        "node_attr_name:name": "减法节点",
+        "node_attr_name:display_name": "减法节点",
+        "node_attr_name:postion": [
+            164.0,
+            -203.0
+        ],
+        "node_attr_name:pin_list": [
+            "{f013591a-f35c-4723-9575-5ec3fa4fa850}",
+            "{31a8d734-15d3-4eb5-8d64-28d4a048a063}",
+            "{ea2f1318-27a0-43ff-96be-9b7836df7ea0}"
+        ]
+    },
+    "{f013591a-f35c-4723-9575-5ec3fa4fa850}": {
+        "pin_attr_name:id": "{f013591a-f35c-4723-9575-5ec3fa4fa850}",
+        "pin_attr_name:name": "输入1",
+        "pin_attr_name:display_name": "输入1",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{31a8d734-15d3-4eb5-8d64-28d4a048a063}": {
+        "pin_attr_name:id": "{31a8d734-15d3-4eb5-8d64-28d4a048a063}",
+        "pin_attr_name:name": "输入2",
+        "pin_attr_name:display_name": "输入2",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{ea2f1318-27a0-43ff-96be-9b7836df7ea0}": {
+        "pin_attr_name:id": "{ea2f1318-27a0-43ff-96be-9b7836df7ea0}",
+        "pin_attr_name:name": "输出",
+        "pin_attr_name:display_name": "输出",
+        "pin_attr_name:pin_type": 1,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "bp_attr_name:": "{2a256062-676e-41a7-996d-3bb9f3a1723d}"
 }

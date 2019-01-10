@@ -34,7 +34,7 @@ class CSearchWidget(QWidget):
     def _InitUI(self):
         self.setWindowTitle("搜索")
         vBox = QVBoxLayout(self)
-        hBox = QHBoxLayout(self)
+        hBox = QHBoxLayout()
         self.m_Search = QLineEdit(self)
         self.m_Search.setFocusPolicy(Qt.ClickFocus)
         self.m_Search.setClearButtonEnabled(True)
@@ -58,7 +58,7 @@ class CSearchWidget(QWidget):
         self.m_Tree.setModel(QStandardItemModel(self))
         self.m_Tree.setEditTriggers(QAbstractItemView.NoEditTriggers)
         vBox.addWidget(self.m_Tree)
-        self.setLayout(vBox)
+        # self.setLayout(vBox)
 
     def _InitSignal(self):
         self.m_BtnMatch.clicked.connect(self.S_ChangeMatch)

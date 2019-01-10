@@ -28,7 +28,7 @@ class CGraphicMgr(basemgr.CBaseMgr):
     def NewGraphic(self, bpID):
         from .bpmgr import GetBPMgr
         graphicID = misc.uuid()
-        sName = "Graphic-%s" % self.NewID()
+        sName = "图表-%s" % self.NewID()
         oGraphic = CGraphic(graphicID, sName)
         GetIDMgr().SetGraphic2BP(bpID, graphicID)
         GetBPMgr().AddGraphic2BP(graphicID)

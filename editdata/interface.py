@@ -62,20 +62,6 @@ def DelGraphic(graphicID):
     GetGraphicMgr().DelItem(graphicID)
 
 
-def OpenGraphic(sPath):
-    with open(sPath, "r", encoding="utf-8") as f:
-        dInfo = json.load(f)
-        graphicID = dInfo.pop(eddefine.GRAPHIC_ATTR_NAME_PREFIX)
-        GetGraphicMgr().LoadItemInfo(graphicID, dInfo)
-        return graphicID
-
-
-def SaveGraphic(graphicID, sPath):
-    dInfo = GetGraphicMgr().GetItemSaveInfo(graphicID)
-    with open(sPath, "w", encoding="utf-8") as f:
-        json.dump(dInfo, f, indent=4, ensure_ascii=False)
-
-
 def GetGraphicAttr(graphicID, sAttrName):
     return GetGraphicMgr().GetItemAttr(graphicID, sAttrName)
 
