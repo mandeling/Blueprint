@@ -194,28 +194,36 @@ class CNodeWidget(QWidget):
         self.horizontalLayout_top.addWidget(self.lb_Title)
         spacerItem = QtWidgets.QSpacerItem(67, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_top.addItem(spacerItem)
-        # TODO 调试label图标
+
+        # add调试label图标
+        self.lable_debug = QtWidgets.QLabel(self.top)
+        self.lable_debug.setMinimumSize(QtCore.QSize(20, 20))
+        self.lable_debug.setMaximumSize(QtCore.QSize(20, 20))
+        self.lable_debug.setPixmap(QtGui.QPixmap(":/icon/debug.png"))
+        self.lable_debug.setScaledContents(True)
+        self.lable_debug.hide()
+
+        self.horizontalLayout_top.addWidget(self.lable_debug)
         self.verticalLayout_BCWidget.addWidget(self.top)
 
-        # for attr
-        maxLen = max(len(self.m_InputInfo), len(self.m_OutputInfo))
-        for i in range(maxLen):
-            qHL = QtWidgets.QHBoxLayout()
-            oInBtn = oOutBtn = None
-            if i < len(self.m_InputInfo) and self.m_InputInfo[i]:
-                oInBtn = CNodeButtonUI(self.m_InputInfo[i], False, self.BCWidget)
-            if i < len(self.m_OutputInfo) and self.m_OutputInfo[i]:
-                oOutBtn = CNodeButtonUI(self.m_OutputInfo[i], True, self.BCWidget)
-            spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-            if oInBtn:
-                qHL.addWidget(oInBtn)
-                self.AddButton(oInBtn)
-            qHL.addItem(spacerItem)
-            if oOutBtn:
-                qHL.addWidget(oOutBtn)
-                self.AddButton(oOutBtn)
-            self.verticalLayout_BCWidget.addLayout(qHL)
+        # fot attr
+        hBox = QtWidgets.QHBoxLayout()
+        inputVBox = QtWidgets.QVBoxLayout()
+        for pinID in self.m_InputInfo:
+            oInBtn = CNodeButtonUI(pinID, False, self.BCWidget)
+            inputVBox.addWidget(oInBtn)
+            self.AddButton(oInBtn)
+        outputVBox = QtWidgets.QVBoxLayout()
+        for pinID in self.m_OutputInfo:
+            oOutBtn = CNodeButtonUI(pinID, True, self.BCWidget)
+            outputVBox.addWidget(oOutBtn)
+            self.AddButton(oOutBtn)
+        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        hBox.addLayout(inputVBox)
+        hBox.addItem(spacerItem)
+        hBox.addLayout(outputVBox)
 
+        self.verticalLayout_BCWidget.addLayout(hBox)
         self.verticalLayout_outline.addWidget(self.BCWidget)
         self.verticalLayout.addWidget(self.outline)
 
