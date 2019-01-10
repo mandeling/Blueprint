@@ -66,10 +66,11 @@ class CMainWindow(QTabWidget):
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
 
-    def S_OpenBlueprint(self):
-        sPath = QFileDialog.getOpenFileName(self, "打开蓝图", self.m_BPDir, filter=self.m_Filter)[0]
+    def S_OpenBlueprint(self, sPath=None):
         if not sPath:
-            return
+            sPath = QFileDialog.getOpenFileName(self, "打开蓝图", self.m_BPDir, filter=self.m_Filter)[0]
+            if not sPath:
+                return
         if sPath in self.m_Path2BPID:
             bpID = self.m_Path2BPID[sPath]
             self._ChangeBPIndex(bpID)
