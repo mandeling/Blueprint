@@ -50,6 +50,11 @@ class CMainWindow(QMainWindow):
         bottomDock.setObjectName("bottomDock")
         bottomDock.setWidget(CMyWidget("底侧面板"))
 
+        bottomDock2 = QDockWidget("底侧面板2", self)
+        bottomDock2.setSizePolicy(sizePolicy)
+        bottomDock2.setObjectName("bottomDock2")
+        bottomDock2.setWidget(CMyWidget("底侧面板2"))
+
         leftDock = QDockWidget("左侧面板", self)
         leftDock.setSizePolicy(sizePolicy)
         leftDock.setObjectName("leftDock")
@@ -62,7 +67,12 @@ class CMainWindow(QMainWindow):
 
         self.addDockWidget(Qt.RightDockWidgetArea, rightDock)
         self.addDockWidget(Qt.TopDockWidgetArea, topDock)
+
         self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock)
+        self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock2)
+        self.tabifyDockWidget(bottomDock, bottomDock2)
+        bottomDock2.raise_()
+
         self.addDockWidget(Qt.LeftDockWidgetArea, leftDock)
         self.setCentralWidget(CMyWidget("中心控件"))
 
