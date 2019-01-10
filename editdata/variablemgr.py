@@ -38,6 +38,10 @@ class CVariableMgr(basemgr.CBaseMgr):
         GetSignal().NEW_VARIABLE.emit(bpID, varID)
         return varID
 
+    def NewObj(self, ID):
+        obj = CVariable(ID)
+        return obj
+
 
 class CVariable(basemgr.CBase):
     def __init__(self, varID, sName=None, iType=None, value=None):
