@@ -10,7 +10,12 @@ BP_ATTR_EVENT = "事件"
 BP_ATTR_GRAPHIC = "图表"
 
 
-class SearchMatch:
-    CASW_SENSITIVELY = 1    # 区分大小写
-    WHOLE_WORDS = 2         # 全字匹配
-    REGULAR = 4             # 正则表达式匹配
+FULL_MATCH = 0     # 全匹配
+FUZZY_MATCH = 1    # 模糊匹配
+
+
+class SearchTreeItemType:
+    BP = 0
+    GRAPHIC = 1
+    NODE = 2
+    PIN = 3

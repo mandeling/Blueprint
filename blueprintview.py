@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
 from PyQt5.QtCore import Qt
 
 from bpwidget import graphictab
-from bpwidget import detailui, menuui, bpattrwidget
+from bpwidget import detailui, menuui, bpattrwidget, searchui
 
 
 class CBlueprintView(QMainWindow):
@@ -20,6 +20,7 @@ class CBlueprintView(QMainWindow):
         self.m_BPAttrWidget = bpattrwidget.CBPAttrWidget(bpID, self)
         self.m_DeltailWidget = detailui.CDetailUI(self)
         self.m_MenuWidget = menuui.CMenuUI(self)
+        self.m_SearchWidget = searchui.CSearchWidget(bpID, self)
         self.m_LogWidget = None
         self._InitCorner()
         self._InitDock()
@@ -39,10 +40,10 @@ class CBlueprintView(QMainWindow):
         topDock.setObjectName("topDock")
         topDock.setWidget(self.m_MenuWidget)
 
-        bottomDock = QDockWidget("Log面板", self)
+        bottomDock = QDockWidget(self)
         bottomDock.setSizePolicy(sizePolicy)
         bottomDock.setObjectName("bottomDock")
-        bottomDock.setWidget(self.m_LogWidget)
+        bottomDock.setWidget(self.m_SearchWidget)
 
         leftDock = QDockWidget("属性", self)
         leftDock.setSizePolicy(sizePolicy)

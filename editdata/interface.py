@@ -6,6 +6,7 @@
 """
 
 import json
+import re
 import editdata.define as eddefine
 import bpdata.define as bddefine
 
@@ -221,3 +222,29 @@ def GetAllLineByNode(nodeID):
 def GetAllLineByPin(pinID):
     """获取与pin相连的所有lineid"""
     return GetIDMgr().GetAllLineByPin(pinID)
+
+
+# ----------------------其他------------------------------
+def GetSearchInfo(bpID, sTxt, bFuzzyMatch):
+    if bFuzzyMatch:
+        pattern = re.compile(sTxt)
+    dGraphic = {}
+    lstGraphic = GetBlueprintAttr(bpID, eddefine.BlueprintAttrName.GRAPHIC_LIST)
+    for graphicID in lstGraphic:
+        lstNode = GetGraphicAttr(graphicID, eddefine.GraphicAttrName.NODE_LIST)
+        dNode = {}
+        for nodeID in lstNode:
+            lstPin = GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
+            resultPin = []
+            for pinID in lstPin:
+                pinName = GetPinAttr(pinID, bddefine.PinAttrName.DISPLAYNAME)
+                if bFuzzyMatch:
+                    if pattern.search(pinName):
+                        resultPin.append(pinID)
+                elif pinName == sTxt:
+                    resultPin.append(pinID)
+            if resultPin:
+                dNode[nodeID] = resultPin
+        if dNode:
+            dGraphic[graphicID] = dNode
+    return dGraphic
