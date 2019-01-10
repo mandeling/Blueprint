@@ -18,8 +18,8 @@ class CBlueprintView(QMainWindow):
         self.m_BPID = bpID
         self.m_BPTabWidget = graphictab.CBPTabWidget(bpID, self)
         self.m_BPAttrWidget = bpattrwidget.CBPAttrWidget(bpID, self)
-        self.m_DeltailWidget = detailui.CDetailUI(self)
-        self.m_MenuWidget = menuui.CMenuUI(self)
+        self.m_DeltailWidget = detailui.CDetailUI(bpID, self)
+        self.m_MenuWidget = menuui.CMenuUI(bpID, self)
         self.m_SearchWidget = searchui.CSearchWidget(bpID, self)
         self.m_LogWidget = None
         self._InitCorner()

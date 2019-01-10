@@ -12,8 +12,9 @@ from PyQt5.QtCore import QSize
 
 
 class CMenuUI(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, bpID, parent=None):
         super(CMenuUI, self).__init__(parent)
+        self.m_BPID = bpID
         self._InitUI()
 
     def _InitUI(self):

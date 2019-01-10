@@ -15,8 +15,17 @@ from bpdata import define as bddefine
 
 
 class CDetailUI(QtWidgets.QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, bpID, parent=None):
         super(CDetailUI, self).__init__(parent)
+        self.m_BPID = bpID
+        self._InitUI()
+        self._InitSignal()
+        self.m_CurName = ""
+        self.m_CurType = None
+        self.m_CurValue = None
+        self.m_IsOpen = False
+
+    def _InitUI(self):
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setSpacing(0)
@@ -25,22 +34,14 @@ class CDetailUI(QtWidgets.QWidget):
         spacerItem = QtWidgets.QSpacerItem(20, 940, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addWidget(self.m_VariableDetail)
         self.verticalLayout.addItem(spacerItem)
-        self.m_CurName = ""
-        self.m_CurType = None
-        self.m_CurValue = None
-        self.m_IsOpen = False
-        self.InitUI()
-        self.InitSingal()
+        for sName in bddefine.NAME_TYPE:
+            self.m_VariableDetail.comboBox_var_type.addItem(sName)
 
-    def InitSingal(self):
+    def _InitSignal(self):
         uisignal.GetSignal().VARIABLE_OPEN.connect(self.S_OpenVariable)
         self.m_VariableDetail.lineEdit_var_name.editingFinished.connect(self.S_NameEditingFinished)
         self.m_VariableDetail.lineEdit_var_value.editingFinished.connect(self.S_ValueEditingFinished)
         self.m_VariableDetail.comboBox_var_type.currentIndexChanged.connect(self.S_TypeChanged)
-
-    def InitUI(self):
-        for sName in bddefine.NAME_TYPE:
-            self.m_VariableDetail.comboBox_var_type.addItem(sName)
 
     def S_OpenVariable(self, sName):
         self.m_IsOpen = True
