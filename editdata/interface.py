@@ -80,14 +80,14 @@ def DelVariable(varID):
     pass
 
 
-def SetVariableAttr(sName, sAttrName, value):
+def SetVariableAttr(varID, sAttrName, value):
     oVariableMgr = GetVariableMgr()
-    oVariableMgr.SetItemAttr(sName, sAttrName, value)
+    oVariableMgr.SetItemAttr(varID, sAttrName, value)
 
 
-def GetVariableAttr(sName, sAttrName):
+def GetVariableAttr(varID, sAttrName):
     oVariableMgr = GetVariableMgr()
-    return oVariableMgr.GetItemAttr(sName, sAttrName)
+    return oVariableMgr.GetItemAttr(varID, sAttrName)
 
 
 # --------------------------节点--------------------------

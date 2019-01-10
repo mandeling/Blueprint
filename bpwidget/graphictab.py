@@ -77,6 +77,6 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         if self.m_BPID != bpID:
             return
         if graphicID in self.m_GraphicUI:
-            oView = self.currentWidget()
+            oView = self.m_GraphicUI[graphicID]
             iIndex = self.indexOf(oView)
             self.setCurrentIndex(iIndex)

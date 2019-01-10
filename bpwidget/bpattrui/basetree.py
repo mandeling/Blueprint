@@ -13,6 +13,7 @@ from PyQt5.QtGui import QIcon, QPixmap, QDrag, QPainter, QTextOption, QImage
 from PyQt5.QtCore import QSize, Qt, QMimeData, QRectF
 
 from editdata import interface
+from signalmgr import GetSignal
 from .. import define
 
 FLOD_BTN_QSS = """
@@ -142,6 +143,14 @@ class CBaseAttrTree(QTreeWidget):
     def mouseReleaseEvent(self, event):
         super(CBaseAttrTree, self).mouseReleaseEvent(event)
         self.m_DragPosition = None
+
+    def mouseDoubleClickEvent(self, event):
+        oItem = self.currentItem()
+        sAttrType, ID = oItem.GetInfo()
+        if sAttrType == define.BP_ATTR_VARIABLE:
+            GetSignal().UI_OPEN_VARIABLE_DETAIL.emit(self.m_BPID, ID)
+        elif sAttrType == define.BP_ATTR_GRAPHIC:
+            GetSignal().UI_FOCUS_GRAPHIC.emit(self.m_BPID, ID)
 
 
 class CBaseAttrItem(QTreeWidgetItem):
