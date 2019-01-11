@@ -52,3 +52,6 @@ class CVariable(basemgr.CBase):
             define.VariableAttrName.TYPE: iType,
             define.VariableAttrName.VALUE: value
         }
+
+    def SetAttr(self, sAttrName, value):
+        self.m_Info[sAttrName] = value
