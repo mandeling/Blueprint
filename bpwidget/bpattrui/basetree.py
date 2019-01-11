@@ -109,49 +109,6 @@ class CBaseAttrTree(QTreeWidget):
             return
         self.m_ItemInfo[ID] = self._New(ID)
 
-    def mousePressEvent(self, event):
-        super(CBaseAttrTree, self).mousePressEvent(event)
-        if event.button() == Qt.LeftButton:
-            self.m_DragPosition = event.pos()
-            index = self.indexAt(event.pos())
-            if not index.isValid():
-                self.clearSelection()
-
-    def mouseMoveEvent(self, event):
-        super(CBaseAttrTree, self).mouseMoveEvent(event)
-        if not self.m_DragPosition:
-            return
-        if (event.pos() - self.m_DragPosition).manhattanLength() < QApplication.startDragDistance():
-            return
-        oItem = self.currentItem()
-        drag = QDrag(self)
-        oMimeData = CBPAttrMimeData()
-        oMimeData.SetItemInfo(oItem.GetInfo())
-        drag.setMimeData(oMimeData)
-
-        pixMap = QPixmap(120, 18)
-        painter = QPainter(pixMap)
-        image = QImage(":/icon/btn_1.png")
-        painter.drawImage(QRectF(0, 0, 16, 16), image)
-        # painter.drawText(QRectF(0, 0, 120, 18), "drag", QTextOption(Qt.AlignVCenter))
-        drag.setPixmap(pixMap)
-        drag.exec(Qt.MoveAction)
-        del painter
-        del pixMap
-        del drag
-
-    def mouseReleaseEvent(self, event):
-        super(CBaseAttrTree, self).mouseReleaseEvent(event)
-        self.m_DragPosition = None
-
-    def mouseDoubleClickEvent(self, event):
-        oItem = self.currentItem()
-        sAttrType, ID = oItem.GetInfo()
-        if sAttrType == define.BP_ATTR_VARIABLE:
-            GetSignal().UI_OPEN_VARIABLE_DETAIL.emit(self.m_BPID, ID)
-        elif sAttrType == define.BP_ATTR_GRAPHIC:
-            GetSignal().UI_FOCUS_GRAPHIC.emit(self.m_BPID, ID)
-
 
 class CBaseAttrItem(QTreeWidgetItem):
     m_AttrType = None

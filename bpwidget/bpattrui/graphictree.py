@@ -24,6 +24,11 @@ class CGraphicAttrTree(basetree.CBaseAttrTree):
         super(CGraphicAttrTree, self)._InitSignal()
         GetSignal().NEW_GRAPHIC.connect(self.S_NewItem)
 
+    def mouseDoubleClickEvent(self, event):
+        oItem = self.currentItem()
+        _, ID = oItem.GetInfo()
+        GetSignal().UI_FOCUS_GRAPHIC.emit(self.m_BPID, ID)
+
 
 class CGraphicAttrItem(basetree.CBaseAttrItem):
     m_AttrType = define.BP_ATTR_GRAPHIC

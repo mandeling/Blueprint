@@ -48,10 +48,10 @@ class CDetailUI(QtWidgets.QWidget):
         iType = interface.GetVariableAttr(varID, eddefine.VariableAttrName.TYPE)
         value = interface.GetVariableAttr(varID, eddefine.VariableAttrName.VALUE)
         sName = interface.GetVariableAttr(varID, eddefine.VariableAttrName.NAME)
-        self.m_VariableDetail.lineEdit_var_name.setText(sName)
-        self.m_VariableDetail.lineEdit_var_value.setText(str(value))
         sType = bddefine.TYPE_NAME[iType]
         self.m_VariableDetail.comboBox_var_type.setCurrentText(sType)
+        self.m_VariableDetail.lineEdit_var_name.setText(sName)
+        self.m_VariableDetail.lineEdit_var_value.setText(str(value))
         self.m_CurName = sName
         self.m_CurType = iType
         self.m_CurValue = value

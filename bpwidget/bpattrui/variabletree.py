@@ -5,7 +5,9 @@
 @Desc: 事件TreeWidget
 """
 
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QIcon, QPixmap, QDrag, QPainter, QTextOption, QImage
+from PyQt5.QtCore import QSize, Qt, QMimeData, QRectF
 
 from . import basetree
 from .. import define
@@ -24,6 +26,47 @@ class CVariableAttrTree(basetree.CBaseAttrTree):
     def _InitSignal(self):
         super(CVariableAttrTree, self)._InitSignal()
         GetSignal().NEW_VARIABLE.connect(self.S_NewItem)
+
+    def mouseDoubleClickEvent(self, event):
+        oItem = self.currentItem()
+        _, ID = oItem.GetInfo()
+        GetSignal().UI_OPEN_VARIABLE_DETAIL.emit(self.m_BPID, ID)
+
+    def mousePressEvent(self, event):
+        super(CVariableAttrTree, self).mousePressEvent(event)
+        if event.button() == Qt.LeftButton:
+            self.m_DragPosition = event.pos()
+            index = self.indexAt(event.pos())
+            if not index.isValid():
+                self.clearSelection()
+                return
+            self.mouseDoubleClickEvent(event)
+
+    def mouseMoveEvent(self, event):
+        super(CVariableAttrTree, self).mouseMoveEvent(event)
+        if not self.m_DragPosition:
+            return
+        if (event.pos() - self.m_DragPosition).manhattanLength() < QApplication.startDragDistance():
+            return
+        oItem = self.currentItem()
+        drag = QDrag(self)
+        oMimeData = basetree.CBPAttrMimeData()
+        oMimeData.SetItemInfo(oItem.GetInfo())
+        drag.setMimeData(oMimeData)
+
+        pixMap = QPixmap(120, 18)
+        painter = QPainter(pixMap)
+        image = QImage(":/icon/btn_1.png")
+        painter.drawImage(QRectF(0, 0, 16, 16), image)
+        drag.setPixmap(pixMap)
+        drag.exec(Qt.MoveAction)
+        del painter
+        del pixMap
+        del drag
+
+    def mouseReleaseEvent(self, event):
+        super(CVariableAttrTree, self).mouseReleaseEvent(event)
+        self.m_DragPosition = None
 
 
 class CVariableAttrItem(basetree.CBaseAttrItem):
