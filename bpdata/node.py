@@ -18,7 +18,7 @@ def Register(sNodeName):
 
 
 class CBaseNode(basemgr.CBase):
-    m_NodeType = define.NodeAttrName
+    m_NodeType = define.NODE_TYPE_NORMAL
 
     def __init__(self, ID, sNodeName=None):
         super(CBaseNode, self).__init__(ID)
