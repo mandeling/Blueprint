@@ -95,9 +95,9 @@ def GetVariableAttr(varID, sAttrName):
 
 
 # --------------------------节点--------------------------
-def AddNode(graphicID, sName, pos=(0, 0)):
+def AddNode(graphicID, sName, pos=(0, 0), varID=None):
     """添加节点"""
-    nodeID = GetNodeMgr().NewNode(graphicID, sName, pos)
+    nodeID = GetNodeMgr().NewNode(graphicID, sName, pos, varID)
     return nodeID
 
 
@@ -134,6 +134,10 @@ def AddPin(nodeID, oDefinePin):
 def DelPin(pinID):
     GetPinMgr().DelItem(pinID)
     GetIDMgr().DelPin2Node(pinID)
+
+
+def SetPinAttr(pinID, sAttrName, value):
+    GetPinMgr().SetItemAttr(pinID, sAttrName, value)
 
 
 def GetPinAttr(pinID, sAttrName):

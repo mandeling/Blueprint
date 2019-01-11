@@ -5,7 +5,6 @@
 @Desc: 管理pin
 """
 
-import copy
 import misc
 from . import basemgr
 
@@ -21,8 +20,7 @@ def GetPinMgr():
 
 class CPinMgr(basemgr.CBaseMgr):
 
-    def NewPin(self, oDefinePin):
-        oPin = copy.deepcopy(oDefinePin)
+    def NewPin(self, oPin):
         pinID = misc.uuid()
         oPin.SetID(pinID)
         self.m_ItemInfo[pinID] = oPin

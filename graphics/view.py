@@ -9,7 +9,7 @@ from . import scene
 from editdata import interface
 
 from PyQt5.QtWidgets import QGraphicsView, QMenu, QRubberBand
-from PyQt5.QtGui import QBrush, QColor, QPainterPath
+from PyQt5.QtGui import QBrush, QColor, QPainterPath, QCursor
 from PyQt5.QtCore import Qt, QRect, QPointF
 
 from pubcode import functor
@@ -151,38 +151,37 @@ class CBlueprintView(QGraphicsView):
     def dragEnterEvent(self, event):
         """拖动操作进入本窗口"""
         super(CBlueprintView, self).dragEnterEvent(event)
-        if not self.CanDrag(event):
-            event.ignore()
-            return
         event.accept()
         event.acceptProposedAction()
 
     def dragMoveEvent(self, event):
         """拖拽移动中"""
-        if not self.CanDrag(event):
-            event.ignore()
-            return
         event.accept()
         event.acceptProposedAction()
 
     def dropEvent(self, event):
         """放开了鼠标完成drop操作"""
         super(CBlueprintView, self).dropEvent(event)
-        if not self.CanDrag(event):
-            event.ignore()
-            return
         event.acceptProposedAction()
+        oMimeData = event.mimeData()
+        from bpwidget.bpattrui import basetree
+        from bpwidget import define as bwdefine
+        if not isinstance(oMimeData, basetree.CBPAttrMimeData):
+            return
+        sType, varID = oMimeData.GetItemInfo()
+        if sType != bwdefine.BP_ATTR_VARIABLE:
+            return
         lPos = event.pos()
         sPos = self.mapToScene(lPos)
         tPos = sPos.x(), sPos.y()
-        # TODO mimeData
+        menu = QMenu(self)
+        for sNodeName in (bddefine.NodeName.GET_VARIABLE, bddefine.NodeName.SET_VARIABLE):
+            func = functor.Functor(self.S_OnCreateNodeUI, sNodeName, tPos, varID)
+            menu.addAction(sNodeName, func)
+        menu.exec_(QCursor.pos())
 
-    def CanDrag(self, event):
-        # TODO
-        return True
-
-    def S_OnCreateNodeUI(self, sNodeName, tPos):
-        interface.AddNode(self.m_GraphicID, sNodeName, tPos)
+    def S_OnCreateNodeUI(self, sNodeName, tPos=(0, 0), varID=None):
+        interface.AddNode(self.m_GraphicID, sNodeName, tPos, varID)
 
     def S_FocusNode(self, graphicID, nodeID):
         if self.m_GraphicID != graphicID:

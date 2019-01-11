@@ -66,6 +66,12 @@ class CBase:
         self.m_ID = ID
         self.m_Info = {}
 
+    def GetID(self):
+        return self.m_ID
+
+    def GetInfo(self):
+        return copy.deepcopy(self.m_Info)
+
     def SetAttr(self, sAttrName, value):
         self.m_Info[sAttrName] = value
 
@@ -81,9 +87,6 @@ class CBase:
         lst = self.m_Info[sAttrName]
         if value in lst:
             lst.remove(value)
-
-    def GetInfo(self):
-        return copy.deepcopy(self.m_Info)
 
     def SetLoadInfo(self, dInfo):
         dMyInfo = dInfo.pop(self.m_ID)

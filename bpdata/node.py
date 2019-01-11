@@ -25,10 +25,11 @@ class CBaseNode(basemgr.CBase):
         self.m_Info = {
             define.NodeAttrName.ID: ID,
             define.NodeAttrName.NAME: sNodeName,
-            define.NodeAttrName.TYPE: self.m_NodeType,
             define.NodeAttrName.DISPLAYNAME: sNodeName,
             define.NodeAttrName.POSITION: (0, 0),
             define.NodeAttrName.PINIDLIST: [],
+            define.NodeAttrName.TYPE: self.m_NodeType,
+            define.NodeAttrName.VARIABLE_ID: 0,
         }
         self.m_OutputFunc = {}  # 输出pin对应执行的函数
         self.m_PinInfo = {}
@@ -37,6 +38,9 @@ class CBaseNode(basemgr.CBase):
     def SetID(self, ID):
         self.m_ID = ID
         self.SetAttr(define.NodeAttrName.ID, ID)
+
+    def GetPinInfo(self):
+        return self.m_PinInfo
 
     def GetSaveInfo(self):
         from editdata.pinmgr import GetPinMgr

@@ -92,7 +92,8 @@ class CNodeUI(QGraphicsProxyWidget):
     def InitSlot(self):
         """四个槽的初始化,先手动设置"""
         iOffset = 8
-        for pinID, oBtn in self.m_NodeWidget.m_ButtonInfo.items():
+        for pinID in self.m_NodeWidget.m_ButtonList:
+            oBtn = GetUIMgr().GetPinBtnUI(pinID)
             if oBtn.IsOutput():
                 center = (oBtn.width() + iOffset, oBtn.height() / 2)
             else:
@@ -145,7 +146,7 @@ class CNodeWidget(QWidget):
         self.m_NodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
         self.m_InputInfo = []
         self.m_OutputInfo = []
-        self.m_ButtonInfo = {}
+        self.m_ButtonList = []
         self.InitData()
         self.InitUI()
 
@@ -158,11 +159,6 @@ class CNodeWidget(QWidget):
             else:
                 tmp = self.m_OutputInfo
             tmp.append(pinID)
-
-    def AddButton(self, oBtn):
-        if not oBtn:
-            return
-        self.m_ButtonInfo[oBtn.GetPinID()] = oBtn
 
     def InitUI(self):
         self.setObjectName("CNodeWidget")
@@ -212,12 +208,12 @@ class CNodeWidget(QWidget):
         for pinID in self.m_InputInfo:
             oInBtn = CNodeButtonUI(pinID, False, self.BCWidget)
             inputVBox.addWidget(oInBtn)
-            self.AddButton(oInBtn)
+            self.m_ButtonList.append(pinID)
         outputVBox = QtWidgets.QVBoxLayout()
         for pinID in self.m_OutputInfo:
             oOutBtn = CNodeButtonUI(pinID, True, self.BCWidget)
             outputVBox.addWidget(oOutBtn)
-            self.AddButton(oOutBtn)
+            self.m_ButtonList.append(pinID)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         hBox.addLayout(inputVBox)
         hBox.addItem(spacerItem)
@@ -236,6 +232,7 @@ class CNodeButtonUI(QPushButton):
         self.setCursor(Qt.PointingHandCursor)
         if bOutput:
             self.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.setStyleSheet("text-align:left;")
         self.SetIcon()
         self.SetText()
         GetUIMgr().AddPinBtnUI(pinID, self)

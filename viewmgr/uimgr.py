@@ -57,6 +57,12 @@ class CUIManager:
         if pinID in self.m_PinBtnUI:
             del self.m_PinBtnUI[pinID]
 
+    def GetPinBtnUI(self, pinID):
+        wObj = self.m_PinBtnUI.get(pinID, None)
+        if wObj:
+            wObj = wObj()
+        return wObj
+
     def AddLineUI(self, lineID, oLineUI):
         self.m_LineUI[lineID] = weakref.ref(oLineUI)
 

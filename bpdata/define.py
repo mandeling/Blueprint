@@ -79,14 +79,14 @@ def ForceTransValue(iType, sValue):
 
 
 class NodeName:
-    ADD = "加法节点"
-    MIUNS = "减法节点"
-    MULTIPLY = "乘法节点"
-    DIVIDE = "除法节点"
-    PRINT = "打印节点"
+    ADD = "加法"
+    MIUNS = "减法"
+    MULTIPLY = "乘法"
+    DIVIDE = "除法"
+    PRINT = "打印"
 
-    GET_VARIABLE = "Get变量节点"
-    SET_VARIABLE = "Set变量节点"
+    GET_VARIABLE = "Get变量"
+    SET_VARIABLE = "Set变量"
 
     START = "开始事件"
 
@@ -103,6 +103,7 @@ class NodeAttrName:
     POSITION = NODE_ATTR_NAME_PREFIX + "postion"
     PINIDLIST = NODE_ATTR_NAME_PREFIX + "pin_list"
     TYPE = NODE_ATTR_NAME_PREFIX + "type"
+    VARIABLE_ID = NODE_ATTR_NAME_PREFIX + "variable_id"
 
 
 # ----------------------pin-------------------------------
