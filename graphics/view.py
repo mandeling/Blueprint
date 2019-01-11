@@ -51,8 +51,7 @@ class CBlueprintView(QGraphicsView):
     def _LoadData(self):
         lstNode = interface.GetGraphicAttr(self.m_GraphicID, eddefine.GraphicAttrName.NODE_LIST)
         for nodeID in lstNode:
-            tPos = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.POSITION)
-            self.m_Scene.AddNodeUI(nodeID, tPos)
+            self.m_Scene._NewNodeUI(nodeID)
         lstLine = interface.GetGraphicAttr(self.m_GraphicID, eddefine.GraphicAttrName.LINE_LIST)
         for lineID in lstLine:
             iPinID, oPinID = interface.GetLinePinInfo(lineID)
@@ -183,12 +182,15 @@ class CBlueprintView(QGraphicsView):
         return True
 
     def S_OnCreateNodeUI(self, sNodeName, tPos):
-        nodeID = interface.AddNode(self.m_GraphicID, sNodeName, tPos)
-        self.m_Scene.AddNodeUI(nodeID, tPos)
+        interface.AddNode(self.m_GraphicID, sNodeName, tPos)
 
     def S_FocusNode(self, graphicID, nodeID):
         if self.m_GraphicID != graphicID:
             return
+
+        bpID = interface.GetBPIDByGraphicID(graphicID)
+        GetSignal().UI_FOCUS_GRAPHIC.emit(bpID, graphicID)
+
         pos = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.POSITION)
         x, y = pos[0], pos[1]
         oNodeUI = GetUIMgr().GetNodeUI(nodeID)

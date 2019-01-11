@@ -21,8 +21,6 @@ class CFileTree(QTreeView):
 
     def _InitUI(self):
         path = os.path.join(os.getcwd(), "bpfile")
-        # path = os.getcwd()
-        print("path", path)
         index = self.m_FileSystem.setRootPath(path)
         self.header().hide()
         self.setModel(self.m_FileSystem)

@@ -10,6 +10,7 @@ import misc
 
 from .idmgr import GetIDMgr
 from bpdata import define as bddefine
+from editdata import define as eddine
 from signalmgr import GetSignal
 from . import basemgr
 
@@ -45,6 +46,18 @@ class CNodeMgr(basemgr.CBaseMgr):
         from . import interface
         from .graphicmgr import GetGraphicMgr
         oDefineNode = self.m_DefineInfo[sNodeName]
+        iNodeType = oDefineNode.GetAttr(bddefine.NodeAttrName.TYPE)
+
+        bIsEventNode = False
+        if iNodeType == bddefine.NODE_TYPE_EVENT:
+            bIsEventNode = True
+            bpID = interface.GetBPIDByGraphicID(graphicID)
+            iEventNodeID = interface.GetBlueprintAttr(bpID, eddine.BlueprintAttrName.EVENT_NODE)
+            if iEventNodeID:
+                mygID = interface.GetGraphicIDByNodeID(iEventNodeID)
+                GetSignal().UI_FOCUS_NODE.emit(mygID, iEventNodeID)
+                return
+
         oNode = copy.deepcopy(oDefineNode)
         nodeID = misc.uuid()
         GetIDMgr().SetNode2Graphic(graphicID, nodeID)     # 记录node对应的graphic
@@ -58,6 +71,9 @@ class CNodeMgr(basemgr.CBaseMgr):
             lstPin.append(pinID)
         oNode.SetAttr(bddefine.NodeAttrName.PINIDLIST, lstPin)
         self.m_ItemInfo[nodeID] = oNode
+        if bIsEventNode:
+            interface.SetBlueprintAttr(bpID, eddine.BlueprintAttrName.EVENT_NODE, nodeID)
+        GetSignal().NEW_NODE.emit(graphicID, nodeID)
         return nodeID
 
     def DelNode(self, nodeID):
@@ -76,6 +92,11 @@ class CNodeMgr(basemgr.CBaseMgr):
         GetGraphicMgr().DelNode4Graphic(nodeID)
         graphicID = GetIDMgr().DelNode2Graphic(nodeID)
         GetSignal().DEL_NODE.emit(graphicID, nodeID)
+
+        iNodeType = oNode.GetAttr(bddefine.NodeAttrName.TYPE)
+        if iNodeType == bddefine.NODE_TYPE_EVENT:
+            bpID = interface.GetBPIDByGraphicID(graphicID)
+            interface.SetBlueprintAttr(bpID, eddine.BlueprintAttrName.EVENT_NODE, None)
 
     def NewObj(self, ID):
         from bpdata import node

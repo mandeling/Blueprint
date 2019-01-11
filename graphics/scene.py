@@ -16,7 +16,7 @@ from editdata import interface
 from signalmgr import GetSignal
 from viewmgr.uimgr import GetUIMgr
 from viewmgr.statusmgr import GetStatusMgr
-from editdata.idmgr import GetIDMgr
+import bpdata.define as bddefine
 
 
 class CBlueprintScene(QGraphicsScene):
@@ -47,6 +47,7 @@ class CBlueprintScene(QGraphicsScene):
     def _InitSignal(self):
         GetSignal().DEL_LINE.connect(self.S_OnDelLineUI)
         GetSignal().DEL_NODE.connect(self.S_OnDelNodeUI)
+        GetSignal().NEW_NODE.connect(self.S_OnNewNodeUI)
 
     def GetGraphicID(self):
         return self.m_GraphicID
@@ -136,7 +137,13 @@ class CBlueprintScene(QGraphicsScene):
             oNodeUI = GetUIMgr().GetNodeUI(nodeID)
             oNodeUI.SetMouseMovePos(offpos)
 
-    def AddNodeUI(self, nodeID, tPos):
+    def S_OnNewNodeUI(self, graphicID, nodeID):
+        if self.m_GraphicID != graphicID:
+            return
+        self._NewNodeUI(nodeID)
+
+    def _NewNodeUI(self, nodeID):
+        tPos = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.POSITION)
         oNodeUI = nodeui.CNodeUI(nodeID)
         self.addItem(oNodeUI)
         x, y = tPos

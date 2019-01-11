@@ -1,6 +1,7 @@
 {
     "{2a256062-676e-41a7-996d-3bb9f3a1723d}": {
         "bp_attr_name:id": "{2a256062-676e-41a7-996d-3bb9f3a1723d}",
+        "bp_attr_name:event_node": "{287e51f3-f7cc-408d-b29c-5a5e68818061}",
         "bp_attr_name:graphic_list": [
             "{81e40631-b2ca-43ab-97c7-2a76271a0862}",
             "{22893703-b773-4ac6-87bd-2c278dcff766}"
@@ -119,7 +120,8 @@
         "graphic_attr_name:name": "图表-2",
         "graphic_attr_name:line_list": [],
         "graphic_attr_name:node_list": [
-            "{93321ca8-2026-48d0-9de8-d83540893337}"
+            "{93321ca8-2026-48d0-9de8-d83540893337}",
+            "{287e51f3-f7cc-408d-b29c-5a5e68818061}"
         ]
     },
     "{93321ca8-2026-48d0-9de8-d83540893337}": {
@@ -159,6 +161,27 @@
         "pin_attr_name:pin_type": 1,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 0
+    },
+    "{287e51f3-f7cc-408d-b29c-5a5e68818061}": {
+        "node_attr_name:id": "{287e51f3-f7cc-408d-b29c-5a5e68818061}",
+        "node_attr_name:name": "开始事件",
+        "node_attr_name:type": 1,
+        "node_attr_name:display_name": "开始事件",
+        "node_attr_name:postion": [
+            -247.0,
+            -288.0
+        ],
+        "node_attr_name:pin_list": [
+            "{4a7aac44-de91-411a-87dc-7462c0518951}"
+        ]
+    },
+    "{4a7aac44-de91-411a-87dc-7462c0518951}": {
+        "pin_attr_name:id": "{4a7aac44-de91-411a-87dc-7462c0518951}",
+        "pin_attr_name:name": "输出",
+        "pin_attr_name:display_name": "输出",
+        "pin_attr_name:pin_type": 3,
+        "pin_attr_name:data_type": -1,
+        "pin_attr_name:data_value": -1
     },
     "bp_attr_name:": "{2a256062-676e-41a7-996d-3bb9f3a1723d}"
 }

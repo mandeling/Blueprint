@@ -52,6 +52,10 @@ def SaveBlueprint(bpID, sPath):
         json.dump(dInfo, f, indent=4, ensure_ascii=False)
 
 
+def GetBPIDByGraphicID(graphicID):
+    return GetIDMgr().GetBPByGraphic(graphicID)
+
+
 # -----------------------图表-----------------------------
 def NewGraphic(bpID):
     graphicID = GetGraphicMgr().NewGraphic(bpID)
