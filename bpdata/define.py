@@ -14,6 +14,7 @@ PIN_OUTPUT_FLOW_TYPE = 3
 
 NODE_TYPE_NORMAL = 0    # 正常节点
 NODE_TYPE_EVENT = 1     # 事件节点
+NODE_TYPE_VARIABLE = 2  # 变量节点
 
 
 class Type:
@@ -83,6 +84,9 @@ class NodeName:
     MULTIPLY = "乘法节点"
     DIVIDE = "除法节点"
     PRINT = "打印节点"
+
+    GET_VARIABLE = "Get变量节点"
+    SET_VARIABLE = "Set变量节点"
 
     START = "开始事件"
 

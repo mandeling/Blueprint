@@ -186,3 +186,40 @@ class CStart(CBaseNode):
 
     def OutputFlow(self):
         return ["输出"]
+
+
+@Register(define.NodeName.GET_VARIABLE)
+class CGetVariable(CBaseNode):
+    m_NodeType = define.NODE_TYPE_VARIABLE
+
+    def OutputData(self):
+        return [
+            ("输出", define.Type.INT, self.Output1),
+        ]
+
+    def Output1(self):
+        return self.GetValue("输出")
+
+
+@Register(define.NodeName.SET_VARIABLE)
+class CSetVariable(CBaseNode):
+    m_NodeType = define.NODE_TYPE_VARIABLE
+
+    def InputFlow(self):
+        return ["input"]
+
+    def OutputFlow(self):
+        return ["output"]
+
+    def InputData(self):
+        return [
+            ("输入", define.Type.INT),
+        ]
+
+    def OutputData(self):
+        return [
+            ("输出", define.Type.INT, self.Output1),
+        ]
+
+    def Output1(self):
+        return self.GetValue("输入")
