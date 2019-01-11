@@ -127,13 +127,16 @@
         "graphic_attr_name:name": "图表-2",
         "graphic_attr_name:line_list": [
             "{d6d5b691-6fbc-478c-b9cb-40349c9fced1}",
-            "{8da1c5b3-656e-4781-8bfd-b5336158740e}"
+            "{8da1c5b3-656e-4781-8bfd-b5336158740e}",
+            "{079a8224-ecf6-4c95-a1ea-026c001ed0c8}",
+            "{045b7c33-2272-4228-8ca7-fc03af671163}"
         ],
         "graphic_attr_name:node_list": [
             "{93321ca8-2026-48d0-9de8-d83540893337}",
             "{287e51f3-f7cc-408d-b29c-5a5e68818061}",
             "{99533d91-7065-43f1-8064-ce5e5a58902c}",
-            "{88b83930-6c46-4f38-94b2-59f222ced0d8}"
+            "{88b83930-6c46-4f38-94b2-59f222ced0d8}",
+            "{1b2cbe8f-4a03-4336-83ee-21646171541e}"
         ]
     },
     "{d6d5b691-6fbc-478c-b9cb-40349c9fced1}": {
@@ -145,6 +148,16 @@
         "line_attr_name:id": "{8da1c5b3-656e-4781-8bfd-b5336158740e}",
         "line_attr_name:output_pin_id": "{669ba128-6161-4b31-83f8-5a715c86c588}",
         "line_attr_name:input_pin_id": "{31a8d734-15d3-4eb5-8d64-28d4a048a063}"
+    },
+    "{079a8224-ecf6-4c95-a1ea-026c001ed0c8}": {
+        "line_attr_name:id": "{079a8224-ecf6-4c95-a1ea-026c001ed0c8}",
+        "line_attr_name:output_pin_id": "{ea2f1318-27a0-43ff-96be-9b7836df7ea0}",
+        "line_attr_name:input_pin_id": "{61f2e253-80c9-43c8-ac02-1d72511f2a6a}"
+    },
+    "{045b7c33-2272-4228-8ca7-fc03af671163}": {
+        "line_attr_name:id": "{045b7c33-2272-4228-8ca7-fc03af671163}",
+        "line_attr_name:output_pin_id": "{4a7aac44-de91-411a-87dc-7462c0518951}",
+        "line_attr_name:input_pin_id": "{21391b0d-0e4c-4928-9d94-8168936e9618}"
     },
     "{93321ca8-2026-48d0-9de8-d83540893337}": {
         "node_attr_name:id": "{93321ca8-2026-48d0-9de8-d83540893337}",
@@ -190,8 +203,8 @@
         "node_attr_name:type": 1,
         "node_attr_name:display_name": "开始事件",
         "node_attr_name:postion": [
-            -247.0,
-            -288.0
+            -127.0,
+            -308.0
         ],
         "node_attr_name:pin_list": [
             "{4a7aac44-de91-411a-87dc-7462c0518951}"
@@ -248,6 +261,46 @@
         "pin_attr_name:pin_type": 1,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 234
+    },
+    "{1b2cbe8f-4a03-4336-83ee-21646171541e}": {
+        "node_attr_name:id": "{1b2cbe8f-4a03-4336-83ee-21646171541e}",
+        "node_attr_name:name": "打印",
+        "node_attr_name:display_name": "打印",
+        "node_attr_name:postion": [
+            293.0,
+            -255.0
+        ],
+        "node_attr_name:pin_list": [
+            "{21391b0d-0e4c-4928-9d94-8168936e9618}",
+            "{03b5c38c-d3c9-4b62-8a36-2f3fba1d41f7}",
+            "{61f2e253-80c9-43c8-ac02-1d72511f2a6a}"
+        ],
+        "node_attr_name:type": 0,
+        "node_attr_name:variable_id": 0
+    },
+    "{21391b0d-0e4c-4928-9d94-8168936e9618}": {
+        "pin_attr_name:id": "{21391b0d-0e4c-4928-9d94-8168936e9618}",
+        "pin_attr_name:name": "输入",
+        "pin_attr_name:display_name": "输入",
+        "pin_attr_name:pin_type": 2,
+        "pin_attr_name:data_type": -1,
+        "pin_attr_name:data_value": -1
+    },
+    "{03b5c38c-d3c9-4b62-8a36-2f3fba1d41f7}": {
+        "pin_attr_name:id": "{03b5c38c-d3c9-4b62-8a36-2f3fba1d41f7}",
+        "pin_attr_name:name": "输出",
+        "pin_attr_name:display_name": "输出",
+        "pin_attr_name:pin_type": 3,
+        "pin_attr_name:data_type": -1,
+        "pin_attr_name:data_value": -1
+    },
+    "{61f2e253-80c9-43c8-ac02-1d72511f2a6a}": {
+        "pin_attr_name:id": "{61f2e253-80c9-43c8-ac02-1d72511f2a6a}",
+        "pin_attr_name:name": "输入1",
+        "pin_attr_name:display_name": "输入1",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
     },
     "bp_attr_name:": "{2a256062-676e-41a7-996d-3bb9f3a1723d}"
 }
