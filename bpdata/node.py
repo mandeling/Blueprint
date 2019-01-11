@@ -18,11 +18,14 @@ def Register(sNodeName):
 
 
 class CBaseNode(basemgr.CBase):
+    m_NodeType = define.NodeAttrName
+
     def __init__(self, ID, sNodeName=None):
         super(CBaseNode, self).__init__(ID)
         self.m_Info = {
             define.NodeAttrName.ID: ID,
             define.NodeAttrName.NAME: sNodeName,
+            define.NodeAttrName.TYPE: self.m_NodeType,
             define.NodeAttrName.DISPLAYNAME: sNodeName,
             define.NodeAttrName.POSITION: (0, 0),
             define.NodeAttrName.PINIDLIST: [],
@@ -172,6 +175,14 @@ class CPrint(CBaseNode):
 
     def InputFlow(self):
         return ["输入"]
+
+    def OutputFlow(self):
+        return ["输出"]
+
+
+@Register(define.NodeName.START)
+class CStart(CBaseNode):
+    m_NodeType = define.NODE_TYPE_EVENT
 
     def OutputFlow(self):
         return ["输出"]

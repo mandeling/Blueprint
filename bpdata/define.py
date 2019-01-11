@@ -12,6 +12,10 @@ PIN_INPUT_FLOW_TYPE = 2
 PIN_OUTPUT_FLOW_TYPE = 3
 
 
+NODE_TYPE_NORMAL = 0    # 正常节点
+NODE_TYPE_EVENT = 1     # 事件节点
+
+
 class Type:
     INT = 1
     FLOAT = 2
@@ -80,6 +84,8 @@ class NodeName:
     DIVIDE = "除法节点"
     PRINT = "打印节点"
 
+    START = "开始事件"
+
 
 
 # ----------------------Node-------------------------------
@@ -92,6 +98,7 @@ class NodeAttrName:
     DISPLAYNAME = NODE_ATTR_NAME_PREFIX + "display_name"
     POSITION = NODE_ATTR_NAME_PREFIX + "postion"
     PINIDLIST = NODE_ATTR_NAME_PREFIX + "pin_list"
+    TYPE = NODE_ATTR_NAME_PREFIX + "type"
 
 
 # ----------------------pin-------------------------------
