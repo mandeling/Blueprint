@@ -117,7 +117,6 @@ class CSearchWidget(QWidget):
             if iItemType == define.SearchTreeItemType.PIN:
                 ID = interface.GetNodeIDByPinID(ID)
             graphicID = interface.GetGraphicIDByNodeID(ID)
-            GetSignal().UI_FOCUS_GRAPHIC.emit(self.m_BPID, graphicID)
             GetSignal().UI_FOCUS_NODE.emit(graphicID, ID)
 
 
