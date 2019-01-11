@@ -12,6 +12,7 @@ class BlueprintAttrName:
     ID = BP_ATTR_NAME_PREFIX + "id"
     GRAPHIC_LIST = BP_ATTR_NAME_PREFIX + "graphic_list"
     VARIABLE_LIST = BP_ATTR_NAME_PREFIX + "variable_list"
+    EVENT_NODE = BP_ATTR_NAME_PREFIX + "event_node"
 
 
 # ----------------------graphic-------------------------------

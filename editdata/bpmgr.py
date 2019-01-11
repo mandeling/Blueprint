@@ -49,6 +49,7 @@ class CBP(basemgr.CBase):
             eddefine.BlueprintAttrName.ID: ID,
             eddefine.BlueprintAttrName.GRAPHIC_LIST: [],
             eddefine.BlueprintAttrName.VARIABLE_LIST: [],
+            eddefine.BlueprintAttrName.EVENT_NODE: None,
         }
 
     def Delete(self):
@@ -77,8 +78,8 @@ class CBP(basemgr.CBase):
         lstVar = self.GetAttr(eddefine.BlueprintAttrName.VARIABLE_LIST)
         for varID in lstVar:
             GetVariableMgr().LoadItemInfo(varID, dInfo)
-            GetIDMgr().SetVar2BP(varID, self.m_ID)
+            GetIDMgr().SetVar2BP(self.m_ID, varID)
         lstGraphic = self.GetAttr(eddefine.BlueprintAttrName.GRAPHIC_LIST)
         for graphicID in lstGraphic:
             GetGraphicMgr().LoadItemInfo(graphicID, dInfo)
-            GetIDMgr().SetGraphic2BP(graphicID, self.m_ID)
+            GetIDMgr().SetGraphic2BP(self.m_ID, graphicID)
