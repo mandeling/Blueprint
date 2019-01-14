@@ -59,6 +59,7 @@ class CBaseMgr:
         obj = self.NewObj(ID)
         obj.SetLoadInfo(dInfo)
         self.m_ItemInfo[ID] = obj
+        self.m_ID += 1
 
 
 class CBase:

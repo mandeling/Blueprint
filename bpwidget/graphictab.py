@@ -27,7 +27,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self._LoadGraphic()
 
     def _InitSignal(self):
-        self.currentChanged.connect(self.S_OnBPTabChange)
+        self.currentChanged.connect(self.S_OnGraphicChange)
         GetSignal().NEW_GRAPHIC.connect(self.S_NewGraphic)
         GetSignal().UI_FOCUS_GRAPHIC.connect(self.S_FocusGraphic)
 
@@ -68,7 +68,7 @@ class CBPTabWidget(QtWidgets.QTabWidget):
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
 
-    def S_OnBPTabChange(self):
+    def S_OnGraphicChange(self):
         oView = self.currentWidget()
         graphicID = oView.GetGraphicID()
         GetStatusMgr().SetCurGraphicID(graphicID)

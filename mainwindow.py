@@ -29,6 +29,7 @@ class CMainWindow(QTabWidget):
 
     def _InitUI(self):
         self.showMaximized()
+        self.setMovable(True)
         self.setWindowTitle("蓝图编辑器")
         oMainTab = mainview.CMainView(self)
         self.addTab(oMainTab, "主窗口")
