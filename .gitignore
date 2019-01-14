@@ -1,3 +1,4 @@
 *.pyc
 temp/
 __pycache__/
+ui/test.*

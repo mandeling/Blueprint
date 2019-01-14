@@ -70,7 +70,7 @@ class CBlueprintView(QGraphicsView):
                 self.m_RubberBand = QRubberBand(QRubberBand.Rectangle, self.viewport())
                 self.m_RubberBand.show()
 
-        if event.button() == Qt.RightButton:
+        if event.button() == Qt.MidButton:
             self.setTransformationAnchor(QGraphicsView.NoAnchor)
             self.setDragMode(QGraphicsView.ScrollHandDrag)
             self.m_StartPos = event.pos()
@@ -101,7 +101,7 @@ class CBlueprintView(QGraphicsView):
 
     def mouseReleaseEvent(self, event):
         super(CBlueprintView, self).mouseReleaseEvent(event)
-        if event.button() == Qt.RightButton:
+        if event.button() == Qt.MidButton:
             self.m_StartPos = None
             self.setDragMode(QGraphicsView.NoDrag)
         if event.button() == Qt.LeftButton:

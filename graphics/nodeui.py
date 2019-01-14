@@ -42,12 +42,12 @@ QLabel{
 QPushButton{
     background-color:transparent;
     color:white;
+    border:none;
 }
 QPushButton:hover{
     background:qlineargradient(spread:pad, x1:0, y1:1, x2:1, y2:1, stop:0 rgba(255, 0, 0, 0), stop:0.175141 rgba(255, 255, 255, 100), stop:0.824859 rgba(255, 255, 255, 100), stop:1 rgba(0, 0, 255, 0));
     border-image:transparent;
     color:white;
-    border:none;
 }
 """
 
@@ -70,7 +70,6 @@ class CNodeUI(QGraphicsProxyWidget):
         self.m_IsNodeMove = False   # 是否节点有拖动
         self.m_NodeWidget = CNodeWidget(nodeID)
         self.InitUI()
-        self.InitSlot()
         GetUIMgr().AddNodeUI(nodeID, self)
 
     def __del__(self):
@@ -88,21 +87,6 @@ class CNodeUI(QGraphicsProxyWidget):
         )
         self.setZValue(4)
         self.SetUnpressStyle()
-
-    def InitSlot(self):
-        """四个槽的初始化,先手动设置"""
-        iOffset = 8
-        for pinID in self.m_NodeWidget.m_ButtonList:
-            oBtn = GetUIMgr().GetPinBtnUI(pinID)
-            if oBtn.IsOutput():
-                center = (oBtn.width() + iOffset, oBtn.height() / 2)
-            else:
-                center = (0 - iOffset, oBtn.height() / 2)
-            oPinUI = pinui.CPinUI(pinID)
-            oPinUI.SetCenter(center)
-            oPinUI.setParentItem(self)
-            oPinUI.setPos(oBtn.x() + self.m_OutlineBorder, oBtn.y() + self.m_OutlineBorder)
-            oPinUI.SetPolygon(oBtn.width(), oBtn.height())
 
     def GetID(self):
         return self.m_NodeID
@@ -144,21 +128,11 @@ class CNodeWidget(QWidget):
         super(CNodeWidget, self).__init__(parent)
         self.m_NodeID = nodeID
         self.m_NodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
-        self.m_InputInfo = []
-        self.m_OutputInfo = []
-        self.m_ButtonList = []
-        self.InitData()
         self.InitUI()
 
-    def InitData(self):
-        lstPin = interface.GetNodeAttr(self.m_NodeID, bddefine.NodeAttrName.PINIDLIST)
-        for pinID in lstPin:
-            iPinType = interface.GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
-            if bddefine.PinIsInput(iPinType):
-                tmp = self.m_InputInfo
-            else:
-                tmp = self.m_OutputInfo
-            tmp.append(pinID)
+    def _PinIsInput(self, pinID):
+        iPinType = interface.GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
+        return bddefine.PinIsInput(iPinType)
 
     def InitUI(self):
         self.setObjectName("CNodeWidget")
@@ -204,62 +178,34 @@ class CNodeWidget(QWidget):
 
         # fot attr
         hBox = QtWidgets.QHBoxLayout()
-        inputVBox = QtWidgets.QVBoxLayout()
-        for pinID in self.m_InputInfo:
-            oInBtn = CNodeButtonUI(pinID, False, self.BCWidget)
-            inputVBox.addWidget(oInBtn)
-            self.m_ButtonList.append(pinID)
-        outputVBox = QtWidgets.QVBoxLayout()
-        for pinID in self.m_OutputInfo:
-            oOutBtn = CNodeButtonUI(pinID, True, self.BCWidget)
-            outputVBox.addWidget(oOutBtn)
-            self.m_ButtonList.append(pinID)
+        self.m_InputVBox = QtWidgets.QVBoxLayout()
+        self.m_OutputVBox = QtWidgets.QVBoxLayout()
+        lstPin = interface.GetNodeAttr(self.m_NodeID, bddefine.NodeAttrName.PINIDLIST)
+        for pinID in lstPin:
+            self._AddPinWidget(pinID)
+
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        hBox.addLayout(inputVBox)
+        hBox.addLayout(self.m_InputVBox)
         hBox.addItem(spacerItem)
-        hBox.addLayout(outputVBox)
+        hBox.addLayout(self.m_OutputVBox)
 
         self.verticalLayout_BCWidget.addLayout(hBox)
         self.verticalLayout_outline.addWidget(self.BCWidget)
         self.verticalLayout.addWidget(self.outline)
 
+    def _AddPinWidget(self, pinID):
+        if self._PinIsInput(pinID):
+            vBox = self.m_InputVBox
+            dirc = Qt.LeftToRight
+        else:
+            vBox = self.m_OutputVBox
+            dirc = Qt.RightToLeft
 
-class CNodeButtonUI(QPushButton):
-    def __init__(self, pinID, bOutput=False, parent=None):
-        super(CNodeButtonUI, self).__init__(parent)
-        self.m_PinID = pinID
-        self.m_BOutPut = bOutput
-        self.setCursor(Qt.PointingHandCursor)
-        if bOutput:
-            self.setLayoutDirection(QtCore.Qt.RightToLeft)
-        self.setStyleSheet("text-align:left;")
-        self.SetIcon()
-        self.SetText()
-        GetUIMgr().AddPinBtnUI(pinID, self)
+        pinWidget = pinui.CPinUI(pinID)
+        self._PinWidgetSignal(pinWidget)
+        pinWidget.setLayoutDirection(dirc)
+        vBox.addWidget(pinWidget)
+        vBox.setAlignment(pinWidget, Qt.AlignLeft)
 
-    def __del__(self):
-        GetUIMgr().DelPinBtnUI(self.m_PinID)
-
-    def GetPinID(self):
-        return self.m_PinID
-
-    def IsOutput(self):
-        return self.m_BOutPut
-
-    def SetIcon(self, iDataType=None):
-        if iDataType is None:
-            iPinType = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.PIN_TYPE)
-            if bddefine.PinIsFlow(iPinType):
-                iDataType = -1
-            else:
-                iDataType = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DATA_TYPE)
-        icon = QtGui.QIcon()
-        pix = ":/icon/btn_%s.png" % iDataType
-        icon.addPixmap(QtGui.QPixmap(pix), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.setIcon(icon)
-        self.setIconSize(QtCore.QSize(20, 20))
-
-    def SetText(self, sText=None):
-        if sText is None:
-            sText = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DISPLAYNAME)
-        self.setText(sText)
+    def _PinWidgetSignal(self, widget):
+        pass
