@@ -6,19 +6,29 @@
 """
 
 from PyQt5.QtWidgets import QWidget, QPushButton, QHBoxLayout, QLabel, QSizePolicy, QMenu
-from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtGui import QIcon, QPixmap, QCursor
+from PyQt5.QtCore import QSize, Qt, QPoint
+from PyQt5.QtGui import QIcon, QPixmap, QCursor, QTransform
 
 import bpdata.define as bddefine
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
 from pubcode import functor
+from signalmgr import GetSignal
+from pubcode.pubsignal import CMySignal
+
+
+def Test(pos, txt=""):
+    if not txt:
+        txt = "pos:"
+    print(txt, pos.x(), pos.y())
 
 
 class CPinUI(QWidget):
     def __init__(self, pinID, parent=None):
         super(CPinUI, self).__init__(parent)
         self.m_PinID = pinID
+        self.m_NodeID = interface.GetNodeIDByPinID(pinID)
+        self.m_GraphicID = interface.GetGraphicIDByNodeID(self.m_NodeID)
         self.m_Btn = None
         self.m_Label = None
         self.m_HLayout = None
@@ -88,11 +98,26 @@ class CPinUI(QWidget):
             self.m_HLayout.removeItem(item)
             self.m_Widget = None
 
+    def enterEvent(self, event):
+        super(CPinUI, self).enterEvent(event)
+        GetSignal().UI_LINE_CONNECT.emit(self.m_GraphicID, self.m_PinID)
+        event.accept()
+
 
 class CTypeButton(QPushButton):
+    m_Border = 10
+
     def __init__(self, pinID, parent=None):
         super(CTypeButton, self).__init__(parent)
         self.m_PinID = pinID
+        self.m_NodeID = interface.GetNodeIDByPinID(pinID)
+        self.m_GraphicID = interface.GetGraphicIDByNodeID(self.m_NodeID)
+        self.m_IsInputPin = interface.IsInputPin(pinID)
+        self.m_Center = None
+        GetUIMgr().AddPinBtnUI(pinID, self)
+
+    def __del__(self):
+        GetUIMgr().DelPinBtnUI(self.m_PinID)
 
     def _InitUI(self):
         self.setEnabled(True)
@@ -104,20 +129,38 @@ class CTypeButton(QPushButton):
         self.setFlat(False)
         self.setIconSize(QSize(20, 20))
 
-    # def mousePressEvent(self, event):
-    #     super(CTypeButton, self).mousePressEvent(event)
-    #     if event.button() == Qt.LeftButton:
-    #         self.scene().BeginConnect(self.m_PinID)
-    #     event.accept()
+    def GetCenter(self):
+        if not self.m_Center:
+            x, y = self.size().width(), self.size().height()
+            if self.m_IsInputPin:
+                self.m_Center = 0 - self.m_Border, y/2
+            else:
+                self.m_Center = x + self.m_Border, y/2
+        return self.m_Center
 
-    # def mouseMoveEvent(self, event):
-    #     super(CTypeButton, self).mouseMoveEvent(event)
-    #     event.accept()
-    #     if event.button() == Qt.LeftButton:
-    #         self.update()
+    def GetScenePos(self, ePos=None):
+        if not ePos:
+            ePos = QPoint(*self.GetCenter())
+        nodeUI = GetUIMgr().GetNodeUI(self.m_NodeID)
+        nPos = self.mapTo(nodeUI.m_NodeWidget, ePos)
+        sPos = nodeUI.mapToScene(nPos)
+        # print("scenePos:", sPos)
+        return sPos
 
-    # def mouseReleaseEvent(self, event):
-    #     event.accept()
-    #     super(CTypeButton, self).mouseReleaseEvent(event)
-    #     if event.button() == Qt.LeftButton:
-    #         self.scene().EndConnect(event)
+    def mousePressEvent(self, event):
+        super(CTypeButton, self).mousePressEvent(event)
+        if event.button() == Qt.LeftButton:
+            GetSignal().UI_LINE_PRESS.emit(self.m_GraphicID, self.m_PinID)
+        event.accept()
+
+    def mouseMoveEvent(self, event):
+        super(CTypeButton, self).mouseMoveEvent(event)
+        if event.button() == Qt.LeftButton:
+            GetSignal().UI_LINE_MOVE.emit(self.m_GraphicID)
+        event.accept()
+
+    def mouseReleaseEvent(self, event):
+        super(CTypeButton, self).mouseReleaseEvent(event)
+        if event.button() == Qt.LeftButton:
+            GetSignal().UI_LINE_RELEASE.emit(self.m_GraphicID)
+        event.accept()

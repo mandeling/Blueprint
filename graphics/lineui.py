@@ -7,8 +7,10 @@
 
 
 from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5.QtGui import QCursor
 
 from viewmgr.uimgr import GetUIMgr
+from editdata import interface
 
 
 class CLineUI(QtWidgets.QGraphicsItem):
@@ -70,15 +72,20 @@ class CLineUI(QtWidgets.QGraphicsItem):
         self.m_EndPinID = pinID
         self.UpdatePosition()
 
+    def GetPos(self, pinID):
+        pass
+
     def UpdatePosition(self):
-        startPinUI = GetUIMgr().GetPinUI(self.m_StartPinID)
+        startPinUI = GetUIMgr().GetPinBtnUI(self.m_StartPinID)
+        nodeID = interface.GetNodeIDByPinID(self.m_StartPinID)
+        nodeUI = GetUIMgr().GetNodeUI(nodeID)
         if startPinUI:
-            self.m_StartPoint = self.mapFromItem(startPinUI, *startPinUI.GetCenter())
+            self.m_StartPoint = startPinUI.GetScenePos()
         if self.m_EndPinID:
-            endPinUI = GetUIMgr().GetPinUI(self.m_EndPinID)
-            self.m_EndPoint = self.mapFromItem(endPinUI, *endPinUI.GetCenter())
+            endPinUI = GetUIMgr().GetPinBtnUI(self.m_EndPinID)
+            self.m_EndPoint = endPinUI.GetScenePos()
         else:
-            self.m_EndPoint = self.mapFromScene(self.scene().GetMouseScenePos())
+            self.m_EndPoint = nodeUI.scene().GetMouseScenePos(QCursor.pos())
         self.prepareGeometryChange()
         self.RecalculateShapeAndBount()
 
