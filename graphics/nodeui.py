@@ -91,10 +91,13 @@ class CNodeUI(QGraphicsProxyWidget):
         return self.m_NodeID
 
     def contextMenuEvent(self, event):
-        event.accept()
+        super(CNodeUI, self).contextMenuEvent(event)
+        if event.isAccepted():
+            return
         menu = QtWidgets.QMenu()
         menu.addAction("删除节点", self.S_OnDelNodeUI)
         menu.exec_(QtGui.QCursor.pos())
+        event.accept()
 
     def itemChange(self, change, value):
         if change == QGraphicsItem.ItemPositionHasChanged:

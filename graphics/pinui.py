@@ -47,10 +47,9 @@ class CPinUI(QWidget):
         hBox.addWidget(self.m_Label)
         hBox.addLayout(self.m_HLayout)
 
-    def contextMenuEvent(self, _):
+    def contextMenuEvent(self, event):
+        super(CPinUI, self).contextMenuEvent(event)
         lstLineID = interface.GetAllLineByPin(self.m_PinID)
-        if not lstLineID:
-            return
         menu = QMenu()
         for lineID in lstLineID:
             oPinID = interface.GetLineOtherPin(lineID, self.m_PinID)
@@ -58,9 +57,10 @@ class CPinUI(QWidget):
             nodeID = interface.GetNodeIDByPinID(oPinID)
             sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
             sMsg = "删除与\"%s\"-\"%s\"的连线" % (sNodeDisplayName, sPinDisplayName)
-            func = functor.Functor(self.scene().OnDelLineUI, lineID)
+            func = functor.Functor(interface.DelLine, lineID)
             menu.addAction(sMsg, func)
         menu.exec_(QCursor.pos())
+        event.accept()
 
     def SetIcon(self, iDataType=None):
         if iDataType is None:
