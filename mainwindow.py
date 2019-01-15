@@ -5,6 +5,8 @@
 @Desc: 主界面
 """
 
+import os
+
 from PyQt5.QtWidgets import QTabWidget, QPushButton, QTabBar, QFileDialog
 
 from signalmgr import GetSignal
@@ -45,9 +47,14 @@ class CMainWindow(QTabWidget):
 
     def S_NewBlueprint(self, bpID):
         oBPView = blueprintview.CBlueprintView(bpID, self)
-        sName = "蓝图-%s" % self._NewID()
-        iIndex = self.addTab(oBPView, sName)
+        sPath = self.m_BPID2Path.get(bpID, None)
+        if sPath:
+            tabName = os.path.split(sPath)[1]
+        else:
+            tabName = "蓝图-%s" % self._NewID()
+        iIndex = self.addTab(oBPView, tabName)
         self.setCurrentIndex(iIndex)
+        self.setTabToolTip(iIndex, sPath)
         self.m_BPInfo[bpID] = oBPView
 
         btn = QPushButton("x")
