@@ -60,6 +60,13 @@ class CBlueprintScene(QGraphicsScene):
     def GetGraphicID(self):
         return self.m_GraphicID
 
+    def GetMouseScenePos(self, gPos):
+        view = self.views()[0]
+        viewPos = view.mapFromGlobal(gPos)
+        scenePos = view.mapToScene(viewPos)
+        return scenePos
+
+    # ----------------------各种事件-------------------------------------
     def mousePressEvent(self, event):
         super(CBlueprintScene, self).mousePressEvent(event)
         if self.m_TempPinLine:
@@ -188,25 +195,12 @@ class CBlueprintScene(QGraphicsScene):
         if self.m_GraphicID != graphicID:
             return
         self.m_ReleaseTime = time.time()
-
-        # endPinUI = self.itemAt(sPos, QTransform())
-        # # print("endConnect", endPinUI)
-        # if isinstance(endPinUI, pinui.CPinUI):    # 如果是pinui
-        #     sPinID = self.m_TempPinLine.GetStartPinID()
-        #     ePinID = endPinUI.GetPID()
-        #     if interface.PinCanConnect(sPinID, ePinID):
-        #         if interface.IsInputPin(sPinID):
-        #             inputPinID, outputPinID = sPinID, ePinID
-        #         else:
-        #             inputPinID, outputPinID = ePinID, sPinID
-        #         lineID = interface.AddLine(self.m_GraphicID, outputPinID, inputPinID)
-        #         self.AddLineUI(lineID, inputPinID, outputPinID)
-
         self.removeItem(self.m_TempPinLine)
-        # self.m_TempPinLine = None
 
     def S_LineOnConnect(self, graphicID, ePinID):
         if self.m_GraphicID != graphicID:
+            return
+        if not self.m_TempPinLine:
             return
         if time.time() - self.m_ReleaseTime < 0.2:
             sPinID = self.m_TempPinLine.GetStartPinID()
@@ -217,34 +211,6 @@ class CBlueprintScene(QGraphicsScene):
                     inputPinID, outputPinID = ePinID, sPinID
                 lineID = interface.AddLine(self.m_GraphicID, outputPinID, inputPinID)
                 self.AddLineUI(lineID, inputPinID, outputPinID)
-
-        if self.m_TempPinLine:
-            # self.removeItem(self.m_TempPinLine)
-            self.m_TempPinLine = None
-
-    def BeginConnect(self, startPinID):
-        self.m_TempPinLine = lineui.CLineUI()
-        self.addItem(self.m_TempPinLine)
-        self.m_TempPinLine.SetStartPinID(startPinID)
-
-    def LineMoving(self):
-        self.m_TempPinLine.UpdatePosition()
-
-    def EndConnect(self, event):
-        sPos = event.scenePos()
-        endPinUI = self.itemAt(sPos, QTransform())
-        if isinstance(endPinUI, pinui.CPinUI):    # 如果是pinui
-            sPinID = self.m_TempPinLine.GetStartPinID()
-            ePinID = endPinUI.GetPID()
-            if interface.PinCanConnect(sPinID, ePinID):
-                if interface.IsInputPin(sPinID):
-                    inputPinID, outputPinID = sPinID, ePinID
-                else:
-                    inputPinID, outputPinID = ePinID, sPinID
-                lineID = interface.AddLine(self.m_GraphicID, outputPinID, inputPinID)
-                self.AddLineUI(lineID, inputPinID, outputPinID)
-
-        self.removeItem(self.m_TempPinLine)
         self.m_TempPinLine = None
 
     def AddLineUI(self, lineID, iPin, oPin):
@@ -265,9 +231,3 @@ class CBlueprintScene(QGraphicsScene):
         oLineUI = GetUIMgr().GetLineUI(lineID)
         if oLineUI:
             self.removeItem(oLineUI)
-
-    def GetMouseScenePos(self, gPos):
-        view = self.views()[0]
-        viewPos = view.mapFromGlobal(gPos)
-        scenePos = view.mapToScene(viewPos)
-        return scenePos

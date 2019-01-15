@@ -72,9 +72,6 @@ class CLineUI(QtWidgets.QGraphicsItem):
         self.m_EndPinID = pinID
         self.UpdatePosition()
 
-    def GetPos(self, pinID):
-        pass
-
     def UpdatePosition(self):
         startPinUI = GetUIMgr().GetPinBtnUI(self.m_StartPinID)
         nodeID = interface.GetNodeIDByPinID(self.m_StartPinID)

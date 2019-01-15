@@ -7,13 +7,12 @@
 
 
 from PyQt5 import QtWidgets, QtGui, QtCore
-from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsItem, QPushButton, QWidget
-from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtWidgets import QGraphicsProxyWidget, QGraphicsItem, QWidget
+from PyQt5.QtCore import Qt
 
 from . import pinui
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
-from pubcode import functor
 import bpdata.define as bddefine
 
 
@@ -91,9 +90,6 @@ class CNodeUI(QGraphicsProxyWidget):
     def GetID(self):
         return self.m_NodeID
 
-    def ToScenePos(self, gPos):
-        return self.scene().GetMouseScenePos(gPos)
-
     def contextMenuEvent(self, event):
         event.accept()
         menu = QtWidgets.QMenu()
@@ -124,13 +120,6 @@ class CNodeUI(QGraphicsProxyWidget):
     def SetUnpressStyle(self):
         self.m_NodeWidget.setStyleSheet(QSS_NODE_UNPRESS)
         self.setZValue(self.zValue() - 2)
-
-    # def mousePressEvent(self, event):
-    #     super(CNodeUI, self).mousePressEvent(event)
-    #     ePos = event.pos()
-    #     print("node-pos", ePos)
-    #     print("node-scenepos", self.mapToScene(ePos))
-    #     print("-"*20)
 
 
 class CNodeWidget(QWidget):

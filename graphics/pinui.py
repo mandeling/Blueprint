@@ -7,20 +7,13 @@
 
 from PyQt5.QtWidgets import QWidget, QPushButton, QHBoxLayout, QLabel, QSizePolicy, QMenu
 from PyQt5.QtCore import QSize, Qt, QPoint
-from PyQt5.QtGui import QIcon, QPixmap, QCursor, QTransform
+from PyQt5.QtGui import QIcon, QPixmap, QCursor
 
 import bpdata.define as bddefine
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
 from pubcode import functor
 from signalmgr import GetSignal
-from pubcode.pubsignal import CMySignal
-
-
-def Test(pos, txt=""):
-    if not txt:
-        txt = "pos:"
-    print(txt, pos.x(), pos.y())
 
 
 class CPinUI(QWidget):
@@ -138,13 +131,11 @@ class CTypeButton(QPushButton):
                 self.m_Center = x + self.m_Border, y/2
         return self.m_Center
 
-    def GetScenePos(self, ePos=None):
-        if not ePos:
-            ePos = QPoint(*self.GetCenter())
+    def GetScenePos(self):
+        ePos = QPoint(*self.GetCenter())
         nodeUI = GetUIMgr().GetNodeUI(self.m_NodeID)
         nPos = self.mapTo(nodeUI.m_NodeWidget, ePos)
         sPos = nodeUI.mapToScene(nPos)
-        # print("scenePos:", sPos)
         return sPos
 
     def mousePressEvent(self, event):
