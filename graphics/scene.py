@@ -220,14 +220,8 @@ class CBlueprintScene(QGraphicsScene):
         line.SetStartPinID(oPin)
         line.SetEndPinID(iPin)
 
-    def OnDelLineUI(self, lineID):
-        interface.DelLine(lineID)
-
     def S_OnDelLineUI(self, graphicID, lineID):
         if graphicID == self.m_GraphicID:
-            self._DelLineUI(lineID)
-
-    def _DelLineUI(self, lineID):
-        oLineUI = GetUIMgr().GetLineUI(lineID)
-        if oLineUI:
-            self.removeItem(oLineUI)
+            oLineUI = GetUIMgr().GetLineUI(lineID)
+            if oLineUI:
+                self.removeItem(oLineUI)
