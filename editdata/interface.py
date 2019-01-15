@@ -174,6 +174,13 @@ def IsInputPin(pinID):
     return False
 
 
+def IsFlowPin(pinID):
+    iPinType = GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
+    if bddefine.PinIsFlow(iPinType):
+        return True
+    return False
+
+
 def GetLinePinInfo(lineID):
     iPinID = GetLineAttr(lineID, eddefine.LineAttrName.INPUT_PINID)
     oPinID = GetLineAttr(lineID, eddefine.LineAttrName.OUTPUT_PINID)
