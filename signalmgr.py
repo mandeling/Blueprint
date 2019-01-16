@@ -20,6 +20,7 @@ def GetSignal():
 class CSignal:
     # 数据层信号
     DEL_LINE = CMySignal()  # graphicID, lineID
+    LINE_RUN_STATUE = CMySignal()  # lineID, bRun
 
     DEL_NODE = CMySignal()  # graphicID, nodeID
     NEW_NODE = CMySignal()  # graphicID, nodeID

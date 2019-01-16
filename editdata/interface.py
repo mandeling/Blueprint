@@ -74,6 +74,10 @@ def GetGraphicIDByNodeID(nodeID):
     return GetIDMgr().GetGraphicByNode(nodeID)
 
 
+def GetGraphicIDByLineID(lineID):
+    return GetIDMgr().GetGraphicByLine(lineID)
+
+
 # --------------------变量--------------------------------
 def NewVariable(bpID):
     varID = GetVariableMgr().NewVariable(bpID)

@@ -11,6 +11,7 @@ import logging
 from editdata import interface
 from editdata import define as eddefine
 from bpdata import define as bddefine
+from signalmgr import GetSignal
 
 
 g_BlueprintRunMgr = None
@@ -31,9 +32,12 @@ def GetPinValue(pinID):
 class CBlueprintRunMgr:
     def __init__(self):
         self.m_PinValue = {}
+        self.m_LineList = []
 
     def Reset(self):
         self.m_PinValue = {}
+        for lineID in self.m_LineList:
+            GetSignal().LINE_RUN_STATUE.emit(lineID, False)
 
     def _GetPinFunc(self, pinID):
         nodeID = interface.GetNodeIDByPinID(pinID)
@@ -58,6 +62,8 @@ class CBlueprintRunMgr:
                 self.m_PinValue[outPin] = outPinValue
                 self.m_PinValue[pinID] = outPinValue
                 logging.info("pin:%s->%s value:%s type:%s" % (outPin, pinID, outPinValue, type(outPinValue)))
+                GetSignal().LINE_RUN_STATUE.emit(lineID, True)
+                self.m_LineList.append(lineID)
                 return outPinValue
 
             # 无连线
@@ -84,6 +90,8 @@ class CBlueprintRunMgr:
         for lineID in lstline:
             inputPin = interface.GetLineOtherPin(lineID, outputPin)
             self.RunInputFlow(inputPin)
+            GetSignal().LINE_RUN_STATUE.emit(lineID, True)
+            self.m_LineList.append(lineID)
 
     def RunInputFlow(self, inputPin):
         func = self._GetPinFunc(inputPin)

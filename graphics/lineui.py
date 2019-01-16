@@ -25,8 +25,8 @@ class CLineUI(QGraphicsPathItem):
         self.m_EndPinID = None
         self.m_StartPoint = None
         self.m_EndPoint = None
-        self.m_Path = None
-        self.m_Rect = None
+        self.m_PenColor = Qt.white
+        self.m_BakColor = Qt.white
         self._InitUI()
         if lineID != -1:    # -1为临时连线
             GetUIMgr().AddLineUI(lineID, self)
@@ -39,17 +39,14 @@ class CLineUI(QGraphicsPathItem):
     def _InitUI(self):
         self.setFlag(QGraphicsPathItem.ItemIsSelectable)
         self.RecalculateShapeAndBount()
-        pen = QPen(Qt.white)
-        pen.setWidth(2)
-        pen.setJoinStyle(Qt.MiterJoin)
-        self.setPen(pen)
+        self._SetPen()
         self.setZValue(-1)
         self.update()
 
     def RecalculateShapeAndBount(self):
         if self.m_StartPoint is None or self.m_EndPoint is None:
-            self.m_Path = QPainterPath()
-            self.m_Path.addRect(0, 0, 0, 0)
+            qPath = QPainterPath()
+            qPath.addRect(0, 0, 0, 0)
             return
         if self.m_StartPoint.x() < self.m_EndPoint.x():
             centerY = (self.m_StartPoint.y() + self.m_EndPoint.y()) // 2
@@ -59,22 +56,23 @@ class CLineUI(QGraphicsPathItem):
             centerX = (self.m_StartPoint.x() + self.m_EndPoint.x()) // 2
             c1 = QPointF(centerX, self.m_StartPoint.y())
             c2 = QPointF(centerX, self.m_EndPoint.y())
-        self.m_Path = QPainterPath()
-        self.m_Path.moveTo(self.m_StartPoint)
-        self.m_Path.cubicTo(c1, c2, self.m_EndPoint)
-        self.m_Path.addEllipse(self.m_StartPoint, 4, 4)
-        self.m_Path.addEllipse(self.m_EndPoint, 4, 4)
-        self.setPath(self.m_Path)
+        qPath = QPainterPath()
+        qPath.moveTo(self.m_StartPoint)
+        qPath.cubicTo(c1, c2, self.m_EndPoint)
+        qPath.addEllipse(self.m_StartPoint, 4, 4)
+        qPath.addEllipse(self.m_EndPoint, 4, 4)
+        self.setPath(qPath)
 
-    def _ChangePen(self, pinID):
-        if interface.IsFlowPin(pinID):
-            pen = QPen(Qt.blue)
-            pen.setWidth(2)
-            pen.setJoinStyle(Qt.MiterJoin)
-            self.setPen(pen)
+    def _SetPen(self):
+        pen = QPen(self.m_PenColor)
+        pen.setWidth(2)
+        pen.setJoinStyle(Qt.MiterJoin)
+        self.setPen(pen)
 
     def SetStartPinID(self, pinID):
-        self._ChangePen(pinID)
+        if interface.IsFlowPin(pinID):
+            self.m_PenColor = Qt.blue
+            self._SetPen()
         self.m_StartPinID = pinID
         self.UpdatePosition()
 
@@ -103,3 +101,12 @@ class CLineUI(QGraphicsPathItem):
         painter.setRenderHint(QPainter.Antialiasing, True)
         option.state = QStyle.State_None
         super(CLineUI, self).paint(painter, option, widget)
+
+    def SetRunColor(self):
+        self.m_BakColor = self.m_PenColor
+        self.m_PenColor = Qt.red
+        self._SetPen()
+
+    def SetStopColor(self):
+        self.m_PenColor = self.m_BakColor
+        self._SetPen()
