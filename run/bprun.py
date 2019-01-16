@@ -38,6 +38,7 @@ class CBlueprintRunMgr:
         self.m_PinValue = {}
         for lineID in self.m_LineList:
             GetSignal().LINE_RUN_STATUE.emit(lineID, False)
+        self.m_LineList = []
 
     def _GetPinFunc(self, pinID):
         nodeID = interface.GetNodeIDByPinID(pinID)
