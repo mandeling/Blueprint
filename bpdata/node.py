@@ -65,7 +65,11 @@ class CBaseNode(basemgr.CBase):
         lstOutputFlow = self.OutputFlow()
         lstInputData = self.InputData()
         lstOutputData = self.OutputData()
-        for sPinName in lstInputFlow:
+        for tmp in lstInputFlow:
+            sPinName = tmp
+            if isinstance(tmp, tuple):
+                sPinName = tmp[0]
+                self.m_OutputFunc[sPinName] = tmp[1]
             self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_FLOW_TYPE, 0, sPinName)
 
         for sPinName in lstOutputFlow:
@@ -178,10 +182,15 @@ class CPrint(CBaseNode):
         ]
 
     def InputFlow(self):
-        return ["输入"]
+        return [
+            ("输入", self.Func1),
+        ]
 
     def OutputFlow(self):
         return ["输出"]
+
+    def Func1(self):
+        print(self.GetValue("输入1"))
 
 
 @Register(define.NodeName.START)

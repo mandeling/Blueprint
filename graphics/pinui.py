@@ -37,12 +37,12 @@ class CPinUI(QWidget):
     def _InitUI(self):
         hBox = QHBoxLayout(self)
         hBox.setContentsMargins(0, 0, 0, 0)
-        hBox.setSpacing(6)
+        hBox.setSpacing(0)
         self.m_Btn = CTypeButton(self.m_PinID, self)
         self.m_Label = QLabel(self)
         self.m_HLayout = QHBoxLayout()
         self.m_HLayout.setContentsMargins(0, 0, 0, 0)
-        self.m_HLayout.setSpacing(6)
+        self.m_HLayout.setSpacing(0)
         hBox.addWidget(self.m_Btn)
         hBox.addWidget(self.m_Label)
         hBox.addLayout(self.m_HLayout)
@@ -107,6 +107,7 @@ class CTypeButton(QPushButton):
         self.m_GraphicID = interface.GetGraphicIDByNodeID(self.m_NodeID)
         self.m_IsInputPin = interface.IsInputPin(pinID)
         self.m_Center = None
+        self._InitUI()
         GetUIMgr().AddPinBtnUI(pinID, self)
 
     def __del__(self):
@@ -120,7 +121,10 @@ class CTypeButton(QPushButton):
         sizePolicy.setHeightForWidth(self.sizePolicy().hasHeightForWidth())
         self.setSizePolicy(sizePolicy)
         self.setFlat(False)
-        self.setIconSize(QSize(20, 20))
+        size = QSize(20, 20)
+        self.setIconSize(size)
+        self.setMinimumSize(size)
+        self.setMaximumSize(size)
 
     def GetCenter(self):
         if not self.m_Center:

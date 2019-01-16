@@ -12,9 +12,24 @@ from editdata import define as eddefine
 from bpdata import define as bddefine
 
 
+g_RunMgr = None
+
+
+def GetRunMgr():
+    global g_RunMgr
+    if not g_RunMgr:
+        g_RunMgr = CRunPinMgr()
+    return g_RunMgr
+
+
+def GetValue(pinID):
+    pass
+
+
 class CRunPinMgr:
     def __init__(self):
         self.m_ItemInfo = {}
+        self.m_PinValue = {}
 
     def RunOutputFlow(self, outputPin):
         lstline = interface.GetAllLineByPin(outputPin)
