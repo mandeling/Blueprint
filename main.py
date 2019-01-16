@@ -6,6 +6,8 @@
 """
 
 import sys
+import os
+import logging
 import mainwindow
 
 from PyQt5 import QtWidgets, QtGui
@@ -16,8 +18,30 @@ from bpdata import node
 from pubcode.pubfunc import pubmisc
 
 
-def Start():
+def InitDir():
+    for sDir in ("bpfile", "log"):
+        if os.path.exists(sDir):
+            continue
+        os.makedirs(sDir)
+
+
+def InitConfig():
     sys.excepthook = pubmisc.SysExceptHook
+
+    sTime = pubmisc.Time2Str(timeformat="%Y-%m-%d")
+    sLogName = os.path.join("log", sTime+".log")
+    handler = logging.FileHandler(filename=sLogName, mode="a", encoding="utf-8")
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(filename)s(%(lineno)d) - %(levelname)s - %(message)s"))
+    logger = logging.getLogger()
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    logger.addHandler(ch)
+
+
+def Start():
+    InitDir()
+    InitConfig()
     Mainwindow()
 
 
