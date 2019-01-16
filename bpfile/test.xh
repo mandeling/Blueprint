@@ -48,8 +48,8 @@
     },
     "{e8a12b32-ea16-4b1b-aecc-d62b1e6f9b88}": {
         "node_attr_name:id": "{e8a12b32-ea16-4b1b-aecc-d62b1e6f9b88}",
-        "node_attr_name:name": "减法节点",
-        "node_attr_name:display_name": "减法节点",
+        "node_attr_name:name": "减法",
+        "node_attr_name:display_name": "减法",
         "node_attr_name:postion": [
             -260.0,
             -159.0
@@ -86,8 +86,8 @@
     },
     "{1c7fedc0-8b68-4031-84db-323acbdfc38d}": {
         "node_attr_name:id": "{1c7fedc0-8b68-4031-84db-323acbdfc38d}",
-        "node_attr_name:name": "打印节点",
-        "node_attr_name:display_name": "打印节点",
+        "node_attr_name:name": "打印",
+        "node_attr_name:display_name": "打印",
         "node_attr_name:postion": [
             89.0,
             -178.0
@@ -161,8 +161,8 @@
     },
     "{93321ca8-2026-48d0-9de8-d83540893337}": {
         "node_attr_name:id": "{93321ca8-2026-48d0-9de8-d83540893337}",
-        "node_attr_name:name": "减法节点",
-        "node_attr_name:display_name": "减法节点",
+        "node_attr_name:name": "减法",
+        "node_attr_name:display_name": "减法",
         "node_attr_name:postion": [
             7.0,
             -158.0
