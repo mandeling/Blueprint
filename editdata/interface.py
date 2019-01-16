@@ -124,6 +124,11 @@ def GetNodeIDByPinID(pinID):
     return GetIDMgr().GetNodeByPin(pinID)
 
 
+def GetNodeFuncInfo(nodeID):
+    oNode = GetNodeMgr().GetItem(nodeID)
+    return oNode.GetFuncInfo()
+
+
 # ---------------------引脚-------------------------------
 def AddPin(nodeID, oDefinePin):
     pinID = GetPinMgr().NewPin(oDefinePin)

@@ -126,3 +126,12 @@ class CNodeMgr(basemgr.CBaseMgr):
             interface.SetPinAttr(pinID, bddefine.PinAttrName.DISPLAYNAME, varName)
             interface.SetPinAttr(pinID, bddefine.PinAttrName.DATA_TYPE, varType)
             interface.SetPinAttr(pinID, bddefine.PinAttrName.VALUE, varValue)
+
+    def LoadItemInfo(self, ID, dInfo):
+        """加载节点时重新复制节点里面运行时对应的函数"""
+        sNodeName = dInfo[ID][bddefine.NodeAttrName.NAME]
+        oDefineNode = self.m_DefineInfo[sNodeName]
+        oNode = copy.deepcopy(oDefineNode)
+        oNode.SetID(ID)
+        oNode.SetLoadInfo(dInfo)
+        self.m_ItemInfo[ID] = oNode

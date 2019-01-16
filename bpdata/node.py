@@ -31,7 +31,7 @@ class CBaseNode(basemgr.CBase):
             define.NodeAttrName.TYPE: self.m_NodeType,
             define.NodeAttrName.VARIABLE_ID: 0,
         }
-        self.m_OutputFunc = {}  # 输出pin对应执行的函数
+        self.m_FuncInfo = {}  # pin对应执行的函数
         self.m_PinInfo = {}
         self._Run()
 
@@ -41,6 +41,9 @@ class CBaseNode(basemgr.CBase):
 
     def GetPinInfo(self):
         return self.m_PinInfo
+
+    def GetFuncInfo(self):
+        return self.m_FuncInfo
 
     def GetSaveInfo(self):
         from editdata.pinmgr import GetPinMgr
@@ -59,6 +62,10 @@ class CBaseNode(basemgr.CBase):
         for pinID in lstPin:
             GetPinMgr().LoadItemInfo(pinID, dInfo)
             GetIDMgr().SetPin2Node(self.m_ID, pinID)
+        # 更新pinInfo（pinName:真正的pin）
+        for pinID in lstPin:
+            pinName = GetPinMgr().GetItemAttr(pinID, define.PinAttrName.NAME)
+            self.m_PinInfo[pinName] = GetPinMgr().GetItem(pinID)
 
     def _Run(self):
         lstInputFlow = self.InputFlow()
@@ -69,7 +76,7 @@ class CBaseNode(basemgr.CBase):
             sPinName = tmp
             if isinstance(tmp, tuple):
                 sPinName = tmp[0]
-                self.m_OutputFunc[sPinName] = tmp[1]
+                self.m_FuncInfo[sPinName] = tmp[1]
             self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_FLOW_TYPE, 0, sPinName)
 
         for sPinName in lstOutputFlow:
@@ -80,13 +87,17 @@ class CBaseNode(basemgr.CBase):
             self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_DATA_TYPE, iDataType, sPinName)
 
         for lst in lstOutputData:
-            sPinName, iDataType, func = lst[0], lst[1], lst[2]
+            sPinName, iDataType = lst[0], lst[1],
             self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_OUTPUT_DATA_TYPE, iDataType, sPinName)
-            self.m_OutputFunc[sPinName] = func
+            if len(lst) > 2:
+                self.m_FuncInfo[sPinName] = lst[2]
 
     def GetValue(self, sPinName):
+        from run import bprun
         oPin = self.m_PinInfo[sPinName]
-        return oPin.GetAttr(define.PinAttrName.VALUE)
+        pinID = oPin.GetID()
+        value = bprun.GetPinValue(pinID)
+        return value
 
     def InputFlow(self):
         """输入流引脚的定义"""
@@ -207,7 +218,7 @@ class CGetVariable(CBaseNode):
 
     def OutputData(self):
         return [
-            ("输出", define.Type.INT, self.Output1),
+            ("输出", define.Type.INT),
         ]
 
     def Output1(self):

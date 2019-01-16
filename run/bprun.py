@@ -6,6 +6,7 @@
 """
 
 import copy
+import logging
 
 from editdata import interface
 from editdata import define as eddefine
@@ -22,14 +23,60 @@ def GetRunMgr():
     return g_RunMgr
 
 
-def GetValue(pinID):
-    pass
+def GetPinValue(pinID):
+    return GetRunMgr().GetPinValue(pinID)
 
 
 class CRunPinMgr:
     def __init__(self):
-        self.m_ItemInfo = {}
         self.m_PinValue = {}
+
+    def Reset(self):
+        self.m_PinValue = {}
+
+    def _GetPinFunc(self, pinID):
+        nodeID = interface.GetNodeIDByPinID(pinID)
+        pinName = interface.GetPinAttr(pinID, bddefine.PinAttrName.NAME)
+        dFunc = interface.GetNodeFuncInfo(nodeID)
+        func = dFunc.get(pinName, None)
+        return func
+
+    def GetPinValue(self, pinID):
+        if interface.IsFlowPin(pinID):
+            logging.error("flowpin:%s not value" % pinID)
+            return
+        if pinID in self.m_PinValue:
+            return self.m_PinValue[pinID]
+
+        if interface.IsInputPin(pinID):  # 输入引脚
+            lstLine = interface.GetAllLineByPin(pinID)
+            if lstLine:  # 有连线
+                lineID = lstLine[0]
+                outPin = interface.GetLineOtherPin(lineID, pinID)
+                outPinValue = GetPinValue(outPin)
+                self.m_PinValue[outPin] = outPinValue
+                self.m_PinValue[pinID] = outPinValue
+                logging.info("pin:%s->%s value:%s type:%s" % (outPin, pinID, outPinValue, type(outPinValue)))
+                return outPinValue
+
+            # 无连线
+            inputValue = interface.GetPinAttr(pinID, bddefine.PinAttrName.VALUE)
+            self.m_PinValue[pinID] = inputValue
+            logging.info("pin:%s value:%s type:%s" % (pinID, inputValue, type(inputValue)))
+            return inputValue
+
+        # 输出引脚
+        func = self._GetPinFunc(pinID)
+        if func:
+            outPinValue = func()
+            self.m_PinValue[pinID] = outPinValue
+            logging.info("pin:%s value:%s type:%s" % (pinID, outPinValue, type(outPinValue)))
+            return outPinValue
+
+        outPinValue = interface.GetPinAttr(pinID, bddefine.PinAttrName.VALUE)
+        self.m_PinValue[pinID] = outPinValue
+        logging.info("pin:%s value:%s type:%s" % (pinID, outPinValue, type(outPinValue)))
+        return outPinValue
 
     def RunOutputFlow(self, outputPin):
         lstline = interface.GetAllLineByPin(outputPin)
@@ -38,7 +85,9 @@ class CRunPinMgr:
             self.RunInputFlow(inputPin)
 
     def RunInputFlow(self, inputPin):
-        pass
+        func = self._GetPinFunc(inputPin)
+        if func:
+            func()
 
 
 def RunBlueprint(bpID):
@@ -47,6 +96,11 @@ def RunBlueprint(bpID):
         return
     lstPin = interface.GetNodeAttr(iEventNode, bddefine.NodeAttrName.PINIDLIST)
     startPin = lstPin[0]
-    obj = CRunPinMgr()
+    obj = GetRunMgr()
+    obj.Reset()
     obj.RunOutputFlow(startPin)
-    del obj
+
+
+def StopBlueprint(bpID):
+    obj = GetRunMgr()
+    obj.Reset()

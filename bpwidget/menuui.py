@@ -42,10 +42,12 @@ class CMenuUI(QWidget):
         GetSignal().UI_SAVE_BLUEPRINT.emit(self.m_BPID)
 
     def S_Start(self):
-        GetSignal().UI_OPEN_BLUEPRINT.emit(self.m_BPID)
+        from run import bprun
+        bprun.RunBlueprint(self.m_BPID)
 
     def S_Stop(self):
-        pass
+        from run import bprun
+        bprun.StopBlueprint(self.m_BPID)
 
     def S_Debug(self):
         pass
