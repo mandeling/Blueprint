@@ -13,21 +13,22 @@ from editdata import define as eddefine
 from bpdata import define as bddefine
 
 
-g_RunMgr = None
+g_BlueprintRunMgr = None
 
 
 def GetRunMgr():
-    global g_RunMgr
-    if not g_RunMgr:
-        g_RunMgr = CRunPinMgr()
-    return g_RunMgr
+    global g_BlueprintRunMgr
+    if not g_BlueprintRunMgr:
+        g_BlueprintRunMgr = CBlueprintRunMgr()
+    return g_BlueprintRunMgr
 
 
 def GetPinValue(pinID):
-    return GetRunMgr().GetPinValue(pinID)
+    value = GetRunMgr().GetPinValue(pinID)
+    return value
 
 
-class CRunPinMgr:
+class CBlueprintRunMgr:
     def __init__(self):
         self.m_PinValue = {}
 
@@ -88,6 +89,15 @@ class CRunPinMgr:
         func = self._GetPinFunc(inputPin)
         if func:
             func()
+        nodeID = interface.GetNodeIDByPinID(inputPin)
+        lstPin = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
+        for pinID in lstPin:
+            if pinID == inputPin:
+                continue
+            iType = interface.GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
+            if iType != bddefine.PIN_OUTPUT_FLOW_TYPE:
+                continue
+            self.RunOutputFlow(pinID)
 
 
 def RunBlueprint(bpID):
