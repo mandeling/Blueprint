@@ -21,18 +21,21 @@ class Type:
     INT = 1
     FLOAT = 2
     STR = 3
+    BOOL = 4
 
 
 NAME_TYPE = {
     "int": Type.INT,
     "float": Type.FLOAT,
     "str": Type.STR,
+    "bool": Type.BOOL,
 }
 
 TYPE_NAME = {
     Type.INT: "int",
     Type.FLOAT: "float",
     Type.STR: "str",
+    Type.BOOL: "bool",
 }
 
 
@@ -84,6 +87,7 @@ class NodeName:
     MULTIPLY = "乘法"
     DIVIDE = "除法"
     PRINT = "打印"
+    IF = "if分支"
 
     GET_VARIABLE = "Get变量"
     SET_VARIABLE = "Set变量"

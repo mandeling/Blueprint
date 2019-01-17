@@ -97,6 +97,8 @@ class CPinUI(QWidget):
         iDataTye = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DATA_TYPE)
         if iDataTye in (bddefine.Type.INT, bddefine.Type.FLOAT, bddefine.Type.STR):
             oWidget = subpinui.CValidatorLineEdit(self.m_PinID, iDataTye)
+        elif iDataTye == bddefine.Type.BOOL:
+            oWidget = subpinui.CCheckBox(self.m_PinID)
 
         if oWidget:
             self.m_HLayout.addWidget(oWidget)

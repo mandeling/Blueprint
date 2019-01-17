@@ -247,3 +247,22 @@ class CSetVariable(CBaseNode):
 
     def Output1(self):
         return self.GetValue("输入")
+
+
+@Register(define.NodeName.IF)
+class CIF(CBaseNode):
+    m_NodeType = define.NODE_TYPE_NORMAL
+
+    def InputFlow(self):
+        return [("input", self.Func1)]
+
+    def OutputFlow(self):
+        return ["True", "False"]
+
+    def InputData(self):
+        return [
+            ("Condition", define.Type.BOOL),
+        ]
+
+    def Func1(self):
+        pass
