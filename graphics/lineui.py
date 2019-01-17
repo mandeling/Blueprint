@@ -48,19 +48,12 @@ class CLineUI(QGraphicsPathItem):
             qPath = QPainterPath()
             qPath.addRect(0, 0, 0, 0)
             return
-        if self.m_StartPoint.x() < self.m_EndPoint.x():
-            centerY = (self.m_StartPoint.y() + self.m_EndPoint.y()) // 2
-            c1 = QPointF(self.m_StartPoint.x(), centerY)
-            c2 = QPointF(self.m_EndPoint.x(), centerY)
-        else:
-            centerX = (self.m_StartPoint.x() + self.m_EndPoint.x()) // 2
-            c1 = QPointF(centerX, self.m_StartPoint.y())
-            c2 = QPointF(centerX, self.m_EndPoint.y())
+        centerX = (self.m_StartPoint.x() + self.m_EndPoint.x()) // 2
+        c1 = QPointF(centerX, self.m_StartPoint.y())
+        c2 = QPointF(centerX, self.m_EndPoint.y())
         qPath = QPainterPath()
         qPath.moveTo(self.m_StartPoint)
         qPath.cubicTo(c1, c2, self.m_EndPoint)
-        qPath.addEllipse(self.m_StartPoint, 4, 4)
-        qPath.addEllipse(self.m_EndPoint, 4, 4)
         self.setPath(qPath)
 
     def _SetPen(self):

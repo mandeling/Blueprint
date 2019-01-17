@@ -98,8 +98,6 @@ class CPinUI(QWidget):
 
 
 class CTypeButton(QPushButton):
-    m_Border = 10
-
     def __init__(self, pinID, parent=None):
         super(CTypeButton, self).__init__(parent)
         self.m_PinID = pinID
@@ -130,9 +128,9 @@ class CTypeButton(QPushButton):
         if not self.m_Center:
             x, y = self.size().width(), self.size().height()
             if self.m_IsInputPin:
-                self.m_Center = 0 - self.m_Border, y/2
+                self.m_Center = 0 , y / 2
             else:
-                self.m_Center = x + self.m_Border, y/2
+                self.m_Center = x , y / 2
         return self.m_Center
 
     def GetScenePos(self):
