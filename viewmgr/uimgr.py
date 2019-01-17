@@ -7,6 +7,8 @@
 
 import weakref
 
+from signalmgr import GetSignal
+
 g_UIMgr = None
 
 
@@ -23,7 +25,16 @@ class CUIManager:
         self.m_PinBtnUI = {}
         self.m_PinUI = {}
         self.m_LineUI = {}
+    #     self._InitSignal()
 
+    # # ---------------------------ui相关信号------------------------------
+    # def _InitSignal(self):
+    #     GetSignal().UI_PIN_UPDATE_VALUE.connect(self.S_PinUpdateValue)
+
+    # def S_PinUpdateValue(self, pinID, value):
+    #     oPinUI = self.GetPinUI(pinID)
+
+    # ---------------------------ui对象操作------------------------------
     def AddNodeUI(self, nodeID, oNodeUI):
         self.m_NodeUI[nodeID] = weakref.ref(oNodeUI)
 

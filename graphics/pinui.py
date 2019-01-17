@@ -10,6 +10,7 @@ from PyQt5.QtCore import QSize, Qt, QPoint
 from PyQt5.QtGui import QIcon, QPixmap, QCursor
 
 import bpdata.define as bddefine
+from . import subpinui
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
 from pubcode import functor
@@ -29,6 +30,7 @@ class CPinUI(QWidget):
         self._InitUI()
         self.SetIcon()
         self.SetText()
+        self.SetWidget()
         GetUIMgr().AddPinUI(pinID, self)
 
     def __del__(self):
@@ -90,6 +92,16 @@ class CPinUI(QWidget):
             self.m_HLayout.removeWidget(self.m_Widget)
             self.m_HLayout.removeItem(item)
             self.m_Widget = None
+
+        oWidget = None
+        iDataTye = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DATA_TYPE)
+        if iDataTye in (bddefine.Type.INT, bddefine.Type.FLOAT, bddefine.Type.STR):
+            oWidget = subpinui.CValidatorLineEdit(self.m_PinID, iDataTye)
+
+        if oWidget:
+            self.m_HLayout.addWidget(oWidget)
+            self.m_Widget = oWidget
+            self.adjustSize()
 
     def enterEvent(self, event):
         super(CPinUI, self).enterEvent(event)
