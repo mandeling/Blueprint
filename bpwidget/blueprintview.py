@@ -5,11 +5,12 @@
 @Desc: 主窗口
 """
 
-from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy
+from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy, QMenuBar, QAction
 from PyQt5.QtCore import Qt
 
 from bpwidget import graphictab
 from bpwidget import detailui, menuui, bpattrwidget, searchui
+from pubcode.pubqt.pubmenu import menumgr, menudefine
 
 
 class CBlueprintView(QMainWindow):
@@ -24,6 +25,8 @@ class CBlueprintView(QMainWindow):
         self.m_LogWidget = None
         self._InitCorner()
         self._InitDock()
+        self._InitMenu()
+        self._InitWindowsMenu()
 
     def _InitCorner(self):
         self.setCorner(Qt.TopLeftCorner, Qt.LeftDockWidgetArea)
@@ -60,3 +63,51 @@ class CBlueprintView(QMainWindow):
         self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock)
         self.addDockWidget(Qt.LeftDockWidgetArea, leftDock)
         self.setCentralWidget(self.m_BPTabWidget)
+
+    def _InitMenu(self):
+        oMenu = menumgr.InitMenu(self)
+        for dMenuConfig in self.GetMenunInfo():
+            oMenu.AddMenu(dMenuConfig)
+        pMenuBar = oMenu.BuildChildMenu()
+        self.setMenuBar(pMenuBar)
+
+    def _InitWindowsMenu(self):
+        def UpdateWindowsStatue():
+            dMap = {oAction.text(): oAction for oAction in oWindowsMenu.actions()}
+            for oChild in lstChilde:
+                dMap[oChild.windowTitle()].setChecked(oChild.isVisible())
+
+        def OnWindows():
+            for oChild in lstChilde:
+                oSender = self.sender()
+                if oSender.text() != oChild.windowTitle():
+                    continue
+                if oSender.isChecked():
+                    oChild.show()
+                else:
+                    oChild.hide()
+                return
+
+        oMenu = menumgr.GetMenu(self)
+        oWindowsMenu = oMenu.GetSubMenu("窗口")
+        oWindowsMenu.aboutToShow.connect(UpdateWindowsStatue)
+        oWindowsMenu.clear()
+
+        lstChilde = []
+        for oChild in self.children():
+            if not isinstance(oChild, (QDockWidget,)):
+                continue
+            lstChilde.append(oChild)
+
+        for oChild in lstChilde:
+            oAction = QAction(oChild.windowTitle(), self)
+            oAction.triggered.connect(OnWindows)
+            oAction.setCheckable(True)
+            oWindowsMenu.addAction(oAction)
+
+    def GetMenunInfo(self):
+        return [
+            {
+                menudefine.MENU_NAME: "窗口/",
+            }
+        ]

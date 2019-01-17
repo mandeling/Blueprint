@@ -23,11 +23,10 @@ class CMainView(QMainWindow):
         self._InitDock()
 
     def _InitMenu(self):
-        menumgr.InitMgr(self)
-        oMenuMgr = menumgr.GetMenuMgr()
+        oMenu = menumgr.InitMenu(self)
         for dMenuConfig in self.GetMenunInfo():
-            oMenuMgr.AddMenu(dMenuConfig)
-        pMenuBar = oMenuMgr.BuildChildMenu()
+            oMenu.AddMenu(dMenuConfig)
+        pMenuBar = oMenu.BuildChildMenu()
         self.setMenuBar(pMenuBar)
 
     def _InitCorner(self):
