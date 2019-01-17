@@ -35,6 +35,7 @@ class CLineMgr(basemgr.CBaseMgr):
         GetIDMgr().SetLine2Graphic(graphicID, lineID)           # 记录line对应的graphic
         GetIDMgr().AddLine2Pin(oPinID, iPinID, lineID)          # 记录引脚对应的line
         GetGraphicMgr().AddLine2Graphic(lineID)                 # 添加到graphic属性里面
+        GetSignal().PIN_ADD_LINE.emit(iPinID)
         return lineID
 
     def DelLine(self, lineID):
@@ -47,6 +48,7 @@ class CLineMgr(basemgr.CBaseMgr):
         del self.m_ItemInfo[lineID]
         graphicID = GetIDMgr().DelLine2Graphic(lineID)
         GetSignal().DEL_LINE.emit(graphicID, lineID)
+        GetSignal().PIN_DEL_LINE.emit(iPinID)
 
     def NewObj(self, ID):
         oItem = CLine(ID)

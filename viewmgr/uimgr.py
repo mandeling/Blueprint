@@ -25,14 +25,20 @@ class CUIManager:
         self.m_PinBtnUI = {}
         self.m_PinUI = {}
         self.m_LineUI = {}
-    #     self._InitSignal()
+        self._InitSignal()
 
-    # # ---------------------------ui相关信号------------------------------
-    # def _InitSignal(self):
-    #     GetSignal().UI_PIN_UPDATE_VALUE.connect(self.S_PinUpdateValue)
+    # ---------------------------ui相关信号------------------------------
+    def _InitSignal(self):
+        GetSignal().PIN_ADD_LINE.connect(self.S_PinAddLine)
+        GetSignal().PIN_DEL_LINE.connect(self.S_PinDelLine)
 
-    # def S_PinUpdateValue(self, pinID, value):
-    #     oPinUI = self.GetPinUI(pinID)
+    def S_PinAddLine(self, pinID):
+        oPinUI = self.GetPinUI(pinID)
+        oPinUI.HideDefaultWidget()
+
+    def S_PinDelLine(self, pinID):
+        oPinUI = self.GetPinUI(pinID)
+        oPinUI.ShowDefaultWidget()
 
     # ---------------------------ui对象操作------------------------------
     def AddNodeUI(self, nodeID, oNodeUI):

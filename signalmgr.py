@@ -28,6 +28,9 @@ class CSignal:
     NEW_VARIABLE = CMySignal()  # bpID, varID
     NEW_GRAPHIC = CMySignal()   # bpID, graphicID
 
+    PIN_ADD_LINE = CMySignal()  # pinID
+    PIN_DEL_LINE = CMySignal()  # pinID
+
     # ui层信号
     # --蓝图--
     UI_NEW_BLUEPRINT = CMySignal()   # bpID

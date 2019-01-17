@@ -26,11 +26,11 @@ class CPinUI(QWidget):
         self.m_Btn = None
         self.m_Label = None
         self.m_HLayout = None
-        self.m_Widget = None
+        self.m_DefaultWidget = None  # 默认值控件
         self._InitUI()
         self.SetIcon()
         self.SetText()
-        self.SetWidget()
+        self.ShowDefaultWidget()
         GetUIMgr().AddPinUI(pinID, self)
 
     def __del__(self):
@@ -81,29 +81,30 @@ class CPinUI(QWidget):
             sText = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DISPLAYNAME)
         self.m_Label.setText(sText)
 
-    def SetWidget(self):
+    def ShowDefaultWidget(self):
         iPinType = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.PIN_TYPE)
         if iPinType != bddefine.PIN_INPUT_DATA_TYPE:
             return
-        if self.m_Widget:
-            self.m_Widget.setParent(None)
-            index = self.m_HLayout.itemAt(self.m_Widget)
-            item = self.m_HLayout.itemAt(index)
-            self.m_HLayout.removeWidget(self.m_Widget)
-            self.m_HLayout.removeItem(item)
-            self.m_Widget = None
-
         oWidget = None
         iDataTye = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DATA_TYPE)
         if iDataTye in (bddefine.Type.INT, bddefine.Type.FLOAT, bddefine.Type.STR):
             oWidget = subpinui.CValidatorLineEdit(self.m_PinID, iDataTye)
         elif iDataTye == bddefine.Type.BOOL:
             oWidget = subpinui.CCheckBox(self.m_PinID)
-
         if oWidget:
             self.m_HLayout.addWidget(oWidget)
-            self.m_Widget = oWidget
+            self.m_DefaultWidget = oWidget
             self.adjustSize()
+
+    def HideDefaultWidget(self):
+        if not self.m_DefaultWidget:
+            return
+        self.m_DefaultWidget.setParent(None)
+        index = self.m_HLayout.indexOf(self.m_DefaultWidget)
+        item = self.m_HLayout.itemAt(index)
+        self.m_HLayout.removeWidget(self.m_DefaultWidget)
+        self.m_HLayout.removeItem(item)
+        self.m_DefaultWidget = None
 
     def enterEvent(self, event):
         super(CPinUI, self).enterEvent(event)
