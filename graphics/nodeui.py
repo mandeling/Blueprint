@@ -13,6 +13,7 @@ from PyQt5.QtCore import Qt
 from . import pinui
 from editdata import interface
 from viewmgr.uimgr import GetUIMgr
+from run import bprun
 import bpdata.define as bddefine
 
 
@@ -130,11 +131,8 @@ class CNodeWidget(QWidget):
         super(CNodeWidget, self).__init__(parent)
         self.m_NodeID = nodeID
         self.m_NodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
+        self.m_IsFlowNode = False
         self.InitUI()
-
-    def _PinIsInput(self, pinID):
-        iPinType = interface.GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
-        return bddefine.PinIsInput(iPinType)
 
     def InitUI(self):
         self.setObjectName("CNodeWidget")
@@ -195,8 +193,25 @@ class CNodeWidget(QWidget):
         self.verticalLayout_outline.addWidget(self.BCWidget)
         self.verticalLayout.addWidget(self.outline)
 
+    def keyPressEvent(self, event):
+        super(CNodeWidget, self).keyPressEvent(event)
+        if event.key() == Qt.Key_F9:
+            self.S_SetDebugLable()
+
+    def S_SetDebugLable(self):
+        if not self.m_IsFlowNode:
+            return
+        bShow = bprun.SetBreakpoint(self.m_NodeID)
+        if bShow:
+            self.lable_debug.show()
+        else:
+            self.lable_debug.hide()
+
     def _AddPinWidget(self, pinID):
-        if self._PinIsInput(pinID):
+        if interface.IsFlowPin(pinID):
+            self.m_IsFlowNode = True
+
+        if interface.IsInputPin(pinID):
             vBox = self.m_InputVBox
             dirc = Qt.LeftToRight
         else:

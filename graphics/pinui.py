@@ -37,12 +37,12 @@ class CPinUI(QWidget):
     def _InitUI(self):
         hBox = QHBoxLayout(self)
         hBox.setContentsMargins(0, 0, 0, 0)
-        hBox.setSpacing(0)
+        hBox.setSpacing(6)
         self.m_Btn = CTypeButton(self.m_PinID, self)
         self.m_Label = QLabel(self)
         self.m_HLayout = QHBoxLayout()
         self.m_HLayout.setContentsMargins(0, 0, 0, 0)
-        self.m_HLayout.setSpacing(0)
+        self.m_HLayout.setSpacing(6)
         hBox.addWidget(self.m_Btn)
         hBox.addWidget(self.m_Label)
         hBox.addLayout(self.m_HLayout)
@@ -128,9 +128,9 @@ class CTypeButton(QPushButton):
         if not self.m_Center:
             x, y = self.size().width(), self.size().height()
             if self.m_IsInputPin:
-                self.m_Center = 0 , y / 2
+                self.m_Center = 0, y / 2
             else:
-                self.m_Center = x , y / 2
+                self.m_Center = x, y / 2
         return self.m_Center
 
     def GetScenePos(self):

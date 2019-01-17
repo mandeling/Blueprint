@@ -24,28 +24,82 @@ def GetRunMgr():
     return g_BlueprintRunMgr
 
 
+def RunBlueprint(bpID):
+    """运行蓝图"""
+    iEventNode = interface.GetBlueprintAttr(bpID, eddefine.BlueprintAttrName.EVENT_NODE)
+    if not iEventNode:
+        return
+    lstPin = interface.GetNodeAttr(iEventNode, bddefine.NodeAttrName.PINIDLIST)
+    startPin = lstPin[0]
+    obj = GetRunMgr()
+    obj.Run(startPin)
+
+
+def StopBlueprint(bpID):
+    """停止运行蓝图"""
+    obj = GetRunMgr()
+    obj.Reset()
+
+
+def SetBreakpoint(nodeID):
+    obj = GetRunMgr()
+    bShow = obj.SetBreakpoint(nodeID)
+    return bShow
+
+
+def NextBreakpoint():
+    obj = GetRunMgr()
+    obj.NextBreakpoint()
+
+
 def GetPinValue(pinID):
     value = GetRunMgr().GetPinValue(pinID)
     return value
 
 
+def GetPinFunc(pinID):
+    nodeID = interface.GetNodeIDByPinID(pinID)
+    pinName = interface.GetPinAttr(pinID, bddefine.PinAttrName.NAME)
+    dFunc = interface.GetNodeFuncInfo(nodeID)
+    func = dFunc.get(pinName, None)
+    return func
+
+
+BLUEPRINT_RUN = 1
+BLUEPRINT_STOP = 2
+BLUEPRINT_DEBUG = 4
+
+
 class CBlueprintRunMgr:
     def __init__(self):
         self.m_PinValue = {}
+        self.m_Breakpoint = {}
         self.m_LineList = []
+        self.m_CurInputFlowPin = None
+        self.m_Statue = 0
 
     def Reset(self):
         self.m_PinValue = {}
         for lineID in self.m_LineList:
             GetSignal().LINE_RUN_STATUE.emit(lineID, False)
         self.m_LineList = []
+        self.m_Statue = 0
 
-    def _GetPinFunc(self, pinID):
-        nodeID = interface.GetNodeIDByPinID(pinID)
-        pinName = interface.GetPinAttr(pinID, bddefine.PinAttrName.NAME)
-        dFunc = interface.GetNodeFuncInfo(nodeID)
-        func = dFunc.get(pinName, None)
-        return func
+    def Run(self, startPin):
+        self.Reset()
+        self.m_Statue ^= BLUEPRINT_RUN
+        self.RunOutputFlow(startPin)
+
+    def NextBreakpoint(self):
+        if self.m_CurInputFlowPin:
+            self.RunInputFlow(self.m_CurInputFlowPin)
+
+    def SetBreakpoint(self, nodeID):
+        if nodeID in self.m_Breakpoint:
+            del self.m_Breakpoint[nodeID]
+            return False
+        self.m_Breakpoint[nodeID] = True
+        return True
 
     def GetPinValue(self, pinID):
         if interface.IsFlowPin(pinID):
@@ -74,7 +128,7 @@ class CBlueprintRunMgr:
             return inputValue
 
         # 输出引脚
-        func = self._GetPinFunc(pinID)
+        func = GetPinFunc(pinID)
         if func:
             outPinValue = func()
             self.m_PinValue[pinID] = outPinValue
@@ -95,10 +149,13 @@ class CBlueprintRunMgr:
             self.m_LineList.append(lineID)
 
     def RunInputFlow(self, inputPin):
-        func = self._GetPinFunc(inputPin)
+        nodeID = interface.GetNodeIDByPinID(inputPin)
+        if self.m_CurInputFlowPin != inputPin and nodeID in self.m_Breakpoint:
+            self.m_CurInputFlowPin = inputPin
+            return
+        func = GetPinFunc(inputPin)
         if func:
             func()
-        nodeID = interface.GetNodeIDByPinID(inputPin)
         lstPin = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
             if pinID == inputPin:
@@ -107,19 +164,3 @@ class CBlueprintRunMgr:
             if iType != bddefine.PIN_OUTPUT_FLOW_TYPE:
                 continue
             self.RunOutputFlow(pinID)
-
-
-def RunBlueprint(bpID):
-    iEventNode = interface.GetBlueprintAttr(bpID, eddefine.BlueprintAttrName.EVENT_NODE)
-    if not iEventNode:
-        return
-    lstPin = interface.GetNodeAttr(iEventNode, bddefine.NodeAttrName.PINIDLIST)
-    startPin = lstPin[0]
-    obj = GetRunMgr()
-    obj.Reset()
-    obj.RunOutputFlow(startPin)
-
-
-def StopBlueprint(bpID):
-    obj = GetRunMgr()
-    obj.Reset()

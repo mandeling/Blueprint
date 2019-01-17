@@ -11,6 +11,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import QSize
 
 from signalmgr import GetSignal
+from run import bprun
 
 
 class CMenuUI(QWidget):
@@ -24,7 +25,7 @@ class CMenuUI(QWidget):
         horizontalLayout.addWidget(self._GetButton("保存", "save", self.S_Save))
         horizontalLayout.addWidget(self._GetButton("开始", "start", self.S_Start))
         horizontalLayout.addWidget(self._GetButton("停止", "stop", self.S_Stop))
-        horizontalLayout.addWidget(self._GetButton("调试", "debug", self.S_Debug))
+        horizontalLayout.addWidget(self._GetButton("断点", "debug", self.S_Debug))
         horizontalLayout.addWidget(self._GetButton("下一步", "next", self.S_Next))
         spacerItem = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         horizontalLayout.addItem(spacerItem)
@@ -42,15 +43,13 @@ class CMenuUI(QWidget):
         GetSignal().UI_SAVE_BLUEPRINT.emit(self.m_BPID)
 
     def S_Start(self):
-        from run import bprun
         bprun.RunBlueprint(self.m_BPID)
 
     def S_Stop(self):
-        from run import bprun
         bprun.StopBlueprint(self.m_BPID)
 
     def S_Debug(self):
         pass
 
     def S_Next(self):
-        pass
+        bprun.NextBreakpoint()
