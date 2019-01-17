@@ -85,6 +85,9 @@ class CPinUI(QWidget):
         iPinType = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.PIN_TYPE)
         if iPinType != bddefine.PIN_INPUT_DATA_TYPE:
             return
+        lstLine = interface.GetAllLineByPin(self.m_PinID)
+        if lstLine:
+            return
         oWidget = None
         iDataTye = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.DATA_TYPE)
         if iDataTye in (bddefine.Type.INT, bddefine.Type.FLOAT, bddefine.Type.STR):
