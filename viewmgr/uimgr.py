@@ -31,6 +31,7 @@ class CUIManager:
     def _InitSignal(self):
         GetSignal().PIN_ADD_LINE.connect(self.S_PinAddLine)
         GetSignal().PIN_DEL_LINE.connect(self.S_PinDelLine)
+        GetSignal().LINE_RUN_STATUE.connect(self.S_ChangeLineRunStaue)
 
     def S_PinAddLine(self, pinID):
         oPinUI = self.GetPinUI(pinID)
@@ -39,6 +40,15 @@ class CUIManager:
     def S_PinDelLine(self, pinID):
         oPinUI = self.GetPinUI(pinID)
         oPinUI.ShowDefaultWidget()
+
+    def S_ChangeLineRunStaue(self, lineID, bRun):
+        oLineUI = GetUIMgr().GetLineUI(lineID)
+        if not oLineUI:
+            return
+        if bRun:
+            oLineUI.SetRunColor()
+        else:
+            oLineUI.SetStopColor()
 
     # ---------------------------ui对象操作------------------------------
     def AddNodeUI(self, nodeID, oNodeUI):

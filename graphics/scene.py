@@ -51,7 +51,6 @@ class CBlueprintScene(QGraphicsScene):
         GetSignal().DEL_LINE.connect(self.S_OnDelLineUI)
         GetSignal().DEL_NODE.connect(self.S_OnDelNodeUI)
         GetSignal().NEW_NODE.connect(self.S_OnNewNodeUI)
-        GetSignal().LINE_RUN_STATUE.connect(self.S_ChangeLineRunStaue)
 
         GetSignal().UI_LINE_PRESS.connect(self.S_LineOnPress)
         GetSignal().UI_LINE_MOVE.connect(self.S_LineOnMove)
@@ -226,15 +225,3 @@ class CBlueprintScene(QGraphicsScene):
             oLineUI = GetUIMgr().GetLineUI(lineID)
             if oLineUI:
                 self.removeItem(oLineUI)
-
-    def S_ChangeLineRunStaue(self, lineID, bRun):
-        graphicID = interface.GetGraphicIDByLineID(lineID)
-        if graphicID != self.m_GraphicID:
-            return
-        oLineUI = GetUIMgr().GetLineUI(lineID)
-        if not oLineUI:
-            return
-        if bRun:
-            oLineUI.SetRunColor()
-        else:
-            oLineUI.SetStopColor()
