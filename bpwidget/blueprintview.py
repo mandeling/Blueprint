@@ -11,6 +11,7 @@ from PyQt5.QtCore import Qt
 from bpwidget import graphictab
 from bpwidget import detailui, menuui, bpattrwidget, searchui
 from pubcode.pubqt.pubmenu import menumgr, menudefine
+from mainwidget import logwidget
 
 
 class CBlueprintView(QMainWindow):
@@ -22,7 +23,7 @@ class CBlueprintView(QMainWindow):
         self.m_DeltailWidget = detailui.CDetailUI(bpID, self)
         self.m_MenuWidget = menuui.CMenuUI(bpID, self)
         self.m_SearchWidget = searchui.CSearchWidget(bpID, self)
-        self.m_LogWidget = None
+        self.m_LogWidget = logwidget.GetLogWidget()
         self._InitCorner()
         self._InitDock()
         self._InitMenu()
@@ -58,9 +59,18 @@ class CBlueprintView(QMainWindow):
         rightDock.setObjectName("rightDock")
         rightDock.setWidget(self.m_DeltailWidget)
 
+        logDock = QDockWidget("日志面板", self)
+        logDock.setSizePolicy(sizePolicy)
+        logDock.setObjectName("logDock")
+        logDock.setWidget(self.m_LogWidget)
+
         self.addDockWidget(Qt.RightDockWidgetArea, rightDock)
         self.addDockWidget(Qt.TopDockWidgetArea, topDock)
         self.addDockWidget(Qt.BottomDockWidgetArea, bottomDock)
+        self.addDockWidget(Qt.BottomDockWidgetArea, logDock)
+        self.tabifyDockWidget(bottomDock, logDock)
+        logDock.raise_()
+
         self.addDockWidget(Qt.LeftDockWidgetArea, leftDock)
         self.setCentralWidget(self.m_BPTabWidget)
 

@@ -8,7 +8,7 @@
 from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy, QWidget
 from PyQt5.QtCore import Qt
 
-from . import filetree
+from . import filetree, logwidget
 from pubcode.pubqt.pubmenu import menumgr, menudefine
 from editdata import interface
 from signalmgr import GetSignal

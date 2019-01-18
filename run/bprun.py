@@ -5,8 +5,7 @@
 @Desc: 蓝图运行
 """
 
-import copy
-import logging
+import misc
 
 from editdata import interface
 from editdata import define as eddefine
@@ -82,6 +81,13 @@ BLUEPRINT_STOP = 2
 BLUEPRINT_DEBUG = 4
 
 
+def DebugPinInfo(pinID, value):
+    nodeID = interface.GetNodeIDByPinID(pinID)
+    sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
+    sPinDisplayName = interface.GetPinAttr(pinID, bddefine.PinAttrName.DISPLAYNAME)
+    misc.Debug("%s-%s: %s\t%s" % (sNodeDisplayName, sPinDisplayName, value, type(value)))
+
+
 class CBlueprintRunMgr:
     def __init__(self):
         self.m_PinValue = {}
@@ -123,7 +129,7 @@ class CBlueprintRunMgr:
 
     def GetPinValue(self, pinID):
         if interface.IsFlowPin(pinID):
-            logging.error("flowpin:%s not value" % pinID)
+            misc.Error("flowpin:%s not value" % pinID)
             return
 
         if interface.IsInputPin(pinID):  # 输入引脚
@@ -134,15 +140,15 @@ class CBlueprintRunMgr:
                 outPinValue = GetRunPinValue(outPin)
                 self.m_PinValue[outPin] = outPinValue
                 self.m_PinValue[pinID] = outPinValue
-                logging.info("pin:%s->%s value:%s type:%s" % (outPin, pinID, outPinValue, type(outPinValue)))
 
+                DebugPinInfo(pinID, outPinValue)
                 self._AddRunLine(lineID)
                 return outPinValue
 
             # 无连线
             inputValue = interface.GetPinAttr(pinID, bddefine.PinAttrName.VALUE)
             self.m_PinValue[pinID] = inputValue
-            logging.info("pin:%s value:%s type:%s" % (pinID, inputValue, type(inputValue)))
+            DebugPinInfo(pinID, inputValue)
             return inputValue
 
         # 如果输入引脚有记录，那么直接返回值。
@@ -155,12 +161,12 @@ class CBlueprintRunMgr:
         if func:
             outPinValue = func()
             self.m_PinValue[pinID] = outPinValue
-            logging.info("pin:%s value:%s type:%s" % (pinID, outPinValue, type(outPinValue)))
+            DebugPinInfo(pinID, outPinValue)
             return outPinValue
 
         outPinValue = interface.GetPinAttr(pinID, bddefine.PinAttrName.VALUE)
         self.m_PinValue[pinID] = outPinValue
-        logging.info("pin:%s value:%s type:%s" % (pinID, outPinValue, type(outPinValue)))
+        DebugPinInfo(pinID, outPinValue)
         return outPinValue
 
     def RunOutputFlow(self, outputPin):
@@ -179,7 +185,7 @@ class CBlueprintRunMgr:
         func = GetPinFunc(inputPin)
         if func:
             func()
-            return
+
         lstPin = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
             if pinID == inputPin:
