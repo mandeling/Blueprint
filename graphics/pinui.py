@@ -108,6 +108,7 @@ class CPinUI(QWidget):
         self.m_HLayout.removeWidget(self.m_DefaultWidget)
         self.m_HLayout.removeItem(item)
         self.m_DefaultWidget = None
+        self.adjustSize()
 
     def enterEvent(self, event):
         super(CPinUI, self).enterEvent(event)

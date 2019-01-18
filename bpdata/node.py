@@ -8,6 +8,7 @@
 from .import define, pin
 from editdata import nodemgr
 from editdata import basemgr
+from run import bprun
 
 
 def Register(sNodeName):
@@ -84,20 +85,32 @@ class CBaseNode(basemgr.CBase):
 
         for lst in lstInputData:
             sPinName, iDataType = lst[0], lst[1]
-            self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_DATA_TYPE, iDataType, sPinName)
+            value = None
+            if len(lst) > 2:
+                value = lst[2]
+            self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_INPUT_DATA_TYPE, iDataType, sPinName, value)
 
         for lst in lstOutputData:
-            sPinName, iDataType = lst[0], lst[1],
+            sPinName, iDataType = lst[0], lst[1]
             self.m_PinInfo[sPinName] = pin.CPin(-1, define.PIN_OUTPUT_DATA_TYPE, iDataType, sPinName)
             if len(lst) > 2:
                 self.m_FuncInfo[sPinName] = lst[2]
 
     def GetValue(self, sPinName):
-        from run import bprun
         oPin = self.m_PinInfo[sPinName]
         pinID = oPin.GetID()
-        value = bprun.GetPinValue(pinID)
+        value = bprun.GetRunPinValue(pinID)
         return value
+
+    def RunFlow(self, sPinName):
+        oPin = self.m_PinInfo[sPinName]
+        pinID = oPin.GetID()
+        bprun.RunOutputFlow(pinID)
+
+    def SetValue(self, sPinName, value):
+        oPin = self.m_PinInfo[sPinName]
+        pinID = oPin.GetID()
+        bprun.SetRunPinValue(pinID, value)
 
     def InputFlow(self):
         """输入流引脚的定义"""
@@ -201,7 +214,7 @@ class CPrint(CBaseNode):
         return ["输出"]
 
     def Func1(self):
-        print(self.GetValue("输入1"))
+        print("打印结果:%s" % self.GetValue("输入1"))
 
 
 @Register(define.NodeName.START)
@@ -265,4 +278,40 @@ class CIF(CBaseNode):
         ]
 
     def Func1(self):
-        pass
+        bTrue = self.GetValue("Condition")
+        if bTrue:
+            self.RunFlow("True")
+        else:
+            self.RunFlow("False")
+
+
+@Register(define.NodeName.FOR)
+class CFOR(CBaseNode):
+    m_NodeType = define.NODE_TYPE_NORMAL
+
+    def InputFlow(self):
+        return [("入口", self.FlowFunc)]
+
+    def OutputFlow(self):
+        return ["主体", "结束"]
+
+    def InputData(self):
+        return [
+            ("Start", define.Type.INT),
+            ("End", define.Type.INT),
+            ("Step", define.Type.INT, 1),
+        ]
+
+    def OutputData(self):
+        return [
+            ("index", define.Type.INT),
+        ]
+
+    def FlowFunc(self):
+        iStart = self.GetValue("Start")
+        iEnd = self.GetValue("End")
+        iStep = self.GetValue("Step")
+        for i in range(iStart, iEnd, iStep):
+            self.SetValue("index", i)
+            self.RunFlow("主体")
+        self.RunFlow("结束")

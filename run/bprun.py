@@ -24,6 +24,7 @@ def GetRunMgr():
     return g_BlueprintRunMgr
 
 
+# ---------------------ui层接口---------------------------
 def RunBlueprint(bpID):
     """运行蓝图"""
     iEventNode = interface.GetBlueprintAttr(bpID, eddefine.BlueprintAttrName.EVENT_NODE)
@@ -52,9 +53,20 @@ def NextBreakpoint():
     obj.NextBreakpoint()
 
 
-def GetPinValue(pinID):
+# --------------------蓝图运行中的接口----------------------------
+def GetRunPinValue(pinID):
     value = GetRunMgr().GetPinValue(pinID)
     return value
+
+
+def RunOutputFlow(pinID):
+    obj = GetRunMgr()
+    obj.RunOutputFlow(pinID)
+
+
+def SetRunPinValue(pinID, value):
+    obj = GetRunMgr()
+    obj.SetPinValue(pinID, value)
 
 
 def GetPinFunc(pinID):
@@ -85,10 +97,18 @@ class CBlueprintRunMgr:
         self.m_LineList = []
         self.m_Statue = 0
 
+    def _AddRunLine(self, lineID):
+        if lineID not in self.m_LineList:
+            self.m_LineList.append(lineID)
+            GetSignal().LINE_RUN_STATUE.emit(lineID, True)
+
     def Run(self, startPin):
         self.Reset()
         self.m_Statue ^= BLUEPRINT_RUN
         self.RunOutputFlow(startPin)
+
+    def SetPinValue(self, pinID, value):
+        self.m_PinValue[pinID] = value
 
     def NextBreakpoint(self):
         if self.m_CurInputFlowPin:
@@ -105,20 +125,18 @@ class CBlueprintRunMgr:
         if interface.IsFlowPin(pinID):
             logging.error("flowpin:%s not value" % pinID)
             return
-        if pinID in self.m_PinValue:
-            return self.m_PinValue[pinID]
 
         if interface.IsInputPin(pinID):  # 输入引脚
             lstLine = interface.GetAllLineByPin(pinID)
             if lstLine:  # 有连线
                 lineID = lstLine[0]
                 outPin = interface.GetLineOtherPin(lineID, pinID)
-                outPinValue = GetPinValue(outPin)
+                outPinValue = GetRunPinValue(outPin)
                 self.m_PinValue[outPin] = outPinValue
                 self.m_PinValue[pinID] = outPinValue
                 logging.info("pin:%s->%s value:%s type:%s" % (outPin, pinID, outPinValue, type(outPinValue)))
-                GetSignal().LINE_RUN_STATUE.emit(lineID, True)
-                self.m_LineList.append(lineID)
+
+                self._AddRunLine(lineID)
                 return outPinValue
 
             # 无连线
@@ -126,6 +144,11 @@ class CBlueprintRunMgr:
             self.m_PinValue[pinID] = inputValue
             logging.info("pin:%s value:%s type:%s" % (pinID, inputValue, type(inputValue)))
             return inputValue
+
+        # 如果输入引脚有记录，那么直接返回值。
+        # 而输入值可能随着输出值改变，所以需要获取
+        if pinID in self.m_PinValue:
+            return self.m_PinValue[pinID]
 
         # 输出引脚
         func = GetPinFunc(pinID)
@@ -145,10 +168,10 @@ class CBlueprintRunMgr:
         for lineID in lstline:
             inputPin = interface.GetLineOtherPin(lineID, outputPin)
             self.RunInputFlow(inputPin)
-            GetSignal().LINE_RUN_STATUE.emit(lineID, True)
-            self.m_LineList.append(lineID)
+            self._AddRunLine(lineID)
 
     def RunInputFlow(self, inputPin):
+        """输入流引脚永远只有一个"""
         nodeID = interface.GetNodeIDByPinID(inputPin)
         if self.m_CurInputFlowPin != inputPin and nodeID in self.m_Breakpoint:
             self.m_CurInputFlowPin = inputPin
@@ -156,6 +179,7 @@ class CBlueprintRunMgr:
         func = GetPinFunc(inputPin)
         if func:
             func()
+            return
         lstPin = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
             if pinID == inputPin:

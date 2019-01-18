@@ -11,18 +11,17 @@ from editdata import basemgr
 
 
 class CPin(basemgr.CBase):
-    def __init__(self, ID, iPinType=None, iDataType=None, sName=None):
+    def __init__(self, ID, iPinType=None, iDataType=None, sName=None, value=None):
         super(CPin, self).__init__(ID)
         self.m_Info = {
             define.PinAttrName.ID: ID,
             define.PinAttrName.NAME: sName,
             define.PinAttrName.DISPLAYNAME: sName,
             define.PinAttrName.PIN_TYPE: iPinType,
-            define.PinAttrName.DATA_TYPE: -1,
-            define.PinAttrName.VALUE: -1,
+            define.PinAttrName.DATA_TYPE: iDataType,
+            define.PinAttrName.VALUE: value,
         }
-        if iPinType in (define.PIN_INPUT_DATA_TYPE, define.PIN_OUTPUT_DATA_TYPE):
-            self.m_Info[define.PinAttrName.DATA_TYPE] = iDataType
+        if not value and iPinType in (define.PIN_INPUT_DATA_TYPE, define.PIN_OUTPUT_DATA_TYPE):
             self.m_Info[define.PinAttrName.VALUE] = define.GetDefauleValue(iDataType)
 
     def SetID(self, ID):

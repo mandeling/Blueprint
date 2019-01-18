@@ -1,0 +1,169 @@
+{
+    "{e285aeb1-5d50-4f38-902e-00ad4e192c67}": {
+        "bp_attr_name:id": "{e285aeb1-5d50-4f38-902e-00ad4e192c67}",
+        "bp_attr_name:graphic_list": [
+            "{7097f862-0d98-4cb4-829e-9b2072c9e730}"
+        ],
+        "bp_attr_name:variable_list": [],
+        "bp_attr_name:event_node": "{afc1a4e1-9d96-463b-afa0-c71ca350e138}"
+    },
+    "{7097f862-0d98-4cb4-829e-9b2072c9e730}": {
+        "graphic_attr_name:id": "{7097f862-0d98-4cb4-829e-9b2072c9e730}",
+        "graphic_attr_name:name": "图表-1",
+        "graphic_attr_name:line_list": [
+            "{26302d79-2b6b-4e2a-9197-8aa0fb3e9906}",
+            "{331f89a5-efdd-42ea-939e-d191473b7914}",
+            "{8dad3997-54c8-4481-addc-eab09b595c6d}"
+        ],
+        "graphic_attr_name:node_list": [
+            "{a572ceb7-e362-44d3-87be-ab65543a7aed}",
+            "{7535b726-f338-42b8-92ec-6cbbfdefe3e1}",
+            "{afc1a4e1-9d96-463b-afa0-c71ca350e138}"
+        ]
+    },
+    "{26302d79-2b6b-4e2a-9197-8aa0fb3e9906}": {
+        "line_attr_name:id": "{26302d79-2b6b-4e2a-9197-8aa0fb3e9906}",
+        "line_attr_name:output_pin_id": "{207c86db-52a6-4db8-b541-d5b090b1272f}",
+        "line_attr_name:input_pin_id": "{32ca57ac-47fc-44a0-adf8-2d2a3378a5b0}"
+    },
+    "{331f89a5-efdd-42ea-939e-d191473b7914}": {
+        "line_attr_name:id": "{331f89a5-efdd-42ea-939e-d191473b7914}",
+        "line_attr_name:output_pin_id": "{0e0ecfcc-38a8-4124-9f3d-53591f5b9095}",
+        "line_attr_name:input_pin_id": "{e1318a87-e08f-4d9b-b807-dce9aad8a5da}"
+    },
+    "{8dad3997-54c8-4481-addc-eab09b595c6d}": {
+        "line_attr_name:id": "{8dad3997-54c8-4481-addc-eab09b595c6d}",
+        "line_attr_name:output_pin_id": "{ecd8f27b-6714-467f-82c3-b17e98950c79}",
+        "line_attr_name:input_pin_id": "{1d171ef6-f5cd-49a8-976d-6b0d32938053}"
+    },
+    "{a572ceb7-e362-44d3-87be-ab65543a7aed}": {
+        "node_attr_name:id": "{a572ceb7-e362-44d3-87be-ab65543a7aed}",
+        "node_attr_name:name": "for",
+        "node_attr_name:display_name": "for",
+        "node_attr_name:postion": [
+            -303.0,
+            -156.0
+        ],
+        "node_attr_name:pin_list": [
+            "{1d171ef6-f5cd-49a8-976d-6b0d32938053}",
+            "{207c86db-52a6-4db8-b541-d5b090b1272f}",
+            "{0a3dc4fb-8d0c-40a7-9dd5-2d352d54c953}",
+            "{9162e003-3fde-4ea2-a65f-dd21d668e605}",
+            "{3faba077-d407-40c0-b008-bad90175f870}",
+            "{0e0ecfcc-38a8-4124-9f3d-53591f5b9095}"
+        ],
+        "node_attr_name:type": 0,
+        "node_attr_name:variable_id": 0
+    },
+    "{1d171ef6-f5cd-49a8-976d-6b0d32938053}": {
+        "pin_attr_name:id": "{1d171ef6-f5cd-49a8-976d-6b0d32938053}",
+        "pin_attr_name:name": "入口",
+        "pin_attr_name:display_name": "入口",
+        "pin_attr_name:pin_type": 2,
+        "pin_attr_name:data_type": 0,
+        "pin_attr_name:data_value": null
+    },
+    "{207c86db-52a6-4db8-b541-d5b090b1272f}": {
+        "pin_attr_name:id": "{207c86db-52a6-4db8-b541-d5b090b1272f}",
+        "pin_attr_name:name": "主体",
+        "pin_attr_name:display_name": "主体",
+        "pin_attr_name:pin_type": 3,
+        "pin_attr_name:data_type": 0,
+        "pin_attr_name:data_value": null
+    },
+    "{0a3dc4fb-8d0c-40a7-9dd5-2d352d54c953}": {
+        "pin_attr_name:id": "{0a3dc4fb-8d0c-40a7-9dd5-2d352d54c953}",
+        "pin_attr_name:name": "Start",
+        "pin_attr_name:display_name": "Start",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{9162e003-3fde-4ea2-a65f-dd21d668e605}": {
+        "pin_attr_name:id": "{9162e003-3fde-4ea2-a65f-dd21d668e605}",
+        "pin_attr_name:name": "End",
+        "pin_attr_name:display_name": "End",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 7
+    },
+    "{3faba077-d407-40c0-b008-bad90175f870}": {
+        "pin_attr_name:id": "{3faba077-d407-40c0-b008-bad90175f870}",
+        "pin_attr_name:name": "Step",
+        "pin_attr_name:display_name": "Step",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 1
+    },
+    "{0e0ecfcc-38a8-4124-9f3d-53591f5b9095}": {
+        "pin_attr_name:id": "{0e0ecfcc-38a8-4124-9f3d-53591f5b9095}",
+        "pin_attr_name:name": "index",
+        "pin_attr_name:display_name": "index",
+        "pin_attr_name:pin_type": 1,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{7535b726-f338-42b8-92ec-6cbbfdefe3e1}": {
+        "node_attr_name:id": "{7535b726-f338-42b8-92ec-6cbbfdefe3e1}",
+        "node_attr_name:name": "打印",
+        "node_attr_name:display_name": "打印",
+        "node_attr_name:postion": [
+            6.0,
+            -107.0
+        ],
+        "node_attr_name:pin_list": [
+            "{32ca57ac-47fc-44a0-adf8-2d2a3378a5b0}",
+            "{f7c8dea8-e0b3-42b8-87c3-aeb08c300a99}",
+            "{e1318a87-e08f-4d9b-b807-dce9aad8a5da}"
+        ],
+        "node_attr_name:type": 0,
+        "node_attr_name:variable_id": 0
+    },
+    "{32ca57ac-47fc-44a0-adf8-2d2a3378a5b0}": {
+        "pin_attr_name:id": "{32ca57ac-47fc-44a0-adf8-2d2a3378a5b0}",
+        "pin_attr_name:name": "输入",
+        "pin_attr_name:display_name": "输入",
+        "pin_attr_name:pin_type": 2,
+        "pin_attr_name:data_type": 0,
+        "pin_attr_name:data_value": null
+    },
+    "{f7c8dea8-e0b3-42b8-87c3-aeb08c300a99}": {
+        "pin_attr_name:id": "{f7c8dea8-e0b3-42b8-87c3-aeb08c300a99}",
+        "pin_attr_name:name": "输出",
+        "pin_attr_name:display_name": "输出",
+        "pin_attr_name:pin_type": 3,
+        "pin_attr_name:data_type": 0,
+        "pin_attr_name:data_value": null
+    },
+    "{e1318a87-e08f-4d9b-b807-dce9aad8a5da}": {
+        "pin_attr_name:id": "{e1318a87-e08f-4d9b-b807-dce9aad8a5da}",
+        "pin_attr_name:name": "输入1",
+        "pin_attr_name:display_name": "输入1",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{afc1a4e1-9d96-463b-afa0-c71ca350e138}": {
+        "node_attr_name:id": "{afc1a4e1-9d96-463b-afa0-c71ca350e138}",
+        "node_attr_name:name": "开始事件",
+        "node_attr_name:display_name": "开始事件",
+        "node_attr_name:postion": [
+            -577.0,
+            -197.0
+        ],
+        "node_attr_name:pin_list": [
+            "{ecd8f27b-6714-467f-82c3-b17e98950c79}"
+        ],
+        "node_attr_name:type": 1,
+        "node_attr_name:variable_id": 0
+    },
+    "{ecd8f27b-6714-467f-82c3-b17e98950c79}": {
+        "pin_attr_name:id": "{ecd8f27b-6714-467f-82c3-b17e98950c79}",
+        "pin_attr_name:name": "输出",
+        "pin_attr_name:display_name": "输出",
+        "pin_attr_name:pin_type": 3,
+        "pin_attr_name:data_type": 0,
+        "pin_attr_name:data_value": null
+    },
+    "bp_attr_name:": "{e285aeb1-5d50-4f38-902e-00ad4e192c67}"
+}

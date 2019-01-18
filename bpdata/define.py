@@ -88,6 +88,7 @@ class NodeName:
     DIVIDE = "除法"
     PRINT = "打印"
     IF = "if分支"
+    FOR = "for"
 
     GET_VARIABLE = "Get变量"
     SET_VARIABLE = "Set变量"
