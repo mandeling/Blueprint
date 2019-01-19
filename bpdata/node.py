@@ -209,6 +209,45 @@ class CDivide(CBaseNode):
         return self.GetValue("输入1") / self.GetValue("输入2")
 
 
+@Register(define.NodeName.MOD)
+class CMod(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FUNCTION
+
+    def InputData(self):
+        return [
+            ("输入1", define.Type.INT),
+            ("输入2", define.Type.INT),
+        ]
+
+    def OutputData(self):
+        return [
+            ("输出", define.Type.INT, self.Output1),
+        ]
+
+    def Output1(self):
+        return self.GetValue("输入1") % self.GetValue("输入2")
+
+
+@Register(define.NodeName.INT2BOOL)
+class CInt2Bool(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FUNCTION
+
+    def InputData(self):
+        return [
+            ("Int", define.Type.INT),
+        ]
+
+    def OutputData(self):
+        return [
+            ("Bool", define.Type.BOOL, self.Output1),
+        ]
+
+    def Output1(self):
+        if self.GetValue("Int"):
+            return True
+        return False
+
+
 # -----------------------------事件节点-----------------------------------------
 @Register(define.NodeName.START)
 class CStart(CBaseNode):

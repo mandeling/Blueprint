@@ -87,9 +87,11 @@ class NodeName:
     MIUNS = "减法"
     MULTIPLY = "乘法"
     DIVIDE = "除法"
+    MOD = "mod"
     PRINT = "打印"
     IF = "if分支"
     FOR = "for"
+    INT2BOOL = "Int2Bool"
 
     GET_VARIABLE = "Get变量"
     SET_VARIABLE = "Set变量"

@@ -138,8 +138,8 @@ class CBlueprintRunMgr:
                 lineID = lstLine[0]
                 outPin = interface.GetLineOtherPin(lineID, pinID)
                 outPinValue = GetRunPinValue(outPin)
-                self.m_PinValue[outPin] = outPinValue
-                self.m_PinValue[pinID] = outPinValue
+                # self.m_PinValue[outPin] = outPinValue
+                # self.m_PinValue[pinID] = outPinValue
 
                 DebugPinInfo(pinID, outPinValue)
                 self._AddRunLine(lineID)
@@ -147,7 +147,7 @@ class CBlueprintRunMgr:
 
             # 无连线
             inputValue = interface.GetPinAttr(pinID, bddefine.PinAttrName.VALUE)
-            self.m_PinValue[pinID] = inputValue
+            # self.m_PinValue[pinID] = inputValue
             DebugPinInfo(pinID, inputValue)
             return inputValue
 
@@ -160,12 +160,12 @@ class CBlueprintRunMgr:
         func = GetPinFunc(pinID)
         if func:
             outPinValue = func()
-            self.m_PinValue[pinID] = outPinValue
+            # self.m_PinValue[pinID] = outPinValue
             DebugPinInfo(pinID, outPinValue)
             return outPinValue
 
         outPinValue = interface.GetPinAttr(pinID, bddefine.PinAttrName.VALUE)
-        self.m_PinValue[pinID] = outPinValue
+        # self.m_PinValue[pinID] = outPinValue
         DebugPinInfo(pinID, outPinValue)
         return outPinValue
 
@@ -187,4 +187,4 @@ class CBlueprintRunMgr:
             sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
             misc.Debug("开始运行'%s'节点" % sNodeDisplayName)
             func()
-            misc.Debug("'%s'节点运行完成" % sNodeDisplayName)
+            # misc.Debug("'%s'节点运行完成" % sNodeDisplayName)
