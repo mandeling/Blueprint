@@ -19,10 +19,11 @@ def Register(sNodeName):
 
 
 class CBaseNode(basemgr.CBase):
-    m_NodeType = define.NODE_TYPE_NORMAL
+    m_NodeType = None
 
     def __init__(self, ID, sNodeName=None):
         super(CBaseNode, self).__init__(ID)
+        assert self.m_NodeType is not None
         self.m_Info = {
             define.NodeAttrName.ID: ID,
             define.NodeAttrName.NAME: sNodeName,
@@ -129,8 +130,11 @@ class CBaseNode(basemgr.CBase):
         return []
 
 
+# ------------------------------函数节点----------------------------------------
 @Register(define.NodeName.ADD)
 class CAdd(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FUNCTION
+
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -148,6 +152,8 @@ class CAdd(CBaseNode):
 
 @Register(define.NodeName.MIUNS)
 class CMiuns(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FUNCTION
+
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -165,6 +171,8 @@ class CMiuns(CBaseNode):
 
 @Register(define.NodeName.MULTIPLY)
 class CMultipyl(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FUNCTION
+
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -182,6 +190,8 @@ class CMultipyl(CBaseNode):
 
 @Register(define.NodeName.DIVIDE)
 class CDivide(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FUNCTION
+
     def InputData(self):
         return [
             ("输入1", define.Type.INT),
@@ -197,26 +207,7 @@ class CDivide(CBaseNode):
         return self.GetValue("输入1") / self.GetValue("输入2")
 
 
-@Register(define.NodeName.PRINT)
-class CPrint(CBaseNode):
-
-    def InputData(self):
-        return [
-            ("输入1", define.Type.INT)
-        ]
-
-    def InputFlow(self):
-        return [
-            ("输入", self.Func1),
-        ]
-
-    def OutputFlow(self):
-        return ["输出"]
-
-    def Func1(self):
-        print("打印结果:%s" % self.GetValue("输入1"))
-
-
+# -----------------------------事件节点-----------------------------------------
 @Register(define.NodeName.START)
 class CStart(CBaseNode):
     m_NodeType = define.NODE_TYPE_EVENT
@@ -225,6 +216,7 @@ class CStart(CBaseNode):
         return ["输出"]
 
 
+# -----------------------------变量节点-----------------------------------------
 @Register(define.NodeName.GET_VARIABLE)
 class CGetVariable(CBaseNode):
     m_NodeType = define.NODE_TYPE_VARIABLE
@@ -255,19 +247,41 @@ class CSetVariable(CBaseNode):
 
     def OutputData(self):
         return [
-            ("输出", define.Type.INT, self.Output1),
+            ("输出", define.Type.INT, self.NodeFunc),
         ]
 
-    def Output1(self):
+    def NodeFunc(self):
+        # TODO set变量
         return self.GetValue("输入")
+
+
+# -----------------------------流程节点-----------------------------------------
+@Register(define.NodeName.PRINT)
+class CPrint(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FLOW
+
+    def InputFlow(self):
+        return [("入口", self.NodeFunc)]
+
+    def OutputFlow(self):
+        return ["出口"]
+
+    def InputData(self):
+        return [
+            ("值", define.Type.INT)
+        ]
+
+    def NodeFunc(self):
+        print("打印结果:%s" % self.GetValue("值"))
+        self.RunFlow("出口")
 
 
 @Register(define.NodeName.IF)
 class CIF(CBaseNode):
-    m_NodeType = define.NODE_TYPE_NORMAL
+    m_NodeType = define.NODE_TYPE_FLOW
 
     def InputFlow(self):
-        return [("input", self.Func1)]
+        return [("入口", self.NodeFunc)]
 
     def OutputFlow(self):
         return ["True", "False"]
@@ -277,7 +291,7 @@ class CIF(CBaseNode):
             ("Condition", define.Type.BOOL),
         ]
 
-    def Func1(self):
+    def NodeFunc(self):
         bTrue = self.GetValue("Condition")
         if bTrue:
             self.RunFlow("True")
@@ -287,13 +301,13 @@ class CIF(CBaseNode):
 
 @Register(define.NodeName.FOR)
 class CFOR(CBaseNode):
-    m_NodeType = define.NODE_TYPE_NORMAL
+    m_NodeType = define.NODE_TYPE_FLOW
 
     def InputFlow(self):
-        return [("入口", self.FlowFunc)]
+        return [("入口", self.NodeFunc)]
 
     def OutputFlow(self):
-        return ["主体", "结束"]
+        return ["循环", "出口"]
 
     def InputData(self):
         return [
@@ -307,11 +321,11 @@ class CFOR(CBaseNode):
             ("index", define.Type.INT),
         ]
 
-    def FlowFunc(self):
+    def NodeFunc(self):
         iStart = self.GetValue("Start")
         iEnd = self.GetValue("End")
         iStep = self.GetValue("Step")
         for i in range(iStart, iEnd, iStep):
             self.SetValue("index", i)
-            self.RunFlow("主体")
-        self.RunFlow("结束")
+            self.RunFlow("循环")
+        self.RunFlow("出口")

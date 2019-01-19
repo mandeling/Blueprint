@@ -12,9 +12,10 @@ PIN_INPUT_FLOW_TYPE = 2
 PIN_OUTPUT_FLOW_TYPE = 3
 
 
-NODE_TYPE_NORMAL = 0    # 正常节点
-NODE_TYPE_EVENT = 1     # 事件节点
-NODE_TYPE_VARIABLE = 2  # 变量节点
+NODE_TYPE_FUNCTION = 0    # 函数节点
+NODE_TYPE_EVENT = 1       # 事件节点
+NODE_TYPE_VARIABLE = 2    # 变量节点
+NODE_TYPE_FLOW = 3        # 流程节点
 
 
 class Type:

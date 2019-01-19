@@ -185,7 +185,8 @@ class CBlueprintRunMgr:
         func = GetPinFunc(inputPin)
         if func:
             func()
-
+            return
+        # TODO for节点和print节点问题
         lstPin = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
         for pinID in lstPin:
             if pinID == inputPin:
