@@ -70,7 +70,7 @@ class CLogWidget(QWidget):
         vBox.addWidget(self.m_LogTextEdit)
 
     def _InitSignal(self):
-        pass
+        self.m_SearchLine.textChanged.connect(self.S_SearchTextChanged)
 
     def _InitMenu(self):
         self.m_Menu = QMenu()
@@ -82,22 +82,6 @@ class CLogWidget(QWidget):
             self.m_Menu.addAction(action)
             action.triggered.connect(self.S_OnFilterLevel)
         self.m_FilterBtn.setMenu(self.m_Menu)
-
-    def S_OnFilterLevel(self):
-        sender = self.sender()
-        level = sender.level
-        bChecked = sender.isChecked()
-        self.m_LevelShow[level] = bChecked
-        self._RefreshFilter(level, bChecked)
-
-    def _RefreshFilter(self, iLevel, bChecked):
-        doc = self.m_LogTextEdit.document()
-        for iLine in self.m_LevelInfo[iLevel]:
-            blk = doc.findBlockByNumber(iLine)
-            blk.setVisible(bChecked)
-        self.m_LogTextEdit.viewport().update()
-        doc.adjustSize()
-        self.m_LogTextEdit.update()
 
     def AddLog(self, iLevel, sMsg):
         # sMsg = sMsg.replace("\r", "").replace("\n", "")   # 看情况需不需要去掉换行
@@ -123,3 +107,36 @@ class CLogWidget(QWidget):
             oCursor = QTextCursor(oTextBlock)
             oCursor.mergeBlockFormat(fmt)
         self.m_LineID = myDoc.lineCount()
+
+    def S_OnFilterLevel(self):
+        sender = self.sender()
+        level = sender.level
+        bChecked = sender.isChecked()
+        self.m_LevelShow[level] = bChecked
+        self._RefreshLevel(level, bChecked)
+
+    def S_SearchTextChanged(self):
+        for iLevel, bShow in self.m_LevelShow.items():
+            if not bShow:
+                continue
+            self._RefreshLevel(iLevel, bShow)
+
+    def _RefreshLevel(self, iLevel, bShow):
+        txt = self.m_SearchLine.text()
+        doc = self.m_LogTextEdit.document()
+        for iLine in self.m_LevelInfo[iLevel]:
+            blk = doc.findBlockByNumber(iLine)
+            if not bShow:
+                blk.setVisible(False)
+                continue
+            if not txt:
+                blk.setVisible(True)
+                continue
+            sLine = blk.text()
+            if sLine.find(txt) == -1:
+                blk.setVisible(False)
+            else:
+                blk.setVisible(True)
+        self.m_LogTextEdit.viewport().update()
+        doc.adjustSize()
+        self.m_LogTextEdit.update()
