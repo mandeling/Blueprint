@@ -184,14 +184,7 @@ class CBlueprintRunMgr:
             return
         func = GetPinFunc(inputPin)
         if func:
+            sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
+            misc.Debug("开始运行'%s'节点" % sNodeDisplayName)
             func()
-            return
-        # TODO for节点和print节点问题
-        lstPin = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.PINIDLIST)
-        for pinID in lstPin:
-            if pinID == inputPin:
-                continue
-            iType = interface.GetPinAttr(pinID, bddefine.PinAttrName.PIN_TYPE)
-            if iType != bddefine.PIN_OUTPUT_FLOW_TYPE:
-                continue
-            self.RunOutputFlow(pinID)
+            misc.Debug("'%s'节点运行完成" % sNodeDisplayName)

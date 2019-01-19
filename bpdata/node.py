@@ -5,6 +5,8 @@
 @Desc: 蓝图节点定义
 """
 
+import misc
+
 from .import define, pin
 from editdata import nodemgr
 from editdata import basemgr
@@ -272,7 +274,7 @@ class CPrint(CBaseNode):
         ]
 
     def NodeFunc(self):
-        print("打印结果:%s" % self.GetValue("值"))
+        misc.Info("打印结果:%s" % self.GetValue("值"))
         self.RunFlow("出口")
 
 
