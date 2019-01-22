@@ -23,6 +23,9 @@ class Type:
     FLOAT = 2
     STR = 3
     BOOL = 4
+    ENUM = 5
+    VECTOR3 = 6
+    CHECKBOX = 7
 
 
 NAME_TYPE = {
@@ -83,6 +86,8 @@ def ForceTransValue(iType, sValue):
 
 
 class NodeName:
+    TEST = "测试"
+
     ADD = "加法"
     MIUNS = "减法"
     MULTIPLY = "乘法"

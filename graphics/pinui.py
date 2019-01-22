@@ -94,6 +94,12 @@ class CPinUI(QWidget):
             oWidget = subpinui.CValidatorLineEdit(self.m_PinID, iDataTye)
         elif iDataTye == bddefine.Type.BOOL:
             oWidget = subpinui.CCheckBox(self.m_PinID)
+        elif iDataTye == bddefine.Type.ENUM:
+            oWidget = subpinui.CEnum(self.m_PinID)
+        elif iDataTye == bddefine.Type.VECTOR3:
+            oWidget = subpinui.CVector3(self.m_PinID)
+        elif iDataTye == bddefine.Type.CHECKBOX:
+            oWidget = subpinui.CComCheckBox(self.m_PinID)
         if oWidget:
             self.m_HLayout.addWidget(oWidget)
             self.m_DefaultWidget = oWidget

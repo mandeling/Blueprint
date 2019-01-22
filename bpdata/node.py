@@ -132,6 +132,22 @@ class CBaseNode(basemgr.CBase):
         return []
 
 
+@Register(define.NodeName.TEST)
+class CTest(CBaseNode):
+    m_NodeType = define.NODE_TYPE_FLOW
+
+    def InputData(self):
+        return [
+            ("int", define.Type.INT),
+            ("float", define.Type.FLOAT),
+            ("str", define.Type.STR),
+            ("bool", define.Type.BOOL),
+            ("vector3", define.Type.VECTOR3),
+            ("enum", define.Type.ENUM),
+            ("checkbox", define.Type.CHECKBOX),
+        ]
+
+
 # ------------------------------函数节点----------------------------------------
 @Register(define.NodeName.ADD)
 class CAdd(CBaseNode):
