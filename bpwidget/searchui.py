@@ -30,9 +30,11 @@ class CSearchWidget(QWidget):
         self.m_Tree = None
         self._InitUI()
         self._InitSignal()
+        self.m_BtnMatch.click()
 
     def _InitUI(self):
         self.setWindowTitle("搜索")
+        self.setWindowFlags(Qt.Popup | Qt.Sheet)
         vBox = QVBoxLayout(self)
         hBox = QHBoxLayout()
         self.m_Search = QLineEdit(self)

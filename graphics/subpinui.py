@@ -26,50 +26,6 @@ QLineEdit::focus{
 """
 
 
-class CComCheckBox(QWidget):
-    def __init__(self, pinID, parent=None):
-        super(CComCheckBox, self).__init__(parent)
-        self.m_List = ["132434", "2", "3", "4"]
-        self.m_Select = []
-        self.m_ComBox = QComboBox(self)
-        self.m_LineEdit = None
-        self._InitUI()
-
-    def _InitUI(self):
-        self.setMinimumSize(QSize(100, 80))
-        listWidget = QListWidget(self)
-        lineEdit = QLineEdit(self)
-        for i, txt in enumerate(self.m_List):
-            item = QListWidgetItem(listWidget)
-            listWidget.addItem(item)
-            item.setData(Qt.UserRole, i)
-            checkbox = QCheckBox(self)
-            checkbox.setText(txt)
-            listWidget.addItem(item)
-            listWidget.setItemWidget(item, checkbox)
-            checkbox.toggled.connect(self.S_StateChanged)
-
-        self.m_ComBox.setModel(listWidget.model())
-        self.m_ComBox.setView(listWidget)
-        self.m_ComBox.setLineEdit(lineEdit)
-        lineEdit.setReadOnly(True)
-
-        hbox = QVBoxLayout(self)
-        hbox.addWidget(self.m_ComBox)
-
-        self.m_LineEdit = lineEdit
-
-    def S_StateChanged(self, value):
-        checkbox = self.sender()
-        txt = checkbox.text()
-        if value:
-            self.m_Select.append(txt)
-        else:
-            self.m_Select.remove(txt)
-        sLine = "&".join(self.m_Select)
-        self.m_LineEdit.setText(sLine)
-
-
 class CBaseLineEdit(QLineEdit):
     def __init__(self, iDataType, parent=None):
         super(CBaseLineEdit, self).__init__(parent)
@@ -112,16 +68,6 @@ class CValidatorLineEdit(CBaseLineEdit):
         self.m_PinID = pinID
         self.m_LastVar = None
         self._InitData()
-
-    def _InitUI(self):
-        self.setStyleSheet(LINEEDIT_STYLESHEET)
-        self.setMinimumSize(QSize(40, 20))
-        if self.m_DataType == bddefine.Type.INT:
-            self.setValidator(QIntValidator())
-        elif self.m_DataType == bddefine.Type.FLOAT:
-            self.setValidator(QDoubleValidator())
-        self.setText("")
-        self.setFixedSize(20, 20)
 
     def _InitData(self):
         value = interface.GetPinAttr(self.m_PinID, bddefine.PinAttrName.VALUE)
@@ -261,3 +207,48 @@ class CVector3(QWidget):
             if bSuc:
                 vct[i] = value
         print("Vector3:", vct)
+
+
+class CComCheckBox(QWidget):
+    def __init__(self, pinID, parent=None):
+        super(CComCheckBox, self).__init__(parent)
+        self.m_PinID = pinID
+        self.m_List = ["132434", "2", "3", "4"]
+        self.m_Select = []
+        self.m_ComBox = QComboBox(self)
+        self.m_LineEdit = None
+        self._InitUI()
+
+    def _InitUI(self):
+        self.setMinimumSize(QSize(100, 80))
+        listWidget = QListWidget(self)
+        lineEdit = QLineEdit(self)
+        for i, txt in enumerate(self.m_List):
+            item = QListWidgetItem(listWidget)
+            listWidget.addItem(item)
+            item.setData(Qt.UserRole, i)
+            checkbox = QCheckBox(self)
+            checkbox.setText(txt)
+            listWidget.addItem(item)
+            listWidget.setItemWidget(item, checkbox)
+            checkbox.toggled.connect(self.S_StateChanged)
+
+        self.m_ComBox.setModel(listWidget.model())
+        self.m_ComBox.setView(listWidget)
+        self.m_ComBox.setLineEdit(lineEdit)
+        lineEdit.setReadOnly(True)
+
+        hbox = QVBoxLayout(self)
+        hbox.addWidget(self.m_ComBox)
+
+        self.m_LineEdit = lineEdit
+
+    def S_StateChanged(self, value):
+        checkbox = self.sender()
+        txt = checkbox.text()
+        if value:
+            self.m_Select.append(txt)
+        else:
+            self.m_Select.remove(txt)
+        sLine = "&".join(self.m_Select)
+        self.m_LineEdit.setText(sLine)
