@@ -1,8 +1,9 @@
-# 说明：
-- 使用PyQt5写的一套蓝图UI界面
-- 主要控件：QGraphicsScene QGraphicsView QGraphicsItem
-- 节点可以通过配置文件生成，同类型节点才可以连接。
+# 前言介绍
+* 再使用UE4蓝图制作游戏过程中，在体会到不用写代码都能设计一款游戏，觉得很强大；
+* 自己也积累了很多前端、后端知识，所以准备利用课余时间模仿UE4蓝图做一款编辑器；
+* 自己平时用的python比较多，所以准备使用Python3+PyQt5来写；
 
-# 展示：
+# 相关文档介绍
 
-![blueprint](doc/blueprint.gif)
+- [蓝图操作](./doc/蓝图操作.md)
+- [数据类型](./doc/数据类型.md)
