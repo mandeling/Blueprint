@@ -38,9 +38,12 @@ class CBaseLineEdit(QLineEdit):
         self.setMinimumSize(QSize(40, 20))
         if self.m_DataType == bddefine.Type.INT:
             self.setValidator(QIntValidator())
+            self.setText("0")
         elif self.m_DataType == bddefine.Type.FLOAT:
             self.setValidator(QDoubleValidator())
-        self.setText("")
+            self.setText("0.0")
+        else:
+            self.setText("")
         self.setFixedSize(20, 20)
 
     def _InitSignal(self):
@@ -65,6 +68,7 @@ class CBaseLineEdit(QLineEdit):
 class CValidatorLineEdit(CBaseLineEdit):
     def __init__(self, pinID, iDataType, parent=None):
         super(CValidatorLineEdit, self).__init__(iDataType, parent)
+        self.m_DataType = iDataType
         self.m_PinID = pinID
         self.m_LastVar = None
         self._InitData()
@@ -82,7 +86,7 @@ class CValidatorLineEdit(CBaseLineEdit):
         text = self.text()
         if not text and self.m_DataType in (bddefine.Type.INT, bddefine.Type.FLOAT):
             text = "0"
-        value, bSuc = bddefine.ForceTransValue(bddefine.Type.INT, text)
+        value, bSuc = bddefine.ForceTransValue(self.m_DataType, text)
         if not bSuc:
             return
         if value == self.m_LastVar:
@@ -206,6 +210,7 @@ class CVector3(QWidget):
             value, bSuc = bddefine.ForceTransValue(bddefine.Type.FLOAT, sValue)
             if bSuc:
                 vct[i] = value
+                oLine.setText(str(value))
         print("Vector3:", vct)
 
 
