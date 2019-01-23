@@ -45,6 +45,12 @@ class CMainWindow(QTabWidget):
         self.m_ID += 1
         return self.m_ID
 
+    def _GetIndex(self, bpID):
+        oView = self.m_BPInfo.get(bpID, None)
+        if oView:
+            iIndex = self.indexOf(oView)
+            return iIndex
+
     def S_NewBlueprint(self, bpID):
         oBPView = blueprintview.CBlueprintView(bpID, self)
         sPath = self.m_BPID2Path.get(bpID, None)
@@ -79,18 +85,13 @@ class CMainWindow(QTabWidget):
                 return
         if sPath in self.m_Path2BPID:
             bpID = self.m_Path2BPID[sPath]
-            self._ChangeBPIndex(bpID)
+            iIndex = self._GetIndex(bpID)
+            self.setCurrentIndex(iIndex)
             return
         bpID = interface.OpenBlueprint(sPath)
         self.m_Path2BPID[sPath] = bpID
         self.m_BPID2Path[bpID] = sPath
         self.S_NewBlueprint(bpID)
-
-    def _ChangeBPIndex(self, bpID):
-        oView = self.m_BPInfo.get(bpID, None)
-        if oView:
-            iIndex = self.indexOf(oView)
-            self.setCurrentIndex(iIndex)
 
     def S_SaveBlueprint(self, bpID):
         sPath = self.m_BPID2Path.get(bpID, None)
@@ -99,3 +100,9 @@ class CMainWindow(QTabWidget):
             if not sPath:
                 return
         interface.SaveBlueprint(bpID, sPath)
+        iIndex = self._GetIndex(bpID)
+        tabName = os.path.split(sPath)[1]
+        self.setTabText(iIndex, tabName)
+        self.setTabToolTip(iIndex, sPath)
+        self.m_Path2BPID[sPath] = bpID
+        self.m_BPID2Path[bpID] = sPath
