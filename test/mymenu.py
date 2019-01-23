@@ -13,21 +13,11 @@ from PyQt5.QtCore import Qt, QSize
 
 
 class CMainWindow(QWidget):
-    def __init__(self, parent=None):
-        super(CMainWindow, self).__init__(parent)
-        self.InitUI()
-
-    def InitUI(self):
-        # self.setWindowFlags(Qt.Popup | Qt.Sheet)
-        hbox = QHBoxLayout(self)
-        line = QLineEdit(self)
-        hbox.addWidget(line)
-
-    # def contextMenuEvent(self, event):
-    #     self.m_Menu = CMenu()
-    #     pos = self.mapToGlobal(event.pos())
-    #     self.m_Menu.move(pos.x(), pos.y())
-    #     self.m_Menu.show()
+    def contextMenuEvent(self, event):
+        self.m_Menu = CMenu()
+        pos = self.mapToGlobal(event.pos())
+        self.m_Menu.move(pos.x(), pos.y())
+        self.m_Menu.show()
 
 
 class CMenu(QMenu):
