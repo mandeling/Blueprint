@@ -77,6 +77,9 @@ class CMainWindow(QTabWidget):
         iIndex = self.indexOf(oBPView)
         self.removeTab(iIndex)
         self.setCurrentIndex(self.count() - 1)
+        sPath = self.m_BPID2Path.pop(bpID, None)
+        if sPath in self.m_Path2BPID:
+            del self.m_Path2BPID[sPath]
 
     def S_OpenBlueprint(self, sPath=None):
         if not sPath:
