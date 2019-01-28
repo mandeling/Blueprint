@@ -100,7 +100,7 @@ class CMainView(QMainWindow):
         interface.SaveBlueprint(bpID, sPath)
 
     def S_SaveAllBlueprint(self):
-        pass
+        GetSignal().UI_SAVE_ALL_BLUEPRINT.emit()
 
     def S_OpenBlueprint(self):
         GetSignal().UI_OPEN_BLUEPRINT.emit()

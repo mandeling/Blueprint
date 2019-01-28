@@ -36,7 +36,8 @@ class CSignal:
     UI_NEW_BLUEPRINT = CMySignal()   # bpID
     UI_SHOW_BP_SEARCH = CMySignal()  # bpID
     UI_SAVE_BLUEPRINT = CMySignal()  # bpID
-    UI_OPEN_BLUEPRINT = CMySignal()  # bpID
+    UI_SAVE_ALL_BLUEPRINT = CMySignal()
+    UI_OPEN_BLUEPRINT = CMySignal()  # bpID, [sPath]
 
     # --图表--
     UI_FOCUS_GRAPHIC = CMySignal()  # bpID, graphicID

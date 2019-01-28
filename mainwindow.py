@@ -40,6 +40,7 @@ class CMainWindow(QTabWidget):
         GetSignal().UI_NEW_BLUEPRINT.connect(self.S_NewBlueprint)
         GetSignal().UI_SAVE_BLUEPRINT.connect(self.S_SaveBlueprint)
         GetSignal().UI_OPEN_BLUEPRINT.connect(self.S_OpenBlueprint)
+        GetSignal().UI_SAVE_ALL_BLUEPRINT.connect(self.S_SaveAllBlueprint)
 
     def _NewID(self):
         self.m_ID += 1
@@ -114,3 +115,7 @@ class CMainWindow(QTabWidget):
         self.setTabToolTip(iIndex, sPath)
         self.m_Path2BPID[sPath] = bpID
         self.m_BPID2Path[bpID] = sPath
+
+    def S_SaveAllBlueprint(self):
+        for bpID, sPath in self.m_BPID2Path.items():
+            interface.SaveBlueprint(bpID, sPath)
