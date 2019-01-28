@@ -5,10 +5,12 @@
 @Desc: 主界面
 """
 
+import os
+
 from PyQt5.QtWidgets import QMainWindow, QDockWidget, QSizePolicy, QWidget
 from PyQt5.QtCore import Qt
 
-from . import filetree, logwidget
+from . import filetree
 from pubcode.pubqt.pubmenu import menumgr, menudefine
 from editdata import interface
 from signalmgr import GetSignal
@@ -83,9 +85,19 @@ class CMainView(QMainWindow):
             },
         ]
 
+    def _GetFileName(self):
+        for x in range(100):
+            s = ""
+            if x:
+                s = str(x)
+            sPath = "bpfile/blueprint%s.xh" % s
+            if not os.path.exists(sPath):
+                return sPath
+
     def S_NewBlueprint(self):
+        sPath = self._GetFileName()
         bpID = interface.NewBlueprint()
-        GetSignal().UI_NEW_BLUEPRINT.emit(bpID)
+        interface.SaveBlueprint(bpID, sPath)
 
     def S_SaveAllBlueprint(self):
         pass

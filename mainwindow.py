@@ -51,11 +51,16 @@ class CMainWindow(QTabWidget):
             iIndex = self.indexOf(oView)
             return iIndex
 
+    def _GetPathName(self, sPath):
+        sFile = os.path.split(sPath)[1]
+        sName = os.path.splitext(sFile)[0]
+        return sName
+
     def S_NewBlueprint(self, bpID):
         oBPView = blueprintview.CBlueprintView(bpID, self)
         sPath = self.m_BPID2Path.get(bpID, None)
         if sPath:
-            tabName = os.path.split(sPath)[1]
+            tabName = self._GetPathName(sPath)
         else:
             tabName = "蓝图-%s" % self._NewID()
         iIndex = self.addTab(oBPView, tabName)
@@ -104,7 +109,7 @@ class CMainWindow(QTabWidget):
                 return
         interface.SaveBlueprint(bpID, sPath)
         iIndex = self._GetIndex(bpID)
-        tabName = os.path.split(sPath)[1]
+        tabName = self._GetPathName(sPath)
         self.setTabText(iIndex, tabName)
         self.setTabToolTip(iIndex, sPath)
         self.m_Path2BPID[sPath] = bpID

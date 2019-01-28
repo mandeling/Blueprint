@@ -7,7 +7,7 @@
 
 import os
 
-from PyQt5.QtWidgets import QTreeView, QFileSystemModel
+from PyQt5.QtWidgets import QTreeView, QFileSystemModel, QAbstractItemView
 from PyQt5.QtCore import QDir
 
 from signalmgr import GetSignal
@@ -20,6 +20,7 @@ class CFileTree(QTreeView):
         self._InitUI()
 
     def _InitUI(self):
+        self.setEditTriggers(QAbstractItemView.SelectedClicked | QAbstractItemView.EditKeyPressed)
         path = os.path.join(os.getcwd(), "bpfile")
         index = self.m_FileSystem.setRootPath(path)
         self.header().hide()
@@ -27,6 +28,7 @@ class CFileTree(QTreeView):
         self.setRootIndex(index)
 
     def mouseDoubleClickEvent(self, event):
+        super(CFileTree, self).mouseDoubleClickEvent(event)
         index = self.indexAt(event.pos())
         sFile = self.m_FileSystem.filePath(index)
         if os.path.isfile(sFile):
@@ -39,6 +41,7 @@ class CFileSystem(QFileSystemModel):
         self.setFilter(QDir.Files | QDir.AllDirs | QDir.NoDotAndDotDot)
         self.setNameFilters(["*.xh"])
         self.setNameFilterDisables(False)
+        self.setReadOnly(False)
 
     def columnCount(self, *args):
         return 1
