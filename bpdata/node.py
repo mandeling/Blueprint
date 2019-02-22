@@ -244,13 +244,14 @@ class CMod(CBaseNode):
         return self.GetValue("输入1") % self.GetValue("输入2")
 
 
-@Register(define.NodeName.INT2BOOL)
-class CInt2Bool(CBaseNode):
+@Register(define.NodeName.INT_EQUAL)
+class CIntEqual(CBaseNode):
     m_NodeType = define.NODE_TYPE_FUNCTION
 
     def InputData(self):
         return [
-            ("Int", define.Type.INT),
+            ("Int1", define.Type.INT),
+            ("Int2", define.Type.INT),
         ]
 
     def OutputData(self):
@@ -259,7 +260,7 @@ class CInt2Bool(CBaseNode):
         ]
 
     def Output1(self):
-        if self.GetValue("Int"):
+        if self.GetValue("Int1") == self.GetValue("Int2"):
             return True
         return False
 

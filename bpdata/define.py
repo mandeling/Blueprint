@@ -96,7 +96,7 @@ class NodeName:
     PRINT = "打印"
     IF = "if分支"
     FOR = "for"
-    INT2BOOL = "Int2Bool"
+    INT_EQUAL = "Equal"
 
     GET_VARIABLE = "Get变量"
     SET_VARIABLE = "Set变量"

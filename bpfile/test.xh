@@ -16,9 +16,9 @@
             "{995ea0b5-14f1-484b-ae9a-a8792666d1df}",
             "{288a3ba0-f266-4f04-b4af-f23c0d4f3a7f}",
             "{16012f60-4d2c-4672-81d4-c575fc5ea6b1}",
-            "{d1c9394c-dfa9-4fe9-9aeb-e1ccc449c4ae}",
-            "{1165e96d-b58b-45dc-8ae2-dde8f58e8eb4}",
-            "{fcaf4d43-e60b-4248-9cc7-b68686487055}"
+            "{fcaf4d43-e60b-4248-9cc7-b68686487055}",
+            "{ed20df6d-57d6-42e3-b3c8-c2bb5d78925d}",
+            "{e31b8d31-3b25-44c8-9f24-e4e4d30df7ab}"
         ],
         "graphic_attr_name:node_list": [
             "{218645ce-2e20-43e9-b405-cb0d6a567478}",
@@ -27,7 +27,7 @@
             "{9a5a9708-9edf-4dc5-a585-babcdc212fc7}",
             "{8f33078a-f557-4d08-889f-206df7e0751c}",
             "{b3c13644-48ae-4b47-a66b-d5a065b326b7}",
-            "{4b4f4206-4ea1-47bd-bead-4e7a7ebe2a1c}"
+            "{1c5ba190-8fcd-4feb-8f49-e0cbc121a5b8}"
         ]
     },
     "{4991b0a6-fbd9-4b53-b749-0cfbf595a011}": {
@@ -55,20 +55,20 @@
         "line_attr_name:output_pin_id": "{03af060f-a911-45b7-b9c8-abc9cd9c30a7}",
         "line_attr_name:input_pin_id": "{3eaefa45-9f7f-48a3-8476-d87301614369}"
     },
-    "{d1c9394c-dfa9-4fe9-9aeb-e1ccc449c4ae}": {
-        "line_attr_name:id": "{d1c9394c-dfa9-4fe9-9aeb-e1ccc449c4ae}",
-        "line_attr_name:output_pin_id": "{9ab7cd85-a9f4-4c0c-9e80-fc9776eec3eb}",
-        "line_attr_name:input_pin_id": "{a62e3f64-7581-41bd-82a7-2e1533ecfb0f}"
-    },
-    "{1165e96d-b58b-45dc-8ae2-dde8f58e8eb4}": {
-        "line_attr_name:id": "{1165e96d-b58b-45dc-8ae2-dde8f58e8eb4}",
-        "line_attr_name:output_pin_id": "{3592e2b6-4db1-4c22-b9df-223c24aea3ca}",
-        "line_attr_name:input_pin_id": "{d607aaeb-6e54-402d-b1dd-5e3fffe4eb5d}"
-    },
     "{fcaf4d43-e60b-4248-9cc7-b68686487055}": {
         "line_attr_name:id": "{fcaf4d43-e60b-4248-9cc7-b68686487055}",
         "line_attr_name:output_pin_id": "{74ddb406-b0c0-4f84-936c-ff27ea94e03a}",
         "line_attr_name:input_pin_id": "{5ccafb5a-1962-43d2-9431-aeae41ad6e1e}"
+    },
+    "{ed20df6d-57d6-42e3-b3c8-c2bb5d78925d}": {
+        "line_attr_name:id": "{ed20df6d-57d6-42e3-b3c8-c2bb5d78925d}",
+        "line_attr_name:output_pin_id": "{9ab7cd85-a9f4-4c0c-9e80-fc9776eec3eb}",
+        "line_attr_name:input_pin_id": "{bf321893-71dd-44e7-bc99-2b39fc39502e}"
+    },
+    "{e31b8d31-3b25-44c8-9f24-e4e4d30df7ab}": {
+        "line_attr_name:id": "{e31b8d31-3b25-44c8-9f24-e4e4d30df7ab}",
+        "line_attr_name:output_pin_id": "{2f765ee9-ae60-4a03-a4a0-8f4d1b59527e}",
+        "line_attr_name:input_pin_id": "{d607aaeb-6e54-402d-b1dd-5e3fffe4eb5d}"
     },
     "{218645ce-2e20-43e9-b405-cb0d6a567478}": {
         "node_attr_name:id": "{218645ce-2e20-43e9-b405-cb0d6a567478}",
@@ -213,8 +213,8 @@
         "node_attr_name:name": "mod",
         "node_attr_name:display_name": "mod",
         "node_attr_name:postion": [
-            -139.0,
-            -227.0
+            -196.0,
+            -391.0
         ],
         "node_attr_name:pin_list": [
             "{6979b88d-6fd5-4372-84bb-650858f441de}",
@@ -253,8 +253,8 @@
         "node_attr_name:name": "打印",
         "node_attr_name:display_name": "打印",
         "node_attr_name:postion": [
-            578.0,
-            -223.0
+            356.0,
+            -101.0
         ],
         "node_attr_name:pin_list": [
             "{3eaefa45-9f7f-48a3-8476-d87301614369}",
@@ -293,8 +293,8 @@
         "node_attr_name:name": "if分支",
         "node_attr_name:display_name": "if分支",
         "node_attr_name:postion": [
-            323.0,
-            -355.0
+            113.0,
+            -202.0
         ],
         "node_attr_name:pin_list": [
             "{ffe363d3-5b0f-44d5-8ce6-a14fe624a254}",
@@ -337,31 +337,40 @@
         "pin_attr_name:data_type": 4,
         "pin_attr_name:data_value": null
     },
-    "{4b4f4206-4ea1-47bd-bead-4e7a7ebe2a1c}": {
-        "node_attr_name:id": "{4b4f4206-4ea1-47bd-bead-4e7a7ebe2a1c}",
-        "node_attr_name:name": "Int2Bool",
-        "node_attr_name:display_name": "Int2Bool",
+    "{1c5ba190-8fcd-4feb-8f49-e0cbc121a5b8}": {
+        "node_attr_name:id": "{1c5ba190-8fcd-4feb-8f49-e0cbc121a5b8}",
+        "node_attr_name:name": "Equal",
+        "node_attr_name:display_name": "Equal",
         "node_attr_name:postion": [
-            109.0,
-            -224.0
+            -123.0,
+            -271.0
         ],
         "node_attr_name:pin_list": [
-            "{a62e3f64-7581-41bd-82a7-2e1533ecfb0f}",
-            "{3592e2b6-4db1-4c22-b9df-223c24aea3ca}"
+            "{bf321893-71dd-44e7-bc99-2b39fc39502e}",
+            "{f0eeae35-4802-4583-a8db-13bc617bd17d}",
+            "{2f765ee9-ae60-4a03-a4a0-8f4d1b59527e}"
         ],
         "node_attr_name:type": 0,
         "node_attr_name:variable_id": 0
     },
-    "{a62e3f64-7581-41bd-82a7-2e1533ecfb0f}": {
-        "pin_attr_name:id": "{a62e3f64-7581-41bd-82a7-2e1533ecfb0f}",
-        "pin_attr_name:name": "Int",
-        "pin_attr_name:display_name": "Int",
+    "{bf321893-71dd-44e7-bc99-2b39fc39502e}": {
+        "pin_attr_name:id": "{bf321893-71dd-44e7-bc99-2b39fc39502e}",
+        "pin_attr_name:name": "Int1",
+        "pin_attr_name:display_name": "Int1",
         "pin_attr_name:pin_type": 0,
         "pin_attr_name:data_type": 1,
         "pin_attr_name:data_value": 0
     },
-    "{3592e2b6-4db1-4c22-b9df-223c24aea3ca}": {
-        "pin_attr_name:id": "{3592e2b6-4db1-4c22-b9df-223c24aea3ca}",
+    "{f0eeae35-4802-4583-a8db-13bc617bd17d}": {
+        "pin_attr_name:id": "{f0eeae35-4802-4583-a8db-13bc617bd17d}",
+        "pin_attr_name:name": "Int2",
+        "pin_attr_name:display_name": "Int2",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{2f765ee9-ae60-4a03-a4a0-8f4d1b59527e}": {
+        "pin_attr_name:id": "{2f765ee9-ae60-4a03-a4a0-8f4d1b59527e}",
         "pin_attr_name:name": "Bool",
         "pin_attr_name:display_name": "Bool",
         "pin_attr_name:pin_type": 1,
