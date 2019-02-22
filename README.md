@@ -1,3 +1,9 @@
+<!--
+ * @Description: 
+ * @Author: lamborghini1993
+ * @Date: 2019-02-22 22:07:42
+ * @UpdateDate: 2019-02-22 22:09:22
+ -->
 <!-- GFM-TOC -->
 * [前言介绍](#前言介绍)
 * [蓝图操作](#蓝图操作)
@@ -18,6 +24,12 @@
 
 # 蓝图操作
 ## 一、蓝图新建
+- 新建蓝图（文件-新建蓝图/ctrl+N）
+
+    ![新建蓝图](doc/image/20190221_newblueprint.png)
+- 双击蓝图文件直接打开
+
+     ![打开蓝图](doc/image/20190221_openblueprint.png)
 
 ## 二、新建图表
 ![新建图表](doc/image/20190126_graphic.png)
