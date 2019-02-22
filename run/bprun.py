@@ -1,11 +1,14 @@
 # -*- coding:utf-8 -*-
-"""
-@Author: lamborghini
+'''
+@Author: lamborghini1993
 @Date: 2019-01-11 22:29:45
-@Desc: 蓝图运行
-"""
+@UpdateDate: 2019-02-22 16:13:39
+@Description: 蓝图运行
+'''
 
 import misc
+import threading
+import time
 
 from editdata import interface
 from editdata import define as eddefine
@@ -13,58 +16,80 @@ from bpdata import define as bddefine
 from signalmgr import GetSignal
 
 
-g_BlueprintRunMgr = None
+g_BlueprintRun = None
+g_BreakPoint = {}
 
 
-def GetRunMgr():
-    global g_BlueprintRunMgr
-    if not g_BlueprintRunMgr:
-        g_BlueprintRunMgr = CBlueprintRunMgr()
-    return g_BlueprintRunMgr
+def GetRunObj():
+    global g_BlueprintRun
+    # if not g_BlueprintRun:
+    #     g_BlueprintRun = CBlueprintRun()
+    return g_BlueprintRun
+
+
+def InitRunObj():
+    global g_BlueprintRun
+    g_BlueprintRun = CBlueprintRun()
+    return g_BlueprintRun
+
+
+def RefreshObj():
+    global g_BlueprintRun
+    g_BlueprintRun = None
 
 
 # ---------------------ui层接口---------------------------
 def RunBlueprint(bpID):
     """运行蓝图"""
+    obj = GetRunObj()
+    if obj:
+        obj.Stop()
+        while obj.isAlive():
+            time.sleep(0.5)
     iEventNode = interface.GetBlueprintAttr(bpID, eddefine.BlueprintAttrName.EVENT_NODE)
     if not iEventNode:
         return
     lstPin = interface.GetNodeAttr(iEventNode, bddefine.NodeAttrName.PINIDLIST)
     startPin = lstPin[0]
-    obj = GetRunMgr()
+    obj = InitRunObj()
     obj.Run(startPin)
 
 
 def StopBlueprint(bpID):
     """停止运行蓝图"""
-    obj = GetRunMgr()
-    obj.Reset()
-
-
-def SetBreakpoint(nodeID):
-    obj = GetRunMgr()
-    bShow = obj.SetBreakpoint(nodeID)
-    return bShow
+    obj = GetRunObj()
+    if obj:
+        obj.Stop()
 
 
 def NextBreakpoint():
-    obj = GetRunMgr()
-    obj.NextBreakpoint()
+    obj = GetRunObj()
+    if obj:
+        obj.NextBreakpoint()
+
+
+def SetBreakpoint(nodeID):
+    global g_BreakPoint
+    if nodeID in g_BreakPoint:
+        del g_BreakPoint[nodeID]
+        return False
+    g_BreakPoint[nodeID] = True
+    return True
 
 
 # --------------------蓝图运行中的接口----------------------------
 def GetRunPinValue(pinID):
-    value = GetRunMgr().GetPinValue(pinID)
+    value = GetRunObj().GetPinValue(pinID)
     return value
 
 
 def RunOutputFlow(pinID):
-    obj = GetRunMgr()
+    obj = GetRunObj()
     obj.RunOutputFlow(pinID)
 
 
 def SetRunPinValue(pinID, value):
-    obj = GetRunMgr()
+    obj = GetRunObj()
     obj.SetPinValue(pinID, value)
 
 
@@ -76,9 +101,9 @@ def GetPinFunc(pinID):
     return func
 
 
-BLUEPRINT_RUN = 1
-BLUEPRINT_STOP = 2
-BLUEPRINT_DEBUG = 4
+BLUEPRINT_STOP = 1          # 停止
+BLUEPRINT_RUNING = 2        # 运行中
+BLUEPRINT_DEBUG_PAUSE = 4   # 调式中断等待中
 
 
 def DebugPinInfo(pinID, value):
@@ -88,20 +113,19 @@ def DebugPinInfo(pinID, value):
     misc.Debug("%s-%s: %s\t%s" % (sNodeDisplayName, sPinDisplayName, value, type(value)))
 
 
-class CBlueprintRunMgr:
+class CBlueprintRun(threading.Thread):
     def __init__(self):
+        super(CBlueprintRun, self).__init__()
+        self.m_StartPin = None
         self.m_PinValue = {}
-        self.m_Breakpoint = {}
         self.m_LineList = []
-        self.m_CurInputFlowPin = None
         self.m_Statue = 0
+        self.setDaemon(True)
 
-    def Reset(self):
-        self.m_PinValue = {}
+    def Stop(self):
         for lineID in self.m_LineList:
             GetSignal().LINE_RUN_STATUE.emit(lineID, False)
-        self.m_LineList = []
-        self.m_Statue = 0
+        self.m_Statue = BLUEPRINT_STOP
 
     def _AddRunLine(self, lineID):
         if lineID not in self.m_LineList:
@@ -109,24 +133,19 @@ class CBlueprintRunMgr:
             GetSignal().LINE_RUN_STATUE.emit(lineID, True)
 
     def Run(self, startPin):
-        self.Reset()
-        self.m_Statue ^= BLUEPRINT_RUN
-        misc.Debug("-----start----------")
-        self.RunOutputFlow(startPin)
+        self.m_StartPin = startPin
+        self.start()
+
+    def run(self):
+        misc.Debug("----------start----------")
+        self.m_Statue = BLUEPRINT_RUNING
+        self.RunOutputFlow(self.m_StartPin)
 
     def SetPinValue(self, pinID, value):
         self.m_PinValue[pinID] = value
 
     def NextBreakpoint(self):
-        if self.m_CurInputFlowPin:
-            self.RunInputFlow(self.m_CurInputFlowPin, True)
-
-    def SetBreakpoint(self, nodeID):
-        if nodeID in self.m_Breakpoint:
-            del self.m_Breakpoint[nodeID]
-            return False
-        self.m_Breakpoint[nodeID] = True
-        return True
+        self.m_Statue = BLUEPRINT_RUNING
 
     def GetPinValue(self, pinID):
         if interface.IsFlowPin(pinID):
@@ -171,6 +190,9 @@ class CBlueprintRunMgr:
         return outPinValue
 
     def RunOutputFlow(self, outputPin):
+        if self.m_Statue == BLUEPRINT_STOP:
+            return
+
         lstline = interface.GetAllLineByPin(outputPin)
         for lineID in lstline:
             inputPin = interface.GetLineOtherPin(lineID, outputPin)
@@ -179,13 +201,21 @@ class CBlueprintRunMgr:
 
     def RunInputFlow(self, inputPin, bNext=False):
         """输入流引脚永远只有一个"""
-        nodeID = interface.GetNodeIDByPinID(inputPin)
-        if not bNext and nodeID in self.m_Breakpoint:
-            self.m_CurInputFlowPin = inputPin
+        if self.m_Statue & BLUEPRINT_STOP:
             return
+
+        nodeID = interface.GetNodeIDByPinID(inputPin)
+        if not bNext and nodeID in g_BreakPoint:
+            self.m_Statue = BLUEPRINT_DEBUG_PAUSE
+            while True:
+                if self.m_Statue == BLUEPRINT_STOP:
+                    return
+                if self.m_Statue == BLUEPRINT_RUNING:
+                    break
+                time.sleep(0.5)
+
         func = GetPinFunc(inputPin)
         if func:
             sNodeDisplayName = interface.GetNodeAttr(nodeID, bddefine.NodeAttrName.DISPLAYNAME)
             misc.Debug("开始运行'%s'节点" % sNodeDisplayName)
             func()
-            # misc.Debug("'%s'节点运行完成" % sNodeDisplayName)
