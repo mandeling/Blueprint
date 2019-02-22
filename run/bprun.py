@@ -111,6 +111,7 @@ class CBlueprintRunMgr:
     def Run(self, startPin):
         self.Reset()
         self.m_Statue ^= BLUEPRINT_RUN
+        misc.Debug("-----start----------")
         self.RunOutputFlow(startPin)
 
     def SetPinValue(self, pinID, value):
@@ -118,7 +119,7 @@ class CBlueprintRunMgr:
 
     def NextBreakpoint(self):
         if self.m_CurInputFlowPin:
-            self.RunInputFlow(self.m_CurInputFlowPin)
+            self.RunInputFlow(self.m_CurInputFlowPin, True)
 
     def SetBreakpoint(self, nodeID):
         if nodeID in self.m_Breakpoint:
@@ -176,10 +177,10 @@ class CBlueprintRunMgr:
             self.RunInputFlow(inputPin)
             self._AddRunLine(lineID)
 
-    def RunInputFlow(self, inputPin):
+    def RunInputFlow(self, inputPin, bNext=False):
         """输入流引脚永远只有一个"""
         nodeID = interface.GetNodeIDByPinID(inputPin)
-        if self.m_CurInputFlowPin != inputPin and nodeID in self.m_Breakpoint:
+        if not bNext and nodeID in self.m_Breakpoint:
             self.m_CurInputFlowPin = inputPin
             return
         func = GetPinFunc(inputPin)
