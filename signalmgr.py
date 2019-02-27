@@ -44,7 +44,6 @@ class CSignal:
     UI_FOCUS_NODE = CMySignal()     # graphicID, nodeID
 
     # --变量--
-    UI_OPEN_VARIABLE_DETAIL = CMySignal()  # bpID, varID
     UI_VARIABLE_CHANGE_ATTR = CMySignal()  # varID, attrName, value
 
     # --连线--

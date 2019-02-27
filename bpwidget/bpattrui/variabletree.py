@@ -14,6 +14,7 @@ from .. import define
 from editdata import interface
 from editdata import define as eddefine
 from signalmgr import GetSignal
+from viewmgr.uimgr import GetUIMgr
 
 
 class CVariableAttrTree(basetree.CBaseAttrTree):
@@ -30,7 +31,9 @@ class CVariableAttrTree(basetree.CBaseAttrTree):
     def mouseDoubleClickEvent(self, event):
         oItem = self.currentItem()
         _, ID = oItem.GetInfo()
-        GetSignal().UI_OPEN_VARIABLE_DETAIL.emit(self.m_BPID, ID)
+        oDetailUI = GetUIMgr().GetDetailUI(self.m_BPID)
+        if oDetailUI:
+            oDetailUI.SetVarWidget(ID)
 
     def mousePressEvent(self, event):
         super(CVariableAttrTree, self).mousePressEvent(event)

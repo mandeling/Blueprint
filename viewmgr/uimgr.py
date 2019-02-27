@@ -25,6 +25,7 @@ class CUIManager:
         self.m_PinBtnUI = {}
         self.m_PinUI = {}
         self.m_LineUI = {}
+        self.m_DetailUI = {}
         self._InitSignal()
 
     # ---------------------------ui相关信号------------------------------
@@ -51,6 +52,12 @@ class CUIManager:
             oLineUI.SetStopColor()
 
     # ---------------------------ui对象操作------------------------------
+    def _GetRefUI(self, dInfo, ID):
+        wObj = dInfo.get(ID, None)
+        if wObj:
+            wObj = wObj()
+        return wObj
+
     def AddNodeUI(self, nodeID, oNodeUI):
         self.m_NodeUI[nodeID] = weakref.ref(oNodeUI)
 
@@ -102,3 +109,13 @@ class CUIManager:
         if wObj:
             wObj = wObj()
         return wObj
+
+    def AddDetailUI(self, bpID, oUI):
+        self.m_DetailUI[bpID] = weakref.ref(oUI)
+
+    def DelDetailUI(self, bpID):
+        if bpID in self.m_DetailUI:
+            del self.m_DetailUI[bpID]
+
+    def GetDetailUI(self, bpID):
+        return self._GetRefUI(self.m_DetailUI, bpID)

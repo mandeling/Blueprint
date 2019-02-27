@@ -26,21 +26,28 @@ class Type:
     ENUM = 5
     VECTOR3 = 6
     CHECKBOX = 7
+    LIST = 8
+
+
+class SType:
+    INT = "int"
+    FLOAT = "float"
+    STR = "str"
+    BOOL = "bool"
+    LIST = "list"
 
 
 NAME_TYPE = {
-    "int": Type.INT,
-    "float": Type.FLOAT,
-    "str": Type.STR,
-    "bool": Type.BOOL,
+    SType.INT:  Type.INT,
+    SType.FLOAT: Type.FLOAT,
+    SType.STR:  Type.STR,
+    SType.BOOL: Type.BOOL,
+    SType.LIST: Type.LIST,
 }
 
-TYPE_NAME = {
-    Type.INT: "int",
-    Type.FLOAT: "float",
-    Type.STR: "str",
-    Type.BOOL: "bool",
-}
+TYPE_NAME = {}
+for sType, iType in NAME_TYPE.items():
+    TYPE_NAME[iType] = sType
 
 
 def PinIsFlow(iPinType):
@@ -60,6 +67,10 @@ def GetDefauleValue(iType):
         return 0
     if iType in (Type.STR,):
         return ""
+    if iType == Type.BOOL:
+        return False
+    if iType == Type.LIST:
+        return []
     return None
 
 
