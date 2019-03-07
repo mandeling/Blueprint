@@ -135,11 +135,14 @@ class CEnum(QWidget):
         self.m_PinID = pinID
         self.m_EnumBox = None
         self.m_ValueBox = None
-        self.m_Test = {
-            "Enum1": ["1", "2", "3", "4"],
-            "Enum2": ["11", "22", "33"],
-            "Enum3": ["111", "222", "333", "444", "555"],
-        }
+        self.m_Test = {}
+        for x in range(4):
+            sName = "Enum" + str(x+1)
+            lst = []
+            for y in range(100):
+                sTmp = "%s_%s" % (sName, y+1)
+                lst.append(sTmp)
+            self.m_Test[sName] = lst
         self._InitUI()
         self._InitSignal()
         self._InitData()
@@ -158,6 +161,8 @@ class CEnum(QWidget):
         hBox2.addWidget(self.m_ValueBox)
         vBox.addLayout(hBox1)
         vBox.addLayout(hBox2)
+
+        self.m_ValueBox.setEditable(True)
 
     def _InitSignal(self):
         self.m_EnumBox.currentTextChanged.connect(self.S_EnumTypeChange)
@@ -218,23 +223,40 @@ class CComCheckBox(QWidget):
     def __init__(self, pinID, parent=None):
         super(CComCheckBox, self).__init__(parent)
         self.m_PinID = pinID
-        self.m_List = ["132434", "2", "3", "4"]
+        self.m_List = [str(x) for x in range(100, 200)]
         self.m_Select = []
         self.m_ComBox = QComboBox(self)
+        self.m_ListWidget = None
         self.m_LineEdit = None
         self._InitUI()
 
     def _InitUI(self):
-        self.setMinimumSize(QSize(100, 80))
-        listWidget = QListWidget(self)
+        """
+        QListWidget复选列表
+        """
+        hBox = QHBoxLayout(self)
+        self.listWidget = QListWidget(self)
+        for x in range(100):
+            item = QListWidgetItem()
+            item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
+            self.listWidget.addItem(item)
+            sName = "Test_"+str(x)
+            checkbox = QCheckBox(sName, self)
+            self.listWidget.setItemWidget(item, checkbox)
+            checkbox.toggled.connect(self.S_StateChanged)
+        hBox.addWidget(self.listWidget)
+
+    def _InitUI2(self):
+        self.setMinimumSize(QSize(200, 80))
+        self.m_ComBox.setEditable(True)
+        self.m_ListWidget = listWidget = QListWidget(self)
         lineEdit = QLineEdit(self)
         for i, txt in enumerate(self.m_List):
-            item = QListWidgetItem(listWidget)
+            item = QListWidgetItem()
+            item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
             listWidget.addItem(item)
-            item.setData(Qt.UserRole, i)
             checkbox = QCheckBox(self)
             checkbox.setText(txt)
-            listWidget.addItem(item)
             listWidget.setItemWidget(item, checkbox)
             checkbox.toggled.connect(self.S_StateChanged)
 

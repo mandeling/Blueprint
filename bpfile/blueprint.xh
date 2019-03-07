@@ -1,0 +1,95 @@
+{
+    "{1c45493d-95eb-477c-9af7-bd60784cc6aa}": {
+        "bp_attr_name:id": "{1c45493d-95eb-477c-9af7-bd60784cc6aa}",
+        "bp_attr_name:graphic_list": [
+            "{75af715d-5580-4931-b1d4-89157e78320e}"
+        ],
+        "bp_attr_name:variable_list": [],
+        "bp_attr_name:event_node": null
+    },
+    "{75af715d-5580-4931-b1d4-89157e78320e}": {
+        "graphic_attr_name:id": "{75af715d-5580-4931-b1d4-89157e78320e}",
+        "graphic_attr_name:name": "图表-1",
+        "graphic_attr_name:line_list": [],
+        "graphic_attr_name:node_list": [
+            "{8813aae6-4505-4697-97d1-1b231f638476}"
+        ]
+    },
+    "{8813aae6-4505-4697-97d1-1b231f638476}": {
+        "node_attr_name:id": "{8813aae6-4505-4697-97d1-1b231f638476}",
+        "node_attr_name:name": "测试",
+        "node_attr_name:display_name": "测试",
+        "node_attr_name:postion": [
+            -278.0,
+            -386.0
+        ],
+        "node_attr_name:pin_list": [
+            "{67555046-243c-4e70-a7ce-7d7428951b8d}",
+            "{08f3bc5d-7121-490e-adef-e785184f1601}",
+            "{d3eea4b1-b8ed-4b0c-b655-24a9a474d2e0}",
+            "{6a588c3c-8464-4902-834f-7efae58034f7}",
+            "{a6b56a15-fa7d-4295-a4bf-98600a368dc8}",
+            "{97f7c3bb-9da8-415a-a7ef-2e62d450daec}",
+            "{44d09951-eac3-4d1d-bcb6-5c52688614f7}"
+        ],
+        "node_attr_name:type": 3,
+        "node_attr_name:variable_id": 0
+    },
+    "{67555046-243c-4e70-a7ce-7d7428951b8d}": {
+        "pin_attr_name:id": "{67555046-243c-4e70-a7ce-7d7428951b8d}",
+        "pin_attr_name:name": "int",
+        "pin_attr_name:display_name": "int",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{08f3bc5d-7121-490e-adef-e785184f1601}": {
+        "pin_attr_name:id": "{08f3bc5d-7121-490e-adef-e785184f1601}",
+        "pin_attr_name:name": "float",
+        "pin_attr_name:display_name": "float",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 2,
+        "pin_attr_name:data_value": 0
+    },
+    "{d3eea4b1-b8ed-4b0c-b655-24a9a474d2e0}": {
+        "pin_attr_name:id": "{d3eea4b1-b8ed-4b0c-b655-24a9a474d2e0}",
+        "pin_attr_name:name": "str",
+        "pin_attr_name:display_name": "str",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 3,
+        "pin_attr_name:data_value": ""
+    },
+    "{6a588c3c-8464-4902-834f-7efae58034f7}": {
+        "pin_attr_name:id": "{6a588c3c-8464-4902-834f-7efae58034f7}",
+        "pin_attr_name:name": "bool",
+        "pin_attr_name:display_name": "bool",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 4,
+        "pin_attr_name:data_value": false
+    },
+    "{a6b56a15-fa7d-4295-a4bf-98600a368dc8}": {
+        "pin_attr_name:id": "{a6b56a15-fa7d-4295-a4bf-98600a368dc8}",
+        "pin_attr_name:name": "vector3",
+        "pin_attr_name:display_name": "vector3",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 6,
+        "pin_attr_name:data_value": null
+    },
+    "{97f7c3bb-9da8-415a-a7ef-2e62d450daec}": {
+        "pin_attr_name:id": "{97f7c3bb-9da8-415a-a7ef-2e62d450daec}",
+        "pin_attr_name:name": "enum",
+        "pin_attr_name:display_name": "enum",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 5,
+        "pin_attr_name:data_value": null
+    },
+    "{44d09951-eac3-4d1d-bcb6-5c52688614f7}": {
+        "pin_attr_name:id": "{44d09951-eac3-4d1d-bcb6-5c52688614f7}",
+        "pin_attr_name:name": "checkbox",
+        "pin_attr_name:display_name": "checkbox",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 7,
+        "pin_attr_name:data_value": null
+    },
+    "bp_attr_name:": "{1c45493d-95eb-477c-9af7-bd60784cc6aa}"
+}
