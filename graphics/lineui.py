@@ -16,6 +16,7 @@ from editdata import interface
 
 class CLineUI(QGraphicsPathItem):
     """引脚连线"""
+    m_BezierLen = 200
 
     def __init__(self, lineID=-1, parent=None):
         super(CLineUI, self).__init__(parent)
@@ -49,8 +50,12 @@ class CLineUI(QGraphicsPathItem):
             qPath.addRect(0, 0, 0, 0)
             return
         centerX = (self.m_StartPoint.x() + self.m_EndPoint.x()) // 2
-        c1 = QPointF(centerX, self.m_StartPoint.y())
-        c2 = QPointF(centerX, self.m_EndPoint.y())
+        if self.m_StartPoint.x() < self.m_EndPoint.x():
+            c1 = QPointF(centerX, self.m_StartPoint.y())
+            c2 = QPointF(centerX, self.m_EndPoint.y())
+        else:
+            c1 = QPointF(self.m_StartPoint.x() + self.m_BezierLen, self.m_StartPoint.y())
+            c2 = QPointF(self.m_EndPoint.x()-self.m_BezierLen, self.m_EndPoint.y())
         qPath = QPainterPath()
         qPath.moveTo(self.m_StartPoint)
         qPath.cubicTo(c1, c2, self.m_EndPoint)
