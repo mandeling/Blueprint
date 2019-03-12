@@ -12,7 +12,9 @@
         "graphic_attr_name:name": "图表-1",
         "graphic_attr_name:line_list": [],
         "graphic_attr_name:node_list": [
-            "{8813aae6-4505-4697-97d1-1b231f638476}"
+            "{8813aae6-4505-4697-97d1-1b231f638476}",
+            "{9de0dbb5-0e7f-4c37-9969-88e00526a7bf}",
+            "{291ed3b6-fd9f-4df5-a721-69161840dcf4}"
         ]
     },
     "{8813aae6-4505-4697-97d1-1b231f638476}": {
@@ -90,6 +92,122 @@
         "pin_attr_name:pin_type": 0,
         "pin_attr_name:data_type": 7,
         "pin_attr_name:data_value": null
+    },
+    "{9de0dbb5-0e7f-4c37-9969-88e00526a7bf}": {
+        "node_attr_name:id": "{9de0dbb5-0e7f-4c37-9969-88e00526a7bf}",
+        "node_attr_name:name": "测试",
+        "node_attr_name:display_name": "测试",
+        "node_attr_name:postion": [
+            -9728.601655891587,
+            3125.8863042800167
+        ],
+        "node_attr_name:pin_list": [
+            "{2001d8e6-5581-4f86-9068-b31ea671ea08}",
+            "{a6459d06-3a3f-4589-9417-d4bd649a6509}",
+            "{25fc3269-834d-4e78-bfba-a175e88ccf06}",
+            "{cab35bf4-c4ed-4ad7-a60a-a6725538de68}",
+            "{f2e894ed-0819-47bf-9f4d-321a686bca4d}",
+            "{7c7377f1-3a6c-4005-81b2-d61ac5d3bdd6}",
+            "{c9253b06-8b14-4555-8d56-c1edc4dff7ad}"
+        ],
+        "node_attr_name:type": 3,
+        "node_attr_name:variable_id": 0
+    },
+    "{2001d8e6-5581-4f86-9068-b31ea671ea08}": {
+        "pin_attr_name:id": "{2001d8e6-5581-4f86-9068-b31ea671ea08}",
+        "pin_attr_name:name": "int",
+        "pin_attr_name:display_name": "int",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{a6459d06-3a3f-4589-9417-d4bd649a6509}": {
+        "pin_attr_name:id": "{a6459d06-3a3f-4589-9417-d4bd649a6509}",
+        "pin_attr_name:name": "float",
+        "pin_attr_name:display_name": "float",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 2,
+        "pin_attr_name:data_value": 0
+    },
+    "{25fc3269-834d-4e78-bfba-a175e88ccf06}": {
+        "pin_attr_name:id": "{25fc3269-834d-4e78-bfba-a175e88ccf06}",
+        "pin_attr_name:name": "str",
+        "pin_attr_name:display_name": "str",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 3,
+        "pin_attr_name:data_value": ""
+    },
+    "{cab35bf4-c4ed-4ad7-a60a-a6725538de68}": {
+        "pin_attr_name:id": "{cab35bf4-c4ed-4ad7-a60a-a6725538de68}",
+        "pin_attr_name:name": "bool",
+        "pin_attr_name:display_name": "bool",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 4,
+        "pin_attr_name:data_value": false
+    },
+    "{f2e894ed-0819-47bf-9f4d-321a686bca4d}": {
+        "pin_attr_name:id": "{f2e894ed-0819-47bf-9f4d-321a686bca4d}",
+        "pin_attr_name:name": "vector3",
+        "pin_attr_name:display_name": "vector3",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 6,
+        "pin_attr_name:data_value": null
+    },
+    "{7c7377f1-3a6c-4005-81b2-d61ac5d3bdd6}": {
+        "pin_attr_name:id": "{7c7377f1-3a6c-4005-81b2-d61ac5d3bdd6}",
+        "pin_attr_name:name": "enum",
+        "pin_attr_name:display_name": "enum",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 5,
+        "pin_attr_name:data_value": null
+    },
+    "{c9253b06-8b14-4555-8d56-c1edc4dff7ad}": {
+        "pin_attr_name:id": "{c9253b06-8b14-4555-8d56-c1edc4dff7ad}",
+        "pin_attr_name:name": "checkbox",
+        "pin_attr_name:display_name": "checkbox",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 7,
+        "pin_attr_name:data_value": null
+    },
+    "{291ed3b6-fd9f-4df5-a721-69161840dcf4}": {
+        "node_attr_name:id": "{291ed3b6-fd9f-4df5-a721-69161840dcf4}",
+        "node_attr_name:name": "加法",
+        "node_attr_name:display_name": "加法",
+        "node_attr_name:postion": [
+            -9855.76818543348,
+            -9861.594365127454
+        ],
+        "node_attr_name:pin_list": [
+            "{28630f57-c5e3-4d35-a015-a24fafa0a608}",
+            "{d03a66ac-b3f9-4aa6-8b4f-fd737b75be06}",
+            "{59eee58c-a2c4-4815-8f08-fd37d0990896}"
+        ],
+        "node_attr_name:type": 0,
+        "node_attr_name:variable_id": 0
+    },
+    "{28630f57-c5e3-4d35-a015-a24fafa0a608}": {
+        "pin_attr_name:id": "{28630f57-c5e3-4d35-a015-a24fafa0a608}",
+        "pin_attr_name:name": "输入1",
+        "pin_attr_name:display_name": "输入1",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{d03a66ac-b3f9-4aa6-8b4f-fd737b75be06}": {
+        "pin_attr_name:id": "{d03a66ac-b3f9-4aa6-8b4f-fd737b75be06}",
+        "pin_attr_name:name": "输入2",
+        "pin_attr_name:display_name": "输入2",
+        "pin_attr_name:pin_type": 0,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
+    },
+    "{59eee58c-a2c4-4815-8f08-fd37d0990896}": {
+        "pin_attr_name:id": "{59eee58c-a2c4-4815-8f08-fd37d0990896}",
+        "pin_attr_name:name": "输出",
+        "pin_attr_name:display_name": "输出",
+        "pin_attr_name:pin_type": 1,
+        "pin_attr_name:data_type": 1,
+        "pin_attr_name:data_value": 0
     },
     "bp_attr_name:": "{1c45493d-95eb-477c-9af7-bd60784cc6aa}"
 }

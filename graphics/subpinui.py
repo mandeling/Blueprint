@@ -174,14 +174,13 @@ class CEnum(QWidget):
         self.m_ValueBox.setCurrentIndex(0)
 
     def S_EnumTypeChange(self, sText):
-        print("EnumType", sText)
         lst = self.m_Test[sText]
         self.m_ValueBox.clear()
         self.m_ValueBox.addItems(lst)
         self.m_ValueBox.setCurrentIndex(-1)
 
     def S_ValueTypeChange(self, sText):
-        print("ValueType", sText)
+        pass
 
 
 class CVector3(QWidget):
@@ -230,7 +229,7 @@ class CComCheckBox(QWidget):
         self.m_LineEdit = None
         self._InitUI()
 
-    def _InitUI(self):
+    def _InitUI2(self):
         """
         QListWidget复选列表
         """
@@ -246,7 +245,7 @@ class CComCheckBox(QWidget):
             checkbox.toggled.connect(self.S_StateChanged)
         hBox.addWidget(self.listWidget)
 
-    def _InitUI2(self):
+    def _InitUI(self):
         self.setMinimumSize(QSize(200, 80))
         self.m_ComBox.setEditable(True)
         self.m_ListWidget = listWidget = QListWidget(self)
