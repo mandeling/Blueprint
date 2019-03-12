@@ -9,8 +9,8 @@ import weakref
 import time
 
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QGraphicsScene
-from PyQt5.QtGui import QTransform, QCursor, QPolygonF
+from PyQt5.QtWidgets import QGraphicsScene, QGraphicsLineItem
+from PyQt5.QtGui import QTransform, QCursor, QPolygonF, QPen, QColor, QBrush
 from PyQt5.QtCore import QPointF, Qt
 
 from . import nodeui, pinui, lineui
@@ -22,6 +22,10 @@ import bpdata.define as bddefine
 
 
 class CBlueprintScene(QGraphicsScene):
+    m_LineZValue = -1000
+    m_SmallSize = 16
+    m_BigSize = 128
+
     def __init__(self, graphicID, parent=None):
         super(CBlueprintScene, self).__init__(parent)
         self.m_GraphicID = graphicID
@@ -30,22 +34,29 @@ class CBlueprintScene(QGraphicsScene):
         self.m_IsNodeMove = False   # 节点是否有移动
         self.m_StartPos = None      # 节点移动的起始坐标
         self.m_ReleaseTime = 0      # 连线记录释放时间
-        self._Init()
+        self._InitUI()
         self._InitSignal()
 
-    def _Init(self):
-        rect = QtCore.QRectF(-10000, -10000, 20000, 20000)
-        self.setSceneRect(rect)  # 场景大小，传入item里面
-        # brush = QtGui.QBrush()
-        # brush.setColor(QtGui.QColor(QtCore.Qt.darkGray))  # 线的颜色
-        # brush.setStyle(QtCore.Qt.CrossPattern)
-        # self.setBackgroundBrush(brush)
-        # fillColor = QtGui.QColor(QtCore.Qt.black)   # 背景填充色
-        # i = self.addRect(rect, QtCore.Qt.blue, fillColor)
-        # i.setZValue(-1000)
-        # # ---------------------边框颜色
-        # i = self.addRect(rect, QtCore.Qt.yellow, brush)
-        # i.setZValue(-1000)
+    def _InitUI(self):
+        x, y, w, h = -10000, -10000, 20000, 20000
+        self.setSceneRect(QtCore.QRectF(x, y, w, h))
+        smallPen = QPen(QColor(64, 64, 64))
+        for yTemp in range(x, x+w, self.m_SmallSize):
+            self._AddBackLineItem(x, yTemp, x+w, yTemp, smallPen)
+        for xTemp in range(y, y+h, self.m_SmallSize):
+            self._AddBackLineItem(xTemp, y, xTemp, y+h, smallPen)
+        bigPen = QPen(Qt.black)
+        for yTemp in range(x, x+w, self.m_BigSize):
+            self._AddBackLineItem(x, yTemp, x+w, yTemp, bigPen)
+        for xTemp in range(y, y+h, self.m_BigSize):
+            self._AddBackLineItem(xTemp, y, xTemp, y+h, bigPen)
+        self.setBackgroundBrush(QBrush(QColor(38, 38, 38)))
+
+    def _AddBackLineItem(self, x1, y1, x2, y2, pen):
+        line = QGraphicsLineItem(x1, y1, x2, y2)
+        line.setPen(pen)
+        line.setZValue(self.m_LineZValue)
+        self.addItem(line)
 
     def _InitSignal(self):
         GetSignal().DEL_LINE.connect(self.S_OnDelLineUI)
