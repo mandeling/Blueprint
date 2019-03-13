@@ -3,7 +3,7 @@
 @Description: 变量细节widget
 @Author: lamborghini1993
 @Date: 2019-02-27 11:43:42
-@UpdateDate: 2019-03-13 19:36:45
+@UpdateDate: 2019-03-13 19:58:51
 '''
 
 import weakref
@@ -472,10 +472,12 @@ class CDict(QtWidgets.QWidget):
 
     def S_KeyTypeChange(self, sKeyType):
         self.m_KeyType = bddefine.NAME_TYPE[sKeyType]
+        self.m_DefaultKey = bddefine.GetDefauleValue(self.m_KeyType)
         self.S_Clear()
 
     def S_ValueTypeChange(self, sValueType):
         self.m_ValueType = bddefine.NAME_TYPE[sValueType]
+        self.m_DefaultValue = bddefine.GetDefauleValue(self.m_ValueType)
         self.S_Clear()
 
     def DictDel(self, key):
