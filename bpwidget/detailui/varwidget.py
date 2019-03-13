@@ -3,7 +3,7 @@
 @Description: 变量细节widget
 @Author: lamborghini1993
 @Date: 2019-02-27 11:43:42
-@UpdateDate: 2019-03-13 14:43:03
+@UpdateDate: 2019-03-13 19:36:45
 '''
 
 import weakref
@@ -76,6 +76,8 @@ class CVarWidget(QtWidgets.QWidget):
             self.m_ValueWidget = CCheckBox(self.m_VarID)
         elif self.m_Type == bddefine.Type.LIST:
             self.m_ValueWidget = CList(self.m_VarID)
+        elif self.m_Type == bddefine.Type.DICT:
+            self.m_ValueWidget = CDict(self.m_VarID)
 
         if not self.m_ValueWidget:
             return
@@ -366,13 +368,11 @@ class CSubList(QtWidgets.QWidget):
 
 
 class CDict(QtWidgets.QWidget):
-    m_Num = 2
     m_KeyList = [bddefine.SType.INT, bddefine.SType.STR, bddefine.SType.FLOAT]
 
     def __init__(self, varID, parent=None):
         super(CDict, self).__init__(parent)
         self.m_VarID = varID
-        self.m_Value = interface.GetVariableAttr(self.m_VarID, eddefine.VariableAttrName.VALUE)
         self.m_WidgetInfo = {}
         self.m_Box = None
         self._InitUI()
@@ -390,7 +390,7 @@ class CDict(QtWidgets.QWidget):
         hBox1.addWidget(self.m_ComBoxKey)
         hBox1.addWidget(self.m_ComBoxValue)
 
-        hBox2 = QtWidgets.QHBoxLayout(self)
+        hBox2 = QtWidgets.QHBoxLayout()
         self.m_LableInfo = QtWidgets.QLabel(self)
         btnAdd = QtWidgets.QPushButton("+", self)
         btnClear = QtWidgets.QPushButton("x", self)
@@ -411,29 +411,37 @@ class CDict(QtWidgets.QWidget):
 
         btnAdd.clicked.connect(self.S_Add)
         btnClear.clicked.connect(self.S_Clear)
+        self.m_ComBoxKey.currentTextChanged.connect(self.S_KeyTypeChange)
+        self.m_ComBoxValue.currentTextChanged.connect(self.S_ValueTypeChange)
 
     def _InitData(self):
+        self.m_Value = interface.GetVariableAttr(self.m_VarID, eddefine.VariableAttrName.VALUE)
+        if not isinstance(self.m_Value, dict):
+            self.m_Value = {}
         self.m_KeyType = self.m_ValueType = bddefine.Type.INT
-        if isinstance(self.m_Value, dict):
-            for key, value in self.m_Value.items():
-                self.m_KeyType = bddefine.GetType(key)
-                self.m_ValueType = bddefine.GetType(value)
-                break
+        for key, value in self.m_Value.items():
+            self.m_KeyType = bddefine.GetType(key)
+            self.m_ValueType = bddefine.GetType(value)
+            break
         self.m_DefaultKey = bddefine.GetDefauleValue(self.m_KeyType)
         self.m_DefaultValue = bddefine.GetDefauleValue(self.m_ValueType)
-        self.m_ComBoxKey.setCurrentText(self.m_KeyType)
-        self.m_ComBoxValue.setCurrentText(self.m_ValueType)
+        sKeyType = bddefine.TYPE_NAME[self.m_KeyType]
+        self.m_ComBoxKey.setCurrentText(sKeyType)
+        sValueType = bddefine.TYPE_NAME[self.m_ValueType]
+        self.m_ComBoxValue.setCurrentText(sValueType)
 
         for key, value in self.m_Value.items():
             self._AddSubDict(key, value)
+        self._SetLable()
 
     def _AddSubDict(self, key, value):
         if key in self.m_WidgetInfo:
             return
-        oWidget = CSubDict(self.m_KeyType, self.m_ValueType)
+        oWidget = CSubDict(self.m_KeyType, self.m_ValueType, self)
         oWidget.SetInfo(key, value)
         self.m_WidgetInfo[key] = oWidget
         self.m_Value[key] = value
+        self.m_Box.addWidget(oWidget)
 
     def _RemoveWidget(self, oWidget):
         oWidget.setParent(None)
@@ -444,7 +452,11 @@ class CDict(QtWidgets.QWidget):
         oWidget = None
         self.adjustSize()
 
+    def _SetLable(self):
+        self.m_LableInfo.setText(str(len(self.m_Value))+"贴图元素")
+
     def _Save(self):
+        self._SetLable()
         interface.SetVariableAttr(self.m_VarID, eddefine.VariableAttrName.VALUE, self.m_Value)
 
     def S_Add(self):
@@ -458,6 +470,14 @@ class CDict(QtWidgets.QWidget):
         self.m_Value = {}
         self._Save()
 
+    def S_KeyTypeChange(self, sKeyType):
+        self.m_KeyType = bddefine.NAME_TYPE[sKeyType]
+        self.S_Clear()
+
+    def S_ValueTypeChange(self, sValueType):
+        self.m_ValueType = bddefine.NAME_TYPE[sValueType]
+        self.S_Clear()
+
     def DictDel(self, key):
         oWidget = self.m_WidgetInfo.pop(key, None)
         assert oWidget is not None
@@ -470,6 +490,7 @@ class CDict(QtWidgets.QWidget):
             return False
         value = self.m_Value.pop(sOld)
         self.m_Value[sNew] = value
+        self.m_WidgetInfo[sNew] = self.m_WidgetInfo.pop(sOld)
         self._Save()
         return True
 
