@@ -151,6 +151,7 @@ class CNodeWidget(QWidget):
         self.BCWidget.setObjectName("BCWidget")
         self.verticalLayout_BCWidget = QtWidgets.QVBoxLayout(self.BCWidget)
         self.verticalLayout_BCWidget.setObjectName("verticalLayout_BCWidget")
+        # self.verticalLayout_BCWidget.setContentsMargins(0, 0, 0, 0)
 
         # top
         self.top = QtWidgets.QWidget(self.BCWidget)

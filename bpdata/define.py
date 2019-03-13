@@ -27,6 +27,7 @@ class Type:
     VECTOR3 = 6
     CHECKBOX = 7
     LIST = 8
+    DICT = 9
 
 
 class SType:
@@ -35,6 +36,7 @@ class SType:
     STR = "str"
     BOOL = "bool"
     LIST = "list"
+    DICT = "dict"
 
 
 NAME_TYPE = {
@@ -43,11 +45,28 @@ NAME_TYPE = {
     SType.STR:  Type.STR,
     SType.BOOL: Type.BOOL,
     SType.LIST: Type.LIST,
+    SType.DICT: Type.DICT,
 }
 
 TYPE_NAME = {}
 for sType, iType in NAME_TYPE.items():
     TYPE_NAME[iType] = sType
+
+
+def GetType(value, default=Type.INT):
+    if isinstance(value, bool):
+        return Type.BOOL
+    if isinstance(value, int):
+        return Type.INT
+    if isinstance(value, float):
+        return Type.FLOAT
+    if isinstance(value, str):
+        return Type.STR
+    if isinstance(value, list):
+        return Type.LIST
+    if isinstance(value, dict):
+        return Type.DICT
+    return default
 
 
 def PinIsFlow(iPinType):

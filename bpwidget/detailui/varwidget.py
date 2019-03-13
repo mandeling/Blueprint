@@ -3,7 +3,7 @@
 @Description: 变量细节widget
 @Author: lamborghini1993
 @Date: 2019-02-27 11:43:42
-@UpdateDate: 2019-02-27 17:38:17
+@UpdateDate: 2019-03-13 14:43:03
 '''
 
 import weakref
@@ -14,6 +14,7 @@ from signalmgr import GetSignal
 
 from editdata import define as eddefine
 from bpdata import define as bddefine
+from myqt import mylineedit
 
 
 class CVarWidget(QtWidgets.QWidget):
@@ -205,17 +206,8 @@ class CList(QtWidgets.QWidget):
         if not self.m_LastValue:
             self.m_Type = bddefine.Type.INT
             return
-        temp = self.m_LastValue[0]
-        if isinstance(temp, bool):
-            self.m_Type = bddefine.Type.BOOL
-            return
-        if isinstance(temp, int):
-            self.m_Type = bddefine.Type.INT
-            return
-        if isinstance(temp, float):
-            self.m_Type = bddefine.Type.FLOAT
-            return
-        self.m_Type = bddefine.Type.STR
+        value = self.m_LastValue[0]
+        self.m_Type = bddefine.GetType(value, bddefine.Type.INT)
 
     def _InitUI(self):
         self.m_Box = vBox = QtWidgets.QVBoxLayout(self)
@@ -371,3 +363,177 @@ class CSubList(QtWidgets.QWidget):
         if not bSuc:
             return None
         return value
+
+
+class CDict(QtWidgets.QWidget):
+    m_Num = 2
+    m_KeyList = [bddefine.SType.INT, bddefine.SType.STR, bddefine.SType.FLOAT]
+
+    def __init__(self, varID, parent=None):
+        super(CDict, self).__init__(parent)
+        self.m_VarID = varID
+        self.m_Value = interface.GetVariableAttr(self.m_VarID, eddefine.VariableAttrName.VALUE)
+        self.m_WidgetInfo = {}
+        self.m_Box = None
+        self._InitUI()
+        self._InitData()
+
+    def _InitUI(self):
+        self.m_Box = vBox = QtWidgets.QVBoxLayout(self)
+        vBox.setSpacing(0)
+
+        hBox1 = QtWidgets.QHBoxLayout()
+        lable1 = QtWidgets.QLabel("类型", self)
+        self.m_ComBoxKey = QtWidgets.QComboBox(self)
+        self.m_ComBoxValue = QtWidgets.QComboBox(self)
+        hBox1.addWidget(lable1)
+        hBox1.addWidget(self.m_ComBoxKey)
+        hBox1.addWidget(self.m_ComBoxValue)
+
+        hBox2 = QtWidgets.QHBoxLayout(self)
+        self.m_LableInfo = QtWidgets.QLabel(self)
+        btnAdd = QtWidgets.QPushButton("+", self)
+        btnClear = QtWidgets.QPushButton("x", self)
+        btnAdd.setToolTip("插入新的一行")
+        btnClear.setToolTip("清除所有行")
+        size = QtCore.QSize(20, 20)
+        btnAdd.setMaximumSize(size)
+        btnClear.setMaximumSize(size)
+        hBox2.addWidget(self.m_LableInfo)
+        hBox2.addWidget(btnAdd)
+        hBox2.addWidget(btnClear)
+
+        vBox.addLayout(hBox1)
+        vBox.addLayout(hBox2)
+
+        self.m_ComBoxKey.addItems(self.m_KeyList)
+        self.m_ComBoxValue.addItems(self.m_KeyList)
+
+        btnAdd.clicked.connect(self.S_Add)
+        btnClear.clicked.connect(self.S_Clear)
+
+    def _InitData(self):
+        self.m_KeyType = self.m_ValueType = bddefine.Type.INT
+        if isinstance(self.m_Value, dict):
+            for key, value in self.m_Value.items():
+                self.m_KeyType = bddefine.GetType(key)
+                self.m_ValueType = bddefine.GetType(value)
+                break
+        self.m_DefaultKey = bddefine.GetDefauleValue(self.m_KeyType)
+        self.m_DefaultValue = bddefine.GetDefauleValue(self.m_ValueType)
+        self.m_ComBoxKey.setCurrentText(self.m_KeyType)
+        self.m_ComBoxValue.setCurrentText(self.m_ValueType)
+
+        for key, value in self.m_Value.items():
+            self._AddSubDict(key, value)
+
+    def _AddSubDict(self, key, value):
+        if key in self.m_WidgetInfo:
+            return
+        oWidget = CSubDict(self.m_KeyType, self.m_ValueType)
+        oWidget.SetInfo(key, value)
+        self.m_WidgetInfo[key] = oWidget
+        self.m_Value[key] = value
+
+    def _RemoveWidget(self, oWidget):
+        oWidget.setParent(None)
+        index = self.m_Box.indexOf(oWidget)
+        item = self.m_Box.itemAt(index)
+        self.m_Box.removeWidget(oWidget)
+        self.m_Box.removeItem(item)
+        oWidget = None
+        self.adjustSize()
+
+    def _Save(self):
+        interface.SetVariableAttr(self.m_VarID, eddefine.VariableAttrName.VALUE, self.m_Value)
+
+    def S_Add(self):
+        self._AddSubDict(self.m_DefaultKey, self.m_DefaultValue)
+        self._Save()
+
+    def S_Clear(self):
+        for oWidget in self.m_WidgetInfo.values():
+            self._RemoveWidget(oWidget)
+        self.m_WidgetInfo = {}
+        self.m_Value = {}
+        self._Save()
+
+    def DictDel(self, key):
+        oWidget = self.m_WidgetInfo.pop(key, None)
+        assert oWidget is not None
+        self._RemoveWidget(oWidget)
+        self.m_Value.pop(key)
+        self._Save()
+
+    def ChangeKey(self, sOld, sNew):
+        if sNew in self.m_Value:
+            return False
+        value = self.m_Value.pop(sOld)
+        self.m_Value[sNew] = value
+        self._Save()
+        return True
+
+    def ChangeValue(self, key, value):
+        self.m_Value[key] = value
+        self._Save()
+
+
+class CSubDict(QtWidgets.QWidget):
+    def __init__(self, iKeyType, iValueType, parent=None):
+        super(CSubDict, self).__init__(parent)
+        self.m_KeyType = iKeyType
+        self.m_ValueType = iValueType
+        self.m_Key = None
+        self.m_Value = None
+        self.m_Parent = weakref.ref(parent)
+        self._InitUI()
+
+    def _InitUI(self):
+        hBox = QtWidgets.QHBoxLayout(self)
+        self.m_KeyLine = mylineedit.CTypeLineEdit(self.m_KeyType)
+        self.m_ValueLine = mylineedit.CTypeLineEdit(self.m_ValueType)
+        btnDel = QtWidgets.QPushButton("-", self)
+
+        hBox.addWidget(self.m_KeyLine)
+        hBox.addWidget(self.m_ValueLine)
+        hBox.addWidget(btnDel)
+
+        hBox.setContentsMargins(0, 0, 0, 0)
+        hBox.setSpacing(1)
+        btnDel.setToolTip("删除当前行")
+        size = QtCore.QSize(20, 20)
+        btnDel.setMaximumSize(size)
+
+        btnDel.clicked.connect(self.S_Del)
+        self.m_KeyLine.editingFinished.connect(self.S_KeyEditingFinished)
+        self.m_ValueLine.editingFinished.connect(self.S_ValueEditingFinished)
+
+    def SetInfo(self, key, value):
+        self.m_Key = key
+        self.m_Value = value
+        self.m_KeyLine.setText(str(key))
+        self.m_ValueLine.setText(str(value))
+
+    def S_Del(self):
+        self.m_Parent().DictDel(self.m_Key)
+
+    def S_KeyEditingFinished(self):
+        sKey = self.m_KeyLine.text()
+        key, bSuc = bddefine.ForceTransValue(self.m_KeyType, sKey)
+        if not bSuc:
+            return
+        bCanChange = self.m_Parent().ChangeKey(self.m_Key, key)
+        if not bCanChange:
+            self.m_KeyLine.setText(str(self.m_Key))
+            return
+        self.m_Key = key
+
+    def S_ValueEditingFinished(self):
+        sValue = self.m_ValueLine.text()
+        value, bSuc = bddefine.ForceTransValue(self.m_ValueType, sValue)
+        if not bSuc:
+            return
+        if value == self.m_Value:
+            return
+        self.m_Value = value
+        self.m_Parent().ChangeValue(self.m_Key, value)
