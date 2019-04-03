@@ -37,7 +37,7 @@ class CBlueprintView(QGraphicsView):
     def _InitUI(self):
         self.setWindowTitle("蓝图")
         self.setScene(self.m_Scene)
-        self.setBackgroundBrush(QBrush(QColor(103, 103, 103), Qt.SolidPattern))
+        # self.setBackgroundBrush(QBrush(QColor(103, 103, 103), Qt.SolidPattern))
         self.setDragMode(QGraphicsView.NoDrag)
         self.setViewportUpdateMode(QGraphicsView.FullViewportUpdate)
         self.setResizeAnchor(QGraphicsView.NoAnchor)
@@ -113,19 +113,17 @@ class CBlueprintView(QGraphicsView):
     def wheelEvent(self, event):
         """ctrl+滑轮滚动缩放"""
         self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
-        if event.modifiers() == Qt.ControlModifier:
-            fAngleDelta = event.angleDelta().y()
-            factor = 1.41 ** (fAngleDelta / 240.0)
-            minScale, maxScale = 0.1, 2.0   # 控制缩放的值
-            fNewScale = self.m_Scale * factor
-            if fNewScale > maxScale:
-                fNewScale = maxScale
-            elif fNewScale < minScale:
-                fNewScale = minScale
-            fScale = fNewScale / self.m_Scale
-            self.scale(fScale, fScale)
-            self.m_Scale = fNewScale
-            return
+        fAngleDelta = event.angleDelta().y()
+        factor = 1.41 ** (fAngleDelta / 240.0)
+        minScale, maxScale = 0.1, 2.0   # 控制缩放的值
+        fNewScale = self.m_Scale * factor
+        if fNewScale > maxScale:
+            fNewScale = maxScale
+        elif fNewScale < minScale:
+            fNewScale = minScale
+        fScale = fNewScale / self.m_Scale
+        self.scale(fScale, fScale)
+        self.m_Scale = fNewScale
         # 没有缩放信号传递给下层
         super(CBlueprintView, self).wheelEvent(event)
         event.ignore()
