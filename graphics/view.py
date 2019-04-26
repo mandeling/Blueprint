@@ -77,6 +77,7 @@ class CBlueprintView(QGraphicsView):
 
     def mouseMoveEvent(self, event):
         super(CBlueprintView, self).mouseMoveEvent(event)
+        self.setTransformationAnchor(QGraphicsView.NoAnchor)
         pos = event.pos()
         if self.m_StartPos:
             offsetX, offsetY = pos.x() - self.m_StartPos.x(), pos.y()-self.m_StartPos.y()
